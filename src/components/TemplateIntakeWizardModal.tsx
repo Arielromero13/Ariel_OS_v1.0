@@ -132,11 +132,11 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
       normative_criteria: selectedTemplate.applicableStandards.map((std, idx) => ({
         id: `CRIT-NEW-${idx}`,
         standard_name: std,
-        edition: '2024 / Vigente',
-        clause: 'Sección Principal',
-        requirement_summary: `Cumplimiento de estándares de seguridad y tolerancias para ${selectedTemplate.title}.`,
-        applicability: 'verified',
-        verification_notes: 'Verificado automáticamente por la plantilla.',
+        edition: 'Pendiente de verificación',
+        clause: 'Pendiente de investigación',
+        requirement_summary: `Fuente declarada por plantilla; no constituye criterio aplicable hasta su verificación para ${selectedTemplate.title}.`,
+        applicability: 'unverified',
+        verification_notes: 'La plantilla no verifica normas. Requiere investigación normativa independiente.',
       })),
       findings: [],
       stages: [
