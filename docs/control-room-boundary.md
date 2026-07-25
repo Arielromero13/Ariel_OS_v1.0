@@ -50,6 +50,16 @@ norma aplicada, lectura de campo ni recomendación válida. En particular, ning�
 umbral genérico de resistencia puede atribuirse a una norma sin fuente, edición,
 cláusula y aplicabilidad verificables para el caso.
 
+## Backend MVP incorporado
+
+El directorio `server/` implementa la primera frontera real: la API recibe
+casos, work items y artefactos; calcula SHA-256; extrae datos candidatos de
+planillas y EXIF; y valida registros estructurados antes de persistirlos.
+
+El almacenamiento actual es local y orientado a piloto. No equivale a
+producción multiusuario. La extracción de Excel no autoriza una interpretación
+de ingeniería y EXIF no sustituye la inspección visual de orientación.
+
 ## Próximos pasos técnicos
 
 1. Persistencia de casos, revisiones y artefactos.
