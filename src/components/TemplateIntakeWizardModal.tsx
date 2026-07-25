@@ -121,7 +121,6 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           point_code: 'PAT-INT-01',
           location_description: `${plantName} - Jabalina Principal 1`,
           measured_resistance_ohm: 3.40,
-          max_allowed_ohm: 5.0,
           method: '3_point_fall_of_potential',
           photo_rotation_deg: 0,
           photo_legible: true,
