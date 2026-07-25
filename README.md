@@ -269,6 +269,22 @@ Actualmente esas capacidades están declaradas, pero **no enlazadas**. Los [adap
 
 ---
 
+## 🖥️ Ariel OS Control Room
+
+El repositorio incluye una interfaz React de prototipo para visualizar work items,
+workflow, matriz, fuentes, manifest y conversaciones simuladas. La interfaz es
+un **Control Room**, no un motor autorizado de expedientes reales.
+
+- El navegador no solicita ni guarda claves de producción.
+- Los conectores y CLIs se ejecutarán solo desde workers autorizados.
+- Una simulación no cambia compuertas, evidencia, criterios ni aprobaciones.
+- Todo resultado real debe pasar por contratos, persistencia y revisión.
+
+Ver [docs/control-room-boundary.md](docs/control-room-boundary.md) antes de
+conectar un proveedor o cargar evidencia real.
+
+---
+
 ## 🛡️ Seguridad, confidencialidad y sentido común
 
 Este repositorio guarda arquitectura y método. Por defecto, **no** se suben aquí:
