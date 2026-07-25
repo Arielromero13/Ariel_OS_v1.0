@@ -3,16 +3,21 @@ import { PromptPayload, ModelCompletionResponse } from '../types';
 
 export class LocalSimulatorConnector extends BaseModelConnector {
   public async executeRoleTask(payload: PromptPayload): Promise<ModelCompletionResponse> {
-    const startTime = Date.now();
-
     return {
       provider: 'simulator',
-      modelUsed: 'Local Ariel Agent OS Engine (Deterministic Harness)',
-      outputArtifacts: [`local_sim_${payload.stageId}.json`],
-      notes: `[Simulador Local] Verificados contratos y schema para etapa '${payload.stageId}'.`,
-      rawTextResponse: `[SIMULACIÓN LOCAL] Rol '${payload.role}' procesó el mandato del orquestador. Todos los esquemas de evidencia coinciden.`,
+      modelUsed: 'Ariel OS Browser Simulation',
+      outputArtifacts: [],
+      notes: 'Simulación visual completada. No se crearon artefactos ni se modificaron compuertas.',
+      rawTextResponse: 'SIMULACIÓN: el rol ' + payload.role + ' revisaría la etapa ' + payload.stageId + ' cuando exista un worker autorizado.',
       timestamp: new Date().toISOString(),
-      executionTimeMs: Date.now() - startTime + 30,
+      executionTimeMs: 0,
+      isSimulated: true,
+      structuredOutput: {
+        contractType: 'handoff',
+        validationStatus: 'not_attempted',
+        recordIds: [],
+        errors: ['simulation_has_no_authority'],
+      },
     };
   }
 }
