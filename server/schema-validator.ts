@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
+import type { ValidateFunction } from 'ajv';
 import type { ValidationResult } from './types.js';
 
 const schemaPaths: Record<string, string> = {
@@ -12,33 +13,25 @@ const schemaPaths: Record<string, string> = {
   evidence: 'evidence.schema.json',
   report_manifest: 'report-manifest.schema.json'
 };
-let validatorPromise: Promise<Ajv2020> | undefined;
+let validatorsPromise: Promise<Map<string, ValidateFunction>> | undefined;
 
-async function getAjv(): Promise<Ajv2020> {
-  if (!validatorPromise) validatorPromise = (async () => {
+async function getValidators(): Promise<Map<string, ValidateFunction>> {
+  if (!validatorsPromise) validatorsPromise = (async () => {
     const ajv = new Ajv2020({ allErrors: true, strict: false });
     addFormats(ajv);
-    for (const filename of Object.values(schemaPaths)) {
+    const validators = new Map<string, ValidateFunction>();
+    for (const [recordType, filename] of Object.entries(schemaPaths)) {
       const raw = await readFile(path.resolve(process.cwd(), 'contracts', filename), 'utf8');
-      ajv.addSchema(JSON.parse(raw));
+      validators.set(recordType, ajv.compile(JSON.parse(raw)));
     }
-    return ajv;
+    return validators;
   })();
-  return validatorPromise;
+  return validatorsPromise;
 }
 
 export async function validateRecord(recordType: string, record: unknown): Promise<ValidationResult> {
-  const filename = schemaPaths[recordType];
-  if (!filename) return { valid: false, errors: ['Unsupported record type: ' + recordType] };
-  const ajv = await getAjv();
-  const schema = ajv.getSchema(path.resolve(process.cwd(), 'contracts', filename));
-  if (!schema) {
-    const all = Object.values((ajv as unknown as { schemas: Record<string, unknown> }).schemas);
-    const candidate = all.find((item) => JSON.stringify(item).includes(filename));
-    if (!candidate) return { valid: false, errors: ['Schema not available: ' + filename] };
-  }
-  const validate = Array.from(Object.values((ajv as unknown as { schemas: Record<string, (value: unknown) => boolean> }).schemas)).find((fn) => typeof fn === 'function' && String(fn).includes('validate')) || schema;
-  if (!validate) return { valid: false, errors: ['Schema compiler failed: ' + filename] };
-  const valid = schema ? schema(record) : false;
-  return { valid: Boolean(valid), errors: schema?.errors?.map((error) => (error.instancePath || '/') + ' ' + error.message) || [] };
+  const validate = (await getValidators()).get(recordType);
+  if (!validate) return { valid: false, errors: ['Unsupported record type: ' + recordType] };
+  const valid = validate(record);
+  return { valid, errors: validate.errors?.map((error) => (error.instancePath || '/') + ' ' + (error.message || 'schema error')) || [] };
 }
