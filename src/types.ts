@@ -116,7 +116,6 @@ export interface NormativeCriterion {
   edition: string;
   clause: string;
   requirement_summary: string;
-  max_resistance_threshold_ohm?: number;
   applicability: 'verified' | 'unverified' | 'not_applicable';
   verification_notes: string;
   source_artifact_id?: string;
