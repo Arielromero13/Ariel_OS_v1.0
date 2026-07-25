@@ -68,7 +68,7 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
 
     switch (nextRole) {
       case 'orchestrator':
-        nextContent = `Revisando avance del expediente ${currentWorkItem.case.case_id}. Avanzando etapa "${currentStage.name}". Delegando al Especialista de Dominio.`;
+        nextContent = '[SIMULACIÓN] Revisando avance del expediente ${currentWorkItem.case.case_id}. Avanzando etapa "${currentStage.name}". Delegando al Especialista de Dominio.';
         break;
       case 'domain_specialist':
         nextContent = `Especialista P.A.T. analizando datos de la plantilla ${currentWorkItem.template_config?.title || 'Maestra'}. Se han procesado los puntos de medición y generado los hallazgos en la matriz.`;
@@ -118,17 +118,9 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
       messageType: messageType,
     };
 
-    // Update stages in workItem
-    const updatedStages = stages.map((st) => {
-      if (st.id === currentStage.id) {
-        return { ...st, status: 'passed' as const };
-      }
-      return st;
-    });
-
+    // La conversación de demo nunca representa una aprobación ni cambia una etapa.
     const updatedWorkItem: WorkItem = {
       ...currentWorkItem,
-      stages: updatedStages,
       chat_history: [...currentMessages, agentResponse],
     };
 
@@ -181,7 +173,7 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Discusión en tiempo real entre Orquestador, Especialistas y Revisores de Ariel OS
+                Simulación visual de conversación. No modifica compuertas, evidencia ni aprobaciones.
               </p>
             </div>
           </div>
@@ -193,7 +185,7 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white text-xs font-bold transition shadow-md shadow-sky-600/20 cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>Siguiente Discusión</span>
+              <span>Simular mensaje</span>
             </button>
 
             <button
