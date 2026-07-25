@@ -241,6 +241,36 @@ skills:
       - No valida la corrección técnica de una conclusión.
       - No modifica el Word sin corrección y trazabilidad registradas.
 
+  - id: generate-pptx-deck
+    name: Ensamblaje de presentación técnica desde plantilla
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/generate-pptx-deck/SKILL.md
+    domains:
+      - presentation-production
+      - document-production
+    invocable_by:
+      - integrator
+      - visual_reviewer
+    required_inputs:
+      - approved_content
+      - presentation_template
+      - artifact_references
+      - definition_of_done
+    produces:
+      - pptx_draft
+      - rendered_presentation
+      - presentation_integration_record
+    requires_tools:
+      - workspace_artifact_store
+      - document_processor
+      - document_renderer
+    boundaries:
+      - Integra solo contenido técnico ya aprobado.
+      - No inventa datos, gráficos, hallazgos ni referencias.
+      - No sustituye la revisión visual ni la aprobación humana.
+
   - id: analyze-comtrade-event
     name: Análisis de evento COMTRADE
     kind: domain
