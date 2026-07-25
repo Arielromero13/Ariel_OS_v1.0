@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Arielromero13/ariel-agent-os/contracts/finding.schema.json",
+  "title": "Technical Finding",
+  "description": "Contrato universal para un hallazgo técnico trazable. Un hallazgo une evidencia, razonamiento, criterio, evaluación, límites e intervención recomendada.",
+  "type": "object",
+  "required": [
+    "finding_id",
+    "context",
+    "statement",
+    "scope",
+    "evidence",
+    "evaluation",
+    "lifecycle"
+  ],
+  "properties": {
+    "finding_id": {
+      "type": "string"
+    },
+    "context": {
+      "type": "object",
+      "required": [
+        "case_id",
+        "revision_id",
+        "domain"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "revision_id": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "work_item_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "statement": {
+      "type": "object",
+      "required": [
+        "title",
+        "conclusion"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "conclusion": {
+          "type": "string"
+        },
+        "classification": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "point_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "system_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "evidence_ids",
+        "reasoning"
+      ],
+      "properties": {
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "reasoning": {
+          "type": "string"
+        },
+        "method_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "evaluation": {
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "Conforme",
+            "No conforme",
+            "No concluyente",
+            "Pendiente",
+            "Not applicable"
+          ]
+        },
+        "criterion_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "criterion_status": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "pending_validation",
+            "not_applicable"
+          ]
+        },
+        "criterion_rationale": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "Conforme",
+                  "No conforme"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "criterion_id",
+              "criterion_rationale"
+            ],
+            "properties": {
+              "criterion_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "criterion_rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "impact": {
+      "type": "object",
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical",
+            "not_assessed"
+          ]
+        },
+        "decision_impact": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "risk_statement": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "recommendation": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "owner": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "justification": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "related_finding_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "handoff_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliverable_sections": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": [
+        "status",
+        "created_by"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "proposed",
+            "under_review",
+            "approved",
+            "rejected",
+            "superseded"
+          ]
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "superseded_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

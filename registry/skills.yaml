@@ -1,0 +1,260 @@
+registry:
+  id: skills
+  version: 0.2.0
+  status: draft
+  purpose: >
+    Catálogo portable de conocimientos operativos. Cada SKILL.md define el
+    procedimiento; este registro declara su ámbito, dependencias, límites y
+    roles habilitados.
+
+selection_policy:
+  domain_skill: >
+    Una skill de dominio interpreta evidencia dentro de una metodología técnica.
+    Puede proponer análisis y hallazgos, pero no aprueba ni emite externamente.
+  transversal_skill: >
+    Una skill transversal transforma, controla o presenta información. No toma
+    decisiones de ingeniería ni reemplaza al rol responsable.
+  composition: >
+    El orquestador selecciona una skill de dominio según el work item y le
+    habilita las skills transversales necesarias. Las dependencias no autorizan
+    omitir revisiones independientes.
+  status_meaning:
+    draft: Redactada, aún sin ensayo de aceptación controlado.
+    validated: Ensayada contra casos de prueba definidos y apta para uso controlado.
+    planned: Registrada para diseño futuro; no puede activarse.
+
+skills:
+  - id: analyze-grounding-report
+    name: Análisis de informe de verificación P.A.T.
+    kind: domain
+    status: draft
+    version: 0.1.0
+    path: skills/analyze-grounding-report/SKILL.md
+    domains:
+      - electrical-grounding
+      - technical-reporting
+    applicable_workflows:
+      - grounding-report
+    invocable_by:
+      - orchestrator
+      - domain_specialist
+      - technical_reviewer
+    required_inputs:
+      - work_item
+      - input_manifest
+      - current_campaign_evidence
+      - definition_of_done
+    optional_inputs:
+      - master_template
+      - approved_historical_reports
+      - normative_sources
+      - design_specifications
+    produces:
+      - validated_control_matrix
+      - evidence_records
+      - technical_findings
+      - limitations_record
+      - provisional_evaluation_states
+      - pending_items_list
+    uses_skills:
+      - validate-spreadsheet-input
+      - manage-photo-evidence-gallery
+      - validate-technical-traceability
+      - research-normative-criterion
+    requires_tools:
+      - workspace_artifact_store
+      - spreadsheet_processor
+      - image_evidence_inspector
+      - source_research
+    boundaries:
+      - La evidencia actual prevalece sobre históricos y referencias.
+      - No inventa lecturas, criterios, configuraciones ni conclusiones.
+      - No aprueba el resultado ni ensambla el informe final.
+      - Sin evidencia o criterio suficiente usa Pendiente o No concluyente.
+    validation:
+      - Cada lectura se vincula a evidencia o queda pendiente.
+      - Cada estado Conforme o No conforme tiene criterio verificable.
+      - Sus salidas cumplen los contratos de evidencia y finding.
+
+  - id: validate-spreadsheet-input
+    name: Validación de matrices y hojas de cálculo
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/validate-spreadsheet-input/SKILL.md
+    domains:
+      - data-quality
+      - technical-reporting
+    invocable_by:
+      - domain_specialist
+      - technical_reviewer
+      - integrator
+    required_inputs:
+      - source_spreadsheet
+      - expected_structure_or_work_item
+    produces:
+      - normalized_table
+      - spreadsheet_validation_record
+      - data_quality_issues
+    requires_tools:
+      - workspace_artifact_store
+      - spreadsheet_processor
+    boundaries:
+      - Valida estructura y datos visibles; no evalúa aceptación técnica.
+      - No modifica el archivo fuente ni redondea mediciones.
+      - No crea valores para completar celdas faltantes.
+
+  - id: manage-photo-evidence-gallery
+    name: Gestión de galería de evidencias fotográficas
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/manage-photo-evidence-gallery/SKILL.md
+    domains:
+      - evidence-management
+      - visual-quality
+    invocable_by:
+      - domain_specialist
+      - integrator
+      - visual_reviewer
+    required_inputs:
+      - photo_artifacts
+      - evidence_mapping_or_matrix
+    produces:
+      - evidence_gallery
+      - visual_evidence_assessments
+      - photo_issue_list
+    requires_tools:
+      - workspace_artifact_store
+      - image_evidence_inspector
+      - document_renderer
+    boundaries:
+      - Comprueba evidencia visual; no interpreta ingeniería.
+      - No infiere texto, valor o identidad que no pueda verificarse.
+      - No altera el original sin corrección registrada.
+
+  - id: validate-technical-traceability
+    name: Validación de trazabilidad técnica
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/validate-technical-traceability/SKILL.md
+    domains:
+      - traceability
+      - quality-assurance
+    invocable_by:
+      - domain_specialist
+      - technical_reviewer
+      - auditor
+    required_inputs:
+      - evidence_records
+      - findings
+      - criteria_records
+    produces:
+      - traceability_map
+      - traceability_review_record
+      - unresolved_links
+    requires_tools:
+      - workspace_artifact_store
+    boundaries:
+      - Verifica enlaces entre registros; no crea evidencia ni criterios.
+      - No resuelve una falta de evidencia mediante suposición.
+
+  - id: research-normative-criterion
+    name: Investigación de criterio normativo
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/research-normative-criterion/SKILL.md
+    domains:
+      - normative-research
+      - technical-compliance
+    invocable_by:
+      - normative_researcher
+      - technical_reviewer
+      - auditor
+    required_inputs:
+      - criterion_request
+      - technical_context
+    produces:
+      - source_record
+      - normative_citation
+      - applicability_assessment
+    requires_tools:
+      - workspace_artifact_store
+      - source_research
+    boundaries:
+      - Registra fuente, edición, cláusula y aplicabilidad.
+      - No atribuye límites genéricos ni declara cumplimiento por analogía.
+      - Si la fuente no es verificable, conserva el criterio como pendiente.
+
+  - id: write-document-from-template
+    name: Ensamblaje de documento desde plantilla
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/write-document-from-template/SKILL.md
+    domains:
+      - document-production
+    invocable_by:
+      - integrator
+    required_inputs:
+      - approved_content
+      - template
+      - artifact_references
+    produces:
+      - word_report_draft
+      - integration_record
+    requires_tools:
+      - workspace_artifact_store
+      - document_processor
+    boundaries:
+      - Inserta contenido aprobado respetando la plantilla.
+      - No altera hallazgos, estados, datos ni conclusiones aprobadas.
+      - No aprueba ni distribuye el documento.
+
+  - id: render-and-review-document
+    name: Renderizado y revisión visual documental
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/render-and-review-document/SKILL.md
+    domains:
+      - visual-quality
+      - document-production
+    invocable_by:
+      - integrator
+      - visual_reviewer
+    required_inputs:
+      - word_report_draft
+      - report_manifest_or_artifact_list
+    produces:
+      - rendered_document
+      - visual_qa_record
+      - visual_correction_request
+    requires_tools:
+      - workspace_artifact_store
+      - document_renderer
+      - image_evidence_inspector
+    boundaries:
+      - Evalúa presentación, orden, orientación y legibilidad.
+      - No valida la corrección técnica de una conclusión.
+      - No modifica el Word sin corrección y trazabilidad registradas.
+
+  - id: analyze-comtrade-event
+    name: Análisis de evento COMTRADE
+    kind: domain
+    status: planned
+    version: 0.0.0
+    path: skills/analyze-comtrade-event/SKILL.md
+    domains:
+      - power-protection
+      - disturbance-analysis
+    applicable_workflows:
+      - comtrade-diagnosis
+    invocable_by:
+      - orchestrator
+      - domain_specialist
+      - technical_reviewer
+    boundaries:
+      - No puede activarse hasta contar con procedimiento, contratos y evaluación propios.

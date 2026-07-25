@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ariel-agent-os.local/contracts/audit-decision.schema.json",
+  "title": "Audit Decision",
+  "description": "Registro independiente que determina si la decisión de aprobar, no emitir o escalar un entregable es razonable según el expediente, las revisiones y las reglas del workflow. No autoriza por sí solo una emisión externa.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "audit_id",
+    "context",
+    "auditor",
+    "scope",
+    "gates",
+    "gate_summary",
+    "decision",
+    "human_approval",
+    "lifecycle"
+  ],
+  "properties": {
+    "audit_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$",
+      "description": "Identificador único y estable de la auditoría."
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case_id", "revision_id", "work_item_id", "workflow_id", "candidate_deliverable_id"],
+      "properties": {
+        "case_id": { "type": "string", "minLength": 1 },
+        "revision_id": { "type": "string", "minLength": 1 },
+        "work_item_id": { "type": "string", "minLength": 1 },
+        "workflow_id": { "type": "string", "minLength": 1 },
+        "candidate_deliverable_id": { "type": "string", "minLength": 1 },
+        "report_manifest_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "auditor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "independence_confirmed"],
+      "properties": {
+        "role": { "const": "auditor" },
+        "agent_id": { "type": "string", "minLength": 1 },
+        "independence_confirmed": {
+          "type": "boolean",
+          "description": "Debe ser true si el auditor no produjo ni revisó técnicamente el resultado que audita."
+        },
+        "domain_skill_context": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audit_type", "included_records", "excluded_checks"],
+      "properties": {
+        "audit_type": {
+          "type": "string",
+          "enum": ["process_decision", "emission_gate", "correction_decision", "other"]
+        },
+        "included_records": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["record_type", "record_id"],
+            "properties": {
+              "record_type": {
+                "type": "string",
+                "enum": [
+                  "work_item",
+                  "handoff",
+                  "evidence",
+                  "finding",
+                  "review",
+                  "intent_validation",
+                  "report_manifest",
+                  "human_decision",
+                  "other"
+                ]
+              },
+              "record_id": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "excluded_checks": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "Controles que el auditor no realizó; evita presentar la auditoría como una recalculación técnica completa."
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_id", "name", "required", "result", "basis"],
+        "properties": {
+          "gate_id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{1,127}$"
+          },
+          "name": { "type": "string", "minLength": 1 },
+          "required": { "type": "boolean" },
+          "result": {
+            "type": "string",
+            "enum": ["pass", "fail", "pending", "not_applicable"]
+          },
+          "basis": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["record_type", "record_id"],
+              "properties": {
+                "record_type": { "type": "string", "minLength": 1 },
+                "record_id": { "type": "string", "minLength": 1 },
+                "note": { "type": "string" }
+              }
+            }
+          },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "gate_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "failed_required_gate_count",
+        "pending_required_gate_count",
+        "critical_open_decision_count"
+      ],
+      "properties": {
+        "failed_required_gate_count": { "type": "integer", "minimum": 0 },
+        "pending_required_gate_count": { "type": "integer", "minimum": 0 },
+        "critical_open_decision_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "rationale"],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": ["approve_for_human_approval", "no_emit", "escalate"]
+        },
+        "rationale": { "type": "string", "minLength": 1 },
+        "conditions_before_emission": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "residual_risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["risk_id", "description", "severity", "treatment"],
+        "properties": {
+          "risk_id": { "type": "string", "minLength": 1 },
+          "description": { "type": "string", "minLength": 1 },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+          "treatment": { "type": "string", "enum": ["accepted", "mitigated", "escalated", "blocks_emission"] },
+          "linked_record_ids": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "required_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action_id", "action_type", "owner", "acceptance_criterion"],
+        "properties": {
+          "action_id": { "type": "string", "minLength": 1 },
+          "action_type": {
+            "type": "string",
+            "enum": ["patch", "partial_rework", "full_rework", "user_clarification", "human_decision", "other"]
+          },
+          "owner": { "type": "string", "minLength": 1 },
+          "acceptance_criterion": { "type": "string", "minLength": 1 },
+          "artifacts_to_preserve": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+          "artifacts_to_modify": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "human_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "status"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "status": {
+          "type": "string",
+          "enum": ["not_required", "pending", "approved", "rejected"]
+        },
+        "approver_role": { "type": "string", "minLength": 1 },
+        "decision_record_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "correction_cycle"],
+      "properties": {
+        "status": { "type": "string", "enum": ["draft", "issued", "superseded", "resolved"] },
+        "correction_cycle": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "issued_at": { "type": "string", "format": "date-time" },
+        "supersedes_audit_id": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "properties": { "outcome": { "const": "approve_for_human_approval" } },
+            "required": ["outcome"]
+          }
+        },
+        "required": ["decision"]
+      },
+      "then": {
+        "properties": {
+          "auditor": {
+            "properties": { "independence_confirmed": { "const": true } },
+            "required": ["independence_confirmed"]
+          },
+          "gate_summary": {
+            "properties": {
+              "failed_required_gate_count": { "const": 0 },
+              "pending_required_gate_count": { "const": 0 },
+              "critical_open_decision_count": { "const": 0 }
+            }
+          },
+          "human_approval": {
+            "properties": {
+              "required": { "const": true },
+              "status": { "enum": ["pending", "approved"] }
+            },
+            "required": ["required", "status"]
+          }
+        }
+      }
+    }
+  ]
+}

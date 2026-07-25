@@ -1,0 +1,282 @@
+registry:
+  id: tools
+  version: 0.1.0
+  status: draft
+  purpose: >
+    Catálogo portable de capacidades de herramienta que un workflow puede
+    solicitar. No contiene secretos, credenciales, rutas corporativas ni
+    conexiones activas. Un adaptador del arnés convierte estas capacidades
+    abstractas en herramientas concretas.
+
+tooling_policy:
+  default_binding: not_bound
+  selection_rule: >
+    El orquestador selecciona por capacidad, no por nombre de proveedor. Solo
+    puede invocar una herramienta declarada, enlazada por el adaptador activo y
+    autorizada para el work item.
+  external_access: >
+    Toda consulta externa, descarga de fuentes o distribución fuera del entorno
+    de trabajo requiere que la restricción del expediente lo permita. Las
+    credenciales permanecen fuera del repositorio.
+  no_silent_publication: true
+  evidence_rule: >
+    Los resultados que sustenten una conclusión deben conservar referencia al
+    artefacto de entrada, operación ejecutada y artefacto de salida.
+  portability: >
+    Los IDs siguientes son estables. Codex, Claude Code u otro arnés pueden
+    enlazarlos a implementaciones distintas sin modificar los workflows.
+
+tools:
+  - id: workspace_artifact_store
+    name: Almacenamiento de artefactos del expediente
+    category: storage
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Listar, leer, escribir y versionar artefactos autorizados dentro del
+      espacio de trabajo del caso.
+    operations:
+      - list
+      - read
+      - write
+      - copy_to_working_area
+      - calculate_hash
+    accepts:
+      - documents
+      - spreadsheets
+      - images
+      - structured_records
+    produces:
+      - artifact_reference
+      - integrity_hash
+    allowed_roles:
+      - orchestrator
+      - domain_specialist
+      - normative_researcher
+      - technical_reviewer
+      - integrator
+      - visual_reviewer
+      - auditor
+    constraints:
+      - Nunca elimina ni sobrescribe una revisión sin crear una nueva referencia.
+      - No publica ni comparte fuera del caso.
+
+  - id: spreadsheet_processor
+    name: Procesador de matrices y hojas de cálculo
+    category: data_processing
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Leer, validar, transformar y exportar matrices de mediciones u otros datos
+      tabulares preservando valores, encabezados, unidades y trazabilidad.
+    operations:
+      - inspect_workbook
+      - extract_table
+      - validate_columns
+      - validate_data_types
+      - generate_control_matrix
+      - export_table
+    accepts:
+      - xlsx
+      - xls
+      - csv
+      - tsv
+    produces:
+      - normalized_table
+      - validation_result
+      - control_matrix
+    allowed_roles:
+      - domain_specialist
+      - technical_reviewer
+      - integrator
+    constraints:
+      - No altera el archivo fuente.
+      - No redondea ni inventa valores de medición.
+
+  - id: document_processor
+    name: Procesador de documentos fuente y plantilla
+    category: document_processing
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Extraer texto y estructura de documentos, y crear o actualizar un
+      borrador en una plantilla aprobada.
+    operations:
+      - inspect_document
+      - extract_text
+      - extract_structure
+      - create_draft_from_template
+      - insert_validated_content
+      - export_docx
+    accepts:
+      - docx
+      - pdf
+      - odt
+      - markdown
+    produces:
+      - extracted_document_record
+      - word_report_draft
+    allowed_roles:
+      - domain_specialist
+      - integrator
+      - technical_reviewer
+    constraints:
+      - Solo el integrador inserta contenido en el borrador final.
+      - No modifica la plantilla maestra ni hallazgos aprobados.
+
+  - id: document_renderer
+    name: Renderizador de documento
+    category: visual_quality
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Convertir el borrador en una representación visual revisable, normalmente
+      PDF y páginas o imágenes, sin cambiar su contenido.
+    operations:
+      - render_to_pdf
+      - render_pages
+      - inspect_page_count
+    accepts:
+      - docx
+      - odt
+      - pdf
+    produces:
+      - rendered_document
+      - page_images
+    allowed_roles:
+      - integrator
+      - visual_reviewer
+    constraints:
+      - El renderizado es una salida derivada; no sustituye el Word fuente.
+      - Cada salida debe indicar el artefacto y la versión de origen.
+
+  - id: image_evidence_inspector
+    name: Inspector de evidencias fotográficas
+    category: visual_quality
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Revisar legibilidad, orientación visible, duplicados, recortes y vínculo
+      entre foto, etiqueta y lectura declarada en la matriz.
+    operations:
+      - inspect_orientation
+      - inspect_legibility
+      - detect_duplicate_candidate
+      - inspect_crop
+      - verify_gallery_order
+      - extract_visible_text_when_possible
+    accepts:
+      - jpg
+      - jpeg
+      - png
+      - heic
+      - tiff
+      - rendered_page
+    produces:
+      - visual_evidence_assessment
+      - photo_issue_list
+    allowed_roles:
+      - domain_specialist
+      - visual_reviewer
+      - technical_reviewer
+    constraints:
+      - La orientación se verifica visualmente; no basta con metadatos EXIF.
+      - No rota ni edita el original sin una corrección registrada.
+
+  - id: source_research
+    name: Investigación de fuentes normativas
+    category: research
+    status: declared_not_bound
+    required_for_pilot: false
+    purpose: >
+      Localizar y registrar fuentes técnicas autorizadas, con su edición,
+      cláusula o requisito y evidencia de aplicabilidad.
+    operations:
+      - search_authoritative_source
+      - retrieve_source_metadata
+      - extract_citation
+      - record_applicability_basis
+    accepts:
+      - normative_request
+      - known_source_reference
+    produces:
+      - source_record
+      - normative_citation
+      - applicability_assessment
+    allowed_roles:
+      - normative_researcher
+      - technical_reviewer
+      - auditor
+    constraints:
+      - Nunca infiere una cláusula que no pueda verificar.
+      - Respeta licencias, acceso autorizado y restricciones de distribución.
+      - Si no hay fuente verificable, el criterio queda Pendiente o No concluyente.
+
+  - id: technical_calculation_runtime
+    name: Entorno de cálculo técnico reproducible
+    category: analysis
+    status: declared_not_bound
+    required_for_pilot: false
+    purpose: >
+      Ejecutar cálculos, validaciones numéricas y gráficos reproducibles cuando
+      el dominio y la evidencia lo requieran.
+    operations:
+      - calculate
+      - validate_formula
+      - generate_chart
+      - export_calculation_record
+    accepts:
+      - structured_data
+      - calculation_specification
+    produces:
+      - calculation_result
+      - chart
+      - reproducibility_record
+    allowed_roles:
+      - domain_specialist
+      - technical_reviewer
+    constraints:
+      - La fórmula, supuestos, unidades e insumos deben quedar registrados.
+      - No reemplaza el juicio técnico ni crea criterios de aceptación.
+
+  - id: report_package_manager
+    name: Gestor de paquete de entrega
+    category: packaging
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Construir el report manifest, verificar la presencia de artefactos,
+      calcular integridad y preparar un paquete candidato sin distribuirlo.
+    operations:
+      - build_manifest
+      - verify_required_artifacts
+      - verify_integrity
+      - prepare_release_candidate
+    accepts:
+      - artifact_references
+      - definition_of_done
+      - quality_control_records
+    produces:
+      - report_manifest
+      - completeness_result
+      - release_candidate
+    allowed_roles:
+      - integrator
+      - orchestrator
+      - auditor
+    constraints:
+      - No autoriza liberación externa.
+      - Una liberación requiere el registro de aprobación humana definido por el workflow.
+
+adapter_binding_template:
+  required_fields:
+    - tool_id
+    - harness
+    - implementation_name
+    - binding_status
+    - permitted_operations
+    - authentication_mode
+    - data_boundary
+  rule: >
+    El archivo del adaptador, no este registro, declara la implementación
+    concreta y la configuración de acceso de cada arnés.

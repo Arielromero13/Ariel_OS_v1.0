@@ -1,0 +1,321 @@
+workflow:
+  id: grounding-report
+  name: Informe de verificación P.A.T.
+  version: 0.1.0
+  status: draft
+  portable: true
+
+  purpose: >
+    Preparar un informe P.A.T. trazable a partir de una revisión de expediente,
+    con análisis técnico y normativo verificable, revisión visual de evidencias
+    y aprobación humana antes de emisión externa.
+
+  applies_when:
+    domain: electrical-grounding
+    skill: analyze-grounding-report
+
+  contracts:
+    input: contracts/work-item.schema.json
+    handoff: contracts/handoff.schema.json
+    evidence: contracts/evidence.schema.json
+    finding: contracts/finding.schema.json
+    review: contracts/review.schema.json
+    audit_decision: contracts/audit-decision.schema.json
+    report_manifest: contracts/report-manifest.schema.json
+    primary_skill: skills/analyze-grounding-report/SKILL.md
+    output:
+      - validated_control_matrix
+      - evidence_gallery
+      - technical_analysis
+      - word_report_draft
+      - pending_items_list
+      - decision_record
+
+  roles:
+    orchestrator:
+      responsibilities:
+        - Interpretar intención, planificar y seleccionar workflow.
+        - Validar la alineación final con el mandato original.
+    domain_specialist:
+      responsibilities:
+        - Consolidar evidencia y analizar mediciones dentro del alcance documentado.
+    normative_researcher:
+      responsibilities:
+        - Verificar fuente, edición, cláusula y aplicabilidad de criterios técnicos.
+    technical_reviewer:
+      responsibilities:
+        - Revisar exactitud, trazabilidad, limitaciones y uso de criterios.
+    integrator:
+      responsibilities:
+        - Integrar matriz, galería, análisis y borrador Word sin alterar hallazgos aprobados.
+    visual_reviewer:
+      responsibilities:
+        - Inspeccionar el Word o PDF renderizado y aprobar la galería de evidencias.
+    auditor:
+      responsibilities:
+        - Evaluar si aprobar, bloquear o escalar está justificado por evidencia y reglas.
+
+  entry_gate:
+    transition: draft_to_ready
+    required:
+      - case.case_id
+      - case.revision_id
+      - request.objective
+      - domain.name
+      - definition_of_done
+      - input_manifest
+      - constraints
+    sufficient_for:
+      gap_analysis:
+        - task identity
+        - objective
+        - domain
+        - input manifest
+      technical_analysis:
+        - evidence minimum declared by the P.A.T. skill
+      external_emission:
+        - definition of done complete
+        - approved technical review
+        - approved visual QA
+        - required human approval
+    on_failure:
+      missing_hard_requirement: needs_clarification
+      insufficient_evidence_for_requested_phase: blocked
+      safety_or_distribution_constraint_unknown: ready_for_internal_analysis_only
+
+  stages:
+    - id: intake_and_plan
+      owner: orchestrator
+      purpose: Convertir el expediente de la revisión en un work item ejecutable.
+      consumes:
+        - work_item
+        - input_manifest
+      produces:
+        - execution_brief
+        - workflow_selection_record
+        - initial_gap_list
+      acceptance:
+        - intención, alcance y Definition of Done explícitos
+        - revisión de expediente identificada
+        - fase de trabajo autorizada declarada
+      on_failure: needs_clarification
+
+    - id: evidence_control
+      owner: domain_specialist
+      skill: analyze-grounding-report
+      depends_on:
+        - intake_and_plan
+      purpose: Consolidar matriz, identificar evidencias y verificar trazabilidad inicial.
+      consumes:
+        - execution_brief
+        - current_evidence
+        - historical_reference
+      produces:
+        - validated_control_matrix
+        - evidence_manifest
+        - traceability_map
+        - evidence_gap_list
+      acceptance:
+        - cada lectura se vincula a foto o registro, o queda pendiente
+        - no se transcriben lecturas ilegibles
+        - plantas, campañas y revisiones no se mezclan
+      on_failure: user_clarification_or_block
+
+    - id: technical_analysis
+      owner: domain_specialist
+      skill: analyze-grounding-report
+      depends_on:
+        - evidence_control
+      purpose: Analizar las mediciones dentro de método, geometría, alcance y condiciones sustentadas.
+      consumes:
+        - validated_control_matrix
+        - traceability_map
+        - method_and_instrument_context
+      produces:
+        - technical_findings
+        - limitations_record
+        - provisional_evaluation_states
+      acceptance:
+        - no se emite conclusión fuera de la evidencia disponible
+        - toda limitación relevante queda declarada
+      on_failure: partial_rework_or_user_clarification
+
+    - id: normative_analysis
+      owner: normative_researcher
+      depends_on:
+        - evidence_control
+      run_in_parallel_with:
+        - technical_analysis
+      purpose: Verificar criterios de aceptación y su aplicabilidad.
+      consumes:
+        - normative_source
+        - design_specification
+        - method_and_instrument_context
+      produces:
+        - criteria_register
+        - normative_citations
+        - applicability_assessment
+      acceptance:
+        - cada criterio incluye fuente, edición, cláusula o requisito y justificación
+        - no se usan límites genéricos atribuidos a normas sin verificación
+      on_failure: mark_criterion_pending
+
+    - id: technical_review
+      owner: technical_reviewer
+      depends_on:
+        - technical_analysis
+        - normative_analysis
+      purpose: Validar resultados, trazabilidad, estados de evaluación y criterios.
+      consumes:
+        - validated_control_matrix
+        - technical_findings
+        - limitations_record
+        - criteria_register
+      produces:
+        - technical_review_record
+        - approved_findings
+        - correction_request
+      acceptance:
+        - estados Conforme, No conforme, No concluyente o Pendiente están justificados
+        - la conclusión no excede evidencia ni alcance
+      on_failure: correction_loop
+
+    - id: report_integration
+      owner: integrator
+      depends_on:
+        - technical_review
+      purpose: Integrar resultados aprobados en la plantilla maestra.
+      consumes:
+        - approved_findings
+        - validated_control_matrix
+        - evidence_manifest
+        - template
+      produces:
+        - word_report_draft
+        - rendered_document
+        - evidence_gallery
+      acceptance:
+        - matriz, galería, análisis y conclusiones usan referencias consistentes
+        - la metodología no se repite en la tabla de resultados
+      on_failure: partial_rework
+
+    - id: visual_evidence_qa
+      owner: visual_reviewer
+      depends_on:
+        - report_integration
+      purpose: Validar visualmente la galería y maquetación en el documento renderizado.
+      consumes:
+        - rendered_document
+        - evidence_gallery
+        - validated_control_matrix
+      produces:
+        - visual_qa_record
+        - visual_correction_request
+      acceptance:
+        - foto, ID, lectura y pie de foto corresponden
+        - orientación visual correcta; sin giros de 90, 180 o 270 grados incorrectos
+        - orden de evidencias, legibilidad, recortes y paginación son aceptables
+      on_failure: partial_rework
+
+    - id: intent_validation
+      owner: orchestrator
+      depends_on:
+        - visual_evidence_qa
+      purpose: Comprobar que el resultado responde al mandato original y Definition of Done.
+      consumes:
+        - execution_brief
+        - word_report_draft
+        - technical_review_record
+        - visual_qa_record
+      produces:
+        - intent_validation_record
+        - reformulation_brief
+      acceptance:
+        - todos los criterios obligatorios de Definition of Done se verifican
+        - no se cambió el objetivo original sin una reformulación declarada
+      on_failure: correction_loop
+
+    - id: decision_audit
+      owner: auditor
+      depends_on:
+        - intent_validation
+      purpose: Determinar si aprobar, bloquear o escalar es razonable.
+      consumes:
+        - decision_records
+        - technical_review_record
+        - visual_qa_record
+        - intent_validation_record
+      produces:
+        - audit_decision
+        - escalation_record
+      acceptance:
+        - decisión respaldada por evidencia y reglas
+        - desacuerdos materiales se escalan, no se resuelven por reescritura automática
+      on_failure: escalation
+
+  correction_loop:
+    maximum_cycles: 3
+    correction_types:
+      patch:
+        use_when: Error local y aislado.
+      partial_rework:
+        use_when: Una sección o sus dependencias directas dejaron de ser válidas.
+      full_rework:
+        use_when: Una premisa base invalida el enfoque.
+      user_clarification:
+        use_when: Falta información crítica o hay desacuerdo no resoluble.
+    preservation_rule: >
+      Las evidencias, secciones y resultados correctos no se modifican sin
+      justificación explícita. Un full rework preserva trazabilidad y componentes
+      que no dependan de la premisa invalidada.
+    reformulation_contract:
+      required:
+        - original_mandate
+        - previous_interpretation
+        - detected_error
+        - corrected_interpretation
+        - correction_type
+        - artifacts_to_preserve
+        - artifacts_to_modify
+        - responsible_role
+        - acceptance_criterion
+    on_exhausted_cycles:
+      status: blocked
+      output: blocking_report
+
+  emission_gate:
+    transition: ready_for_emission
+    required:
+      - definition_of_done_satisfied
+      - technical_review_approved
+      - visual_qa_approved
+      - audit_decision_approved
+      - human_approval_received
+      - no_critical_open_decisions
+    on_failure:
+      status: no_emit
+      output: pending_items_list
+
+  handoffs:
+    contract: contracts/handoff.schema.json
+    rule: >
+      Cada transición entre roles debe entregar un handoff válido con revisión,
+      artefactos enlazados, limitaciones, decisiones abiertas, preservaciones y
+      una solicitud concreta al rol receptor.
+
+  traceability:
+    required_links:
+      - measurement_to_evidence
+      - finding_to_measurement
+      - evaluation_state_to_criterion
+      - criterion_to_source
+      - recommendation_to_finding
+      - deliverable_to_case_revision
+
+  escalation:
+    conditions:
+      - reviewer_orchestrator_auditor_disagreement
+      - missing_critical_evidence
+      - unsupported_normative_criterion
+      - scope_or_intent_ambiguity
+    action: request_human_decision

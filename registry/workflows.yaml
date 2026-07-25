@@ -1,0 +1,17 @@
+# Catálogo de workflows
+#
+# Los workflows describen la orquestación portable. Las configuraciones
+# específicas de un arnés viven en adapters/.
+
+workflows:
+  - id: grounding-report
+    name: Informe de verificación P.A.T.
+    status: draft
+    version: 0.1.0
+    path: workflows/grounding-report.yaml
+    input_contract: contracts/work-item.schema.json
+    primary_skill: analyze-grounding-report
+    output_contract: report-manifest
+    entry_gate: draft_to_ready
+    emission_gate: ready_for_emission
+    human_approval_required_before_external_emission: true

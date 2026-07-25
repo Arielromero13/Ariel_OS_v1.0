@@ -1,0 +1,352 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Arielromero13/ariel-agent-os/contracts/work-item.schema.json",
+  "title": "Work Item",
+  "description": "DRAFT — Contrato universal para un expediente de trabajo y el work item que genera el orquestador. Los requisitos específicos se declaran dentro del dominio.",
+  "type": "object",
+  "required": [
+    "task_id",
+    "case",
+    "request",
+    "definition_of_done",
+    "input_manifest",
+    "lifecycle"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "Identificador único asignado por el orquestador."
+    },
+    "case": {
+      "type": "object",
+      "required": [
+        "case_id",
+        "revision_id"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "revision_id": {
+          "type": "string"
+        },
+        "based_on_revision": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision_reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": [
+        "objective"
+      ],
+      "properties": {
+        "objective": {
+          "type": "string"
+        },
+        "requester": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "context": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scope_in": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope_out": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "domain": {
+      "type": "object",
+      "required": [
+        "name",
+        "specific_request"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Dominio o tipo de trabajo, por ejemplo grounding-report o comtrade-diagnosis."
+        },
+        "specific_request": {
+          "type": "object",
+          "description": "Anexo técnico propio del dominio.",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "format": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "recipient": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "definition_of_done": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Criterios verificables de cierre; no una descripción genérica de calidad.",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "criterion"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "criterion": {
+            "type": "string"
+          },
+          "verification_method": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mandatory": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "deadline": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidentiality": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approvals_required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowed_tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prohibited_actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "input_manifest": {
+      "type": "array",
+      "description": "Inventario de archivos, datos y fuentes disponibles para la revisión actual.",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifact_id",
+          "name",
+          "role",
+          "status"
+        ],
+        "properties": {
+          "artifact_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "location": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "current_evidence",
+              "template",
+              "historical_reference",
+              "normative_source",
+              "contextual_reference",
+              "output_reference"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "available",
+              "missing",
+              "unreadable",
+              "superseded"
+            ]
+          },
+          "authority_note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "workflow_hint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Sugerencia opcional del usuario; el orquestador puede seleccionar otro workflow justificado."
+    },
+    "orchestration": {
+      "type": "object",
+      "properties": {
+        "workflow_selected": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "skills_selected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "acceptance_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "open_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Datos críticos, ambigüedades o desacuerdos que requieren aclaración."
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "needs_clarification",
+            "ready",
+            "in_progress",
+            "under_review",
+            "ready_for_emission",
+            "no_emit",
+            "blocked",
+            "complete",
+            "superseded"
+          ]
+        },
+        "iteration_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "superseded_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "readiness": {
+          "type": "object",
+          "description": "Resultado de las compuertas de preparación. Ready para ejecutar y ready para emitir son estados distintos.",
+          "properties": {
+            "execution_gate": {
+              "type": "string",
+              "enum": [
+                "not_evaluated",
+                "passed",
+                "failed"
+              ]
+            },
+            "emission_gate": {
+              "type": "string",
+              "enum": [
+                "not_evaluated",
+                "passed",
+                "failed"
+              ]
+            },
+            "blocking_reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

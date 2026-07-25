@@ -1,0 +1,6 @@
+{
+  "name": "Ariel Agent OS - P.A.T. Workbench",
+  "description": "Sistema portable de agentes para verificación y preparación trazable de informes de Puesta a Tierra (P.A.T.)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

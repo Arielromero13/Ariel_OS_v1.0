@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Arielromero13/ariel-agent-os/contracts/evidence.schema.json",
+  "title": "Evidence Record",
+  "description": "Contrato universal para una pieza de evidencia. Un artefacto es un archivo; una evidencia es un elemento concreto que respalda una afirmación o limita una conclusión.",
+  "type": "object",
+  "required": [
+    "evidence_id",
+    "context",
+    "source",
+    "content",
+    "quality",
+    "lifecycle"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string"
+    },
+    "context": {
+      "type": "object",
+      "required": [
+        "case_id",
+        "revision_id",
+        "captured_or_received_at"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string"
+        },
+        "revision_id": {
+          "type": "string"
+        },
+        "captured_or_received_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "campaign_or_event_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "artifact_id",
+        "file_name",
+        "type",
+        "role"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string"
+        },
+        "file_name": {
+          "type": "string"
+        },
+        "location": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "field_photo",
+            "matrix_record",
+            "field_note",
+            "plan",
+            "normative_source",
+            "template",
+            "historical_report",
+            "instrument_record",
+            "other"
+          ]
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "current_evidence",
+            "historical_reference",
+            "normative_source",
+            "contextual_reference",
+            "template"
+          ]
+        },
+        "source_page_or_row": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "content": {
+      "type": "object",
+      "required": [
+        "description"
+      ],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "related_point_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "related_asset_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "observed_values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "value"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ]
+              },
+              "unit": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "confidence": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "claims_supported": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "readability",
+        "orientation",
+        "completeness"
+      ],
+      "properties": {
+        "readability": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "legible",
+            "partial",
+            "unreadable",
+            "not_applicable"
+          ]
+        },
+        "orientation": {
+          "type": "string",
+          "enum": [
+            "correct",
+            "needs_rotation_90",
+            "needs_rotation_180",
+            "needs_rotation_270",
+            "unknown",
+            "not_applicable"
+          ]
+        },
+        "completeness": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "partial",
+            "insufficient",
+            "not_applicable"
+          ]
+        },
+        "ambiguity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visual_qa_status": {
+          "type": "string",
+          "enum": [
+            "not_reviewed",
+            "approved",
+            "correction_required",
+            "not_applicable"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "measurement_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "finding_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "criterion_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gallery_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "related_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Lo que esta evidencia no permite concluir."
+    },
+    "integrity": {
+      "type": "object",
+      "properties": {
+        "source_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "artifact_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supersedes_evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "accepted",
+            "pending",
+            "rejected",
+            "superseded"
+          ]
+        },
+        "reviewed_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,75 @@
+# Catálogo de agentes
+#
+# Los agentes son roles lógicos y contextuales. El orquestador decide si los
+# ejecuta secuencialmente o como subagentes independientes según riesgo y dependencias.
+
+agents:
+  - id: orchestrator
+    status: draft
+    path: agents/orchestrator/AGENT.md
+    mission: Convertir expedientes en work items y coordinar workflows verificables.
+    activates: always
+    outputs: [work_item, execution_brief, workflow_selection_record, intent_validation_record, reformulation_brief]
+    may_decide: [workflow_selection, delegation, correction_type, escalation]
+    must_escalate: [ambiguous_intent, missing_hard_requirement, material_disagreement, exhausted_correction_cycles]
+    independence_required_for_external_emission: true
+
+  - id: domain_specialist
+    status: draft
+    path: agents/domain-specialist/AGENT.md
+    mission: Analizar evidencia dentro de la skill y alcance del dominio activos.
+    activates: when_technical_evidence_is_sufficient
+    outputs: [validated_matrix, technical_findings, limitations_record, provisional_evaluation_states]
+    may_decide: [evidence_bound_interpretation]
+    must_escalate: [unreadable_evidence, unsupported_method, field_contradiction]
+    independence_required_for_external_emission: true
+
+  - id: normative_researcher
+    status: draft
+    path: agents/normative-researcher/AGENT.md
+    mission: Verificar criterios técnicos, fuentes y aplicabilidad.
+    activates: when_normative_or_design_criterion_is_needed
+    outputs: [criteria_register, normative_citations, applicability_assessment]
+    may_decide: [verified_criterion_applicability]
+    must_escalate: [source_or_clause_unverified, applicability_uncertain]
+    independence_required_for_external_emission: false
+
+  - id: technical_reviewer
+    status: draft
+    path: agents/technical-reviewer/AGENT.md
+    mission: Validar calidad, trazabilidad y límites del análisis técnico.
+    activates: before_integration_of_technical_deliverable
+    outputs: [technical_review_record, correction_request]
+    may_decide: [approve_analysis, request_patch, request_partial_rework]
+    must_escalate: [material_technical_risk, evidence_conflict, unsupported_conclusion]
+    independence_required_for_external_emission: true
+
+  - id: integrator
+    status: draft
+    path: agents/integrator/AGENT.md
+    mission: Ensamblar componentes aprobados en entregables coherentes.
+    activates: after_technical_approval
+    outputs: [integrated_deliverable, rendered_document, output_manifest]
+    may_decide: [presentation_and_layout]
+    must_escalate: [component_inconsistency, missing_required_component]
+    independence_required_for_external_emission: false
+
+  - id: visual_reviewer
+    status: draft
+    path: agents/visual-reviewer/AGENT.md
+    mission: Aprobar la calidad visual y trazabilidad de documentos renderizados.
+    activates: after_document_integration
+    outputs: [visual_qa_record, visual_correction_request]
+    may_decide: [approve_visual_presentation, request_visual_patch, request_visual_partial_rework]
+    must_escalate: [ambiguous_visual_evidence, traceability_break]
+    independence_required_for_external_emission: true
+
+  - id: auditor
+    status: draft
+    path: agents/auditor/AGENT.md
+    mission: Evaluar si aprobar, bloquear o escalar cumple evidencia y reglas.
+    activates: before_external_emission_or_when_risk_is_high
+    outputs: [audit_decision, escalation_record, blocking_report]
+    may_decide: [approve_process, block_emission, escalate]
+    must_escalate: [disagreement_between_control_roles, critical_evidence_missing, correction_budget_exhausted]
+    independence_required_for_external_emission: true
