@@ -34,19 +34,27 @@ function extractSpreadsheet(buffer: Buffer): Record<string, unknown> {
   });
   return { parser: 'xlsx', sheets, interpretation_status: 'candidates_only_requires_mapping_review' };
 }
-async function extractImage(buffer: Buffer): Promise<Record<string, unknown>> {
-  const metadata = await exifr.parse(buffer, ['Orientation', 'DateTimeOriginal', 'GPSLatitude', 'GPSLongitude']);
-  const orientation = typeof metadata?.Orientation === 'number' ? metadata.Orientation : null;
-  return {
-    parser: 'exifr',
-    captured_at: metadata?.DateTimeOriginal ? new Date(metadata.DateTimeOriginal).toISOString() : null,
-    gps: metadata?.GPSLatitude !== undefined && metadata?.GPSLongitude !== undefined ? { latitude: metadata.GPSLatitude, longitude: metadata.GPSLongitude } : null,
-    exif_orientation: orientation,
-    orientation_assessment: orientation === 1 ? 'metadata_upright_visual_review_still_required' : 'visual_review_required',
-    visual_orientation_status: 'not_reviewed'
-  };
+function safeIso(value: unknown): string | null {
+  if (!value) return null;
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
 }
-
+async function extractImage(buffer: Buffer): Promise<Record<string, unknown>> {
+  try {
+    const metadata = await exifr.parse(buffer, ['Orientation', 'DateTimeOriginal', 'GPSLatitude', 'GPSLongitude']);
+    const orientation = typeof metadata?.Orientation === 'number' ? metadata.Orientation : null;
+    return {
+      parser: 'exifr',
+      captured_at: safeIso(metadata?.DateTimeOriginal),
+      gps: metadata?.GPSLatitude !== undefined && metadata?.GPSLongitude !== undefined ? { latitude: metadata.GPSLatitude, longitude: metadata.GPSLongitude } : null,
+      exif_orientation: orientation,
+      orientation_assessment: orientation === 1 ? 'metadata_upright_visual_review_still_required' : 'visual_review_required',
+      visual_orientation_status: 'not_reviewed'
+    };
+  } catch (error) {
+    return { parser: 'exifr', parse_status: 'metadata_unavailable', parse_error: (error as Error).message, visual_orientation_status: 'not_reviewed' };
+  }
+}
 export async function ingestArtifact(input: { caseId: string; role: ArtifactRole; file: Express.Multer.File }): Promise<StoredArtifact> {
   const caseId = assertSafeId(input.caseId, 'case_id');
   const sha256 = crypto.createHash('sha256').update(input.file.buffer).digest('hex');
