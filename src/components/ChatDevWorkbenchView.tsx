@@ -59,72 +59,25 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
     setIsSimulatingAgentTurn(true);
 
     const currentMessages = currentWorkItem.chat_history || [];
-    const stages = currentWorkItem.stages;
-    const currentStage = stages.find((s) => s.status === 'in_progress' || s.status === 'pending') || stages[stages.length - 1];
-
-    let nextRole: RoleId = currentStage.owner;
-    let nextContent = '';
-    let messageType: AgentChatMessage['messageType'] = 'discussion';
-
-    switch (nextRole) {
-      case 'orchestrator':
-        nextContent = '[SIMULACIÓN] Revisando avance del expediente ${currentWorkItem.case.case_id}. Avanzando etapa "${currentStage.name}". Delegando al Especialista de Dominio.';
-        break;
-      case 'domain_specialist':
-        nextContent = `Especialista P.A.T. analizando datos de la plantilla ${currentWorkItem.template_config?.title || 'Maestra'}. Se han procesado los puntos de medición y generado los hallazgos en la matriz.`;
-        messageType = 'finding_alert';
-        break;
-      case 'normative_researcher':
-        nextContent = `Evaluación normativamente sustentada. Se verifican cláusulas de IEEE 80 y AEA 90364-7-710. La trazabilidad con los requerimientos está asegurada.`;
-        break;
-      case 'technical_reviewer':
-        nextContent = `Verificación técnica completada. Los hallazgos están vinculados a la evidencia. Se requiere aprobación humana para autorizar la compuerta de emisión.`;
-        messageType = 'decision_request';
-        break;
-      case 'integrator':
-        {
-          const isPPTX = currentWorkItem.template_config?.fileName.toLowerCase().endsWith('.pptx') || currentWorkItem.template_config?.type.includes('pptx');
-          nextContent = isPPTX
-            ? `Iniciando maquetación del deck de diapositivas en la plantilla PowerPoint (.pptx) "${currentWorkItem.template_config?.fileName}". Generando estructura de slides, kpis visuales y gráficos de tendencia.`
-            : `Iniciando integración del entregable en la plantilla .docx "${currentWorkItem.template_config?.fileName || 'Borrador.docx'}". Generando maquetación y tablas completas.`;
-        }
-        break;
-      case 'visual_reviewer':
-        {
-          const isPPTX = currentWorkItem.template_config?.fileName.toLowerCase().endsWith('.pptx') || currentWorkItem.template_config?.type.includes('pptx');
-          nextContent = isPPTX
-            ? `Control visual de diapositivas PPTX: Alineación de elementos, fuentes corporativas, contraste de colores e incrustación de fotos/esquemas aprobados.`
-            : `Control visual de maquetación: Orientación de fotos verificada a 0°. Márgenes y estilos tipográficos conformes a las reglas AGENTS.md.`;
-        }
-        break;
-      case 'auditor':
-        nextContent = `Auditoría final del proceso: Verificando 3 ciclos de corrección y lista de bloqueos. Todo listo para decisión final.`;
-        messageType = 'approval_notice';
-        break;
-      default:
-        nextContent = `El agente ${nextRole} ha completado la revisión de su alcance.`;
-    }
-
-    const agentMeta = AGENTS_CATALOG.find((a) => a.id === nextRole);
+    const currentStage = currentWorkItem.stages.find((stage) => stage.status === 'in_progress' || stage.status === 'pending')
+      || currentWorkItem.stages[currentWorkItem.stages.length - 1];
+    const agentMeta = AGENTS_CATALOG.find((agent) => agent.id === currentStage.owner);
 
     const agentResponse: AgentChatMessage = {
-      id: `MSG-AGENT-${Date.now()}`,
-      senderRole: nextRole,
-      senderName: agentMeta?.title || nextRole,
+      id: 'MSG-SIM-' + Date.now(),
+      senderRole: currentStage.owner,
+      senderName: agentMeta?.title || currentStage.owner,
       recipientRole: 'all',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      content: nextContent,
+      content: '[SIMULACIÓN SIN AUTORIDAD] El rol revisaría la etapa "' + currentStage.name + '". No se analizaron archivos, no se verificó ninguna norma y el estado del workflow permanece intacto.',
       stageId: currentStage.id,
-      messageType: messageType,
+      messageType: 'discussion',
     };
 
-    // La conversación de demo nunca representa una aprobación ni cambia una etapa.
-    const updatedWorkItem: WorkItem = {
+    onUpdateWorkItem({
       ...currentWorkItem,
       chat_history: [...currentMessages, agentResponse],
-    };
-
-    onUpdateWorkItem(updatedWorkItem);
+    });
     setIsSimulatingAgentTurn(false);
   };
 
