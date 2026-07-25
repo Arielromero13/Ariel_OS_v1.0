@@ -1,11 +1,10 @@
 import express, { type NextFunction, type Request, type Response } from 'express';
 import cors from 'cors';
 import multer from 'multer';
-import crypto from 'node:crypto';
 import { assertProductionConfiguration, assertSafeId, config } from './config.js';
 import { ingestArtifact } from './artifact-worker.js';
 import { executeStage } from './orchestrator.js';
-import { getCase, getWorkItem, initializeStorage, saveCase, saveWorkItem } from './storage.js';
+import { getCase, getWorkItem, initializeStorage, listCases, listWorkItems, saveCase, saveWorkItem } from './storage.js';
 import type { ArtifactRole, Provider, StoredCase, StoredWorkItem } from './types.js';
 
 assertProductionConfiguration();
@@ -34,6 +33,9 @@ function errorResponse(response: Response, error: unknown): void {
 app.get('/health', (_request, response) => response.json({ status: 'ok', mode: config.nodeEnv, secrets_exposed_to_client: false }));
 app.use('/api', authorize);
 
+app.get('/api/cases', async (_request, response) => {
+  try { response.json(await listCases()); } catch (error) { errorResponse(response, error); }
+});
 app.post('/api/cases', async (request, response) => {
   try {
     const caseId = assertSafeId(requiredString(request.body.case_id, 'case_id'), 'case_id');
@@ -47,6 +49,9 @@ app.get('/api/cases/:caseId', async (request, response) => {
   try { const value = await getCase(request.params.caseId); if (!value) throw new Error('case not found'); response.json(value); } catch (error) { errorResponse(response, error); }
 });
 
+app.get('/api/work-items', async (_request, response) => {
+  try { response.json(await listWorkItems()); } catch (error) { errorResponse(response, error); }
+});
 app.post('/api/work-items', async (request, response) => {
   try {
     const taskId = assertSafeId(requiredString(request.body.task_id, 'task_id'), 'task_id');
@@ -61,6 +66,13 @@ app.get('/api/work-items/:taskId', async (request, response) => {
   try { const value = await getWorkItem(request.params.taskId); if (!value) throw new Error('work item not found'); response.json(value); } catch (error) { errorResponse(response, error); }
 });
 
+app.get('/api/artifacts', async (request, response) => {
+  try {
+    const caseId = assertSafeId(requiredString(request.query.case_id, 'case_id'), 'case_id');
+    const caseRecord = await getCase(caseId); if (!caseRecord) throw new Error('case not found');
+    response.json(caseRecord.artifacts);
+  } catch (error) { errorResponse(response, error); }
+});
 app.post('/api/artifacts', upload.single('file'), async (request, response) => {
   try {
     if (!request.file) throw new Error('file is required');
@@ -89,10 +101,6 @@ app.post('/api/execute-stage', async (request, response) => {
 });
 
 app.use((error: unknown, _request: Request, response: Response, _next: NextFunction) => {
-  const message = (error as Error).message || 'Unexpected request error.';
-  response.status(400).json({ error: message });
+  response.status(400).json({ error: (error as Error).message || 'Unexpected request error.' });
 });
-
-app.listen(config.port, () => {
-  console.log('Ariel OS orchestration API listening on port ' + config.port + '.');
-});
+app.listen(config.port, () => console.log('Ariel OS orchestration API listening on port ' + config.port + '.'));
