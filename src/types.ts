@@ -99,8 +99,7 @@ export interface MeasurementPoint {
   point_code: string; // e.g. PAT-01
   location_description: string;
   measured_resistance_ohm: number;
-  criterion_id?: string;
-  evaluation_basis?: 'verified_criterion' | 'pending_criterion' | 'not_evaluated';
+  max_allowed_ohm: number;
   method: '3_point_fall_of_potential' | 'clamp_on' | '4_point_wenner' | 'high_frequency';
   photo_id?: string;
   photo_url?: string;
@@ -116,10 +115,9 @@ export interface NormativeCriterion {
   edition: string;
   clause: string;
   requirement_summary: string;
+  max_resistance_threshold_ohm?: number;
   applicability: 'verified' | 'unverified' | 'not_applicable';
   verification_notes: string;
-  source_artifact_id?: string;
-  verified_by?: string;
 }
 
 export interface TechnicalFinding {
@@ -154,11 +152,8 @@ export interface HandoffRecord {
   specificRequest: string;
 }
 
-export type DataClassification = 'demo_synthetic' | 'controlled_internal' | 'client_restricted';
-
 export interface WorkItem {
   task_id: string;
-  data_classification?: DataClassification;
   case: CaseInfo;
   request: RequestInfo;
   definition_of_done: DefinitionOfDoneItem[];

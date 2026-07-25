@@ -269,22 +269,6 @@ Actualmente esas capacidades están declaradas, pero **no enlazadas**. Los [adap
 
 ---
 
-## 🖥️ Ariel OS Control Room
-
-El repositorio incluye una interfaz React de prototipo para visualizar work items,
-workflow, matriz, fuentes, manifest y conversaciones simuladas. La interfaz es
-un **Control Room**, no un motor autorizado de expedientes reales.
-
-- El navegador no solicita ni guarda claves de producción.
-- Los conectores y CLIs se ejecutarán solo desde workers autorizados.
-- Una simulación no cambia compuertas, evidencia, criterios ni aprobaciones.
-- Todo resultado real debe pasar por contratos, persistencia y revisión.
-
-Ver [docs/control-room-boundary.md](docs/control-room-boundary.md) antes de
-conectar un proveedor o cargar evidencia real.
-
----
-
 ## 🛡️ Seguridad, confidencialidad y sentido común
 
 Este repositorio guarda arquitectura y método. Por defecto, **no** se suben aquí:
@@ -330,25 +314,3 @@ Si la memoria falla o se retoma el proyecto tras una pausa, este es el orden rec
 ## 🧱 En una frase
 
 **Ariel Agent OS es una oficina técnica digital portable: organizada por roles, guiada por evidencia, limitada por contratos y siempre cerrada por criterio y aprobación humana.**
-
-
----
-
-## ⚙️ Orquestación backend: primer tramo operativo
-
-El repositorio ahora incluye `server/`: una API de orquestación separada de la
-interfaz React. El navegador sigue siendo un cockpit; el servidor concentra
-credenciales de proveedores, ingesta de archivos, trazabilidad de artefactos y
-validación de contratos.
-
-- `POST/GET /api/cases` y `/api/work-items` crean y consultan el expediente.
-- `POST /api/artifacts` calcula SHA-256, conserva el archivo por contenido y
-  extrae candidatos de Excel o metadatos EXIF.
-- `POST /api/execute-stage` prepara un contexto mínimo por rol, llama un
-  proveedor configurado solo en el servidor y valida su respuesta contra JSON Schema.
-- Una salida inválida genera una corrección local; tres fallas bloquean el
-  work item. Un registro válido **no** emite ni reemplaza aprobación humana.
-
-La guía de arranque y límites del MVP está en
-[server/README.md](server/README.md). Aún falta conectar el cockpit a esta API,
-persistencia de producción y la generación controlada de documentos.

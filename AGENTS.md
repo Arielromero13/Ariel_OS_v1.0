@@ -39,7 +39,6 @@ Ante discrepancia, prevalecen las instrucciones del usuario, luego los contratos
 - No emitir externamente sin que el workflow lo permita y sin aprobación humana registrada.
 - Mantener `NO EMITIR` cuando existan inconsistencias críticas, evidencia insuficiente o decisiones abiertas que afecten la validez del entregable.
 - No guardar secretos, credenciales, información corporativa sensible ni expedientes reales en el repositorio salvo autorización explícita.
-- La interfaz web es un Control Room de prototipo: no ejecuta CLIs, no usa credenciales de producción y no puede cambiar compuertas mediante simulaciones.
 
 ## Modelo de ejecución
 

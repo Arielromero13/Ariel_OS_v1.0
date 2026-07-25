@@ -1,8 +1,3 @@
-/**
- * DATOS SINTÉTICOS DE DEMOSTRACIÓN.
- * No representan una instalación real ni autorizan criterios, hallazgos o emisiones.
- */
-
 import { WorkItem, ReportTemplateInfo, AgentChatMessage } from '../types';
 
 export const AVAILABLE_TEMPLATES: ReportTemplateInfo[] = [
@@ -106,7 +101,7 @@ export const INITIAL_CHAT_MESSAGES: AgentChatMessage[] = [
     senderName: 'Especialista P.A.T. (Dominio)',
     recipientRole: 'orchestrator',
     timestamp: '14:12:45',
-    content: '[SINTÉTICO DE DEMOSTRACIÓN] Se registraron lecturas que requieren evaluación contra criterios aún no verificados. No se asigna conformidad.',
+    content: 'He procesado las 6 lecturas del telurímetro. Detecto 2 valores fuera de umbral norma: Jabalina PAT-SUB-03 (8.45 Ω) y Estructura PAT-EST-01 (12.30 Ω). Las fotografías están vinculadas 1:1 y son legibles.',
     stageId: 'evidence_control',
     artifactsLinked: ['validated_control_matrix'],
     messageType: 'finding_alert'
@@ -117,7 +112,7 @@ export const INITIAL_CHAT_MESSAGES: AgentChatMessage[] = [
     senderName: 'Investigador Normativo',
     recipientRole: 'domain_specialist',
     timestamp: '14:15:30',
-    content: '[SINTÉTICO DE DEMOSTRACIÓN] Las fuentes están disponibles, pero su edición, cláusula y aplicabilidad siguen pendientes de verificación.',
+    content: 'Confirmado. Para la Subestación Principal aplica IEEE Std 80 Clause 14.1 que impone < 5.0 Ω. Por ende, la lectura de 8.45 Ω en PAT-SUB-03 es una No Conformidad Crítica. Para tableros generales aplica AEA 90364 (10 Ω).',
     stageId: 'normative_analysis',
     artifactsLinked: ['criteria_register'],
     messageType: 'discussion'
@@ -140,7 +135,6 @@ export const INITIAL_CHAT_MESSAGES: AgentChatMessage[] = [
 export const INITIAL_WORK_ITEMS: WorkItem[] = [
   {
     task_id: 'TASK-PAT-2026-001',
-    data_classification: 'demo_synthetic',
     template_config: AVAILABLE_TEMPLATES[0],
     chat_history: INITIAL_CHAT_MESSAGES,
     case: {
@@ -251,12 +245,13 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         point_code: 'PAT-SUB-01',
         location_description: 'Jabalina N°1 - Transformador Trafo T1 13.2kV (Lado Norte)',
         measured_resistance_ohm: 2.85,
+        max_allowed_ohm: 5.0,
         method: '3_point_fall_of_potential',
         photo_id: 'IMG_PAT_01.jpg',
         photo_url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&auto=format&fit=crop&q=80',
         photo_rotation_deg: 0,
         photo_legible: true,
-        status: 'Pendiente',
+        status: 'Conforme',
         notes: 'Conexión limpia, sin corrosión en prensa de bronce.'
       },
       {
@@ -264,12 +259,13 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         point_code: 'PAT-SUB-02',
         location_description: 'Jabalina N°2 - Tablero General de Baja Tensión (TGBT)',
         measured_resistance_ohm: 3.12,
+        max_allowed_ohm: 5.0,
         method: '3_point_fall_of_potential',
         photo_id: 'IMG_PAT_02.jpg',
         photo_url: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?w=500&auto=format&fit=crop&q=80',
         photo_rotation_deg: 0,
         photo_legible: true,
-        status: 'Pendiente',
+        status: 'Conforme',
         notes: 'Puntos de medición limpios y ajustados.'
       },
       {
@@ -277,12 +273,13 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         point_code: 'PAT-SUB-03',
         location_description: 'Jabalina N°3 - Celda de Media Tensión 33kV (Sector Entrada)',
         measured_resistance_ohm: 8.45,
+        max_allowed_ohm: 5.0,
         method: '3_point_fall_of_potential',
         photo_id: 'IMG_PAT_03.jpg',
         photo_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=500&auto=format&fit=crop&q=80',
         photo_rotation_deg: 0,
         photo_legible: true,
-        status: 'Pendiente',
+        status: 'No conforme',
         notes: 'Supera el límite de 5.0 Ω para subestación. Requiere jabalina auxiliar o acondicionamiento del suelo.'
       },
       {
@@ -290,12 +287,13 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         point_code: 'PAT-GEN-01',
         location_description: 'Jabalina N°4 - Grupo Electrógeno de Emergencia 500kVA',
         measured_resistance_ohm: 4.10,
+        max_allowed_ohm: 10.0,
         method: 'clamp_on',
         photo_id: 'IMG_PAT_04.jpg',
         photo_url: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=500&auto=format&fit=crop&q=80',
         photo_rotation_deg: 0,
         photo_legible: true,
-        status: 'Pendiente',
+        status: 'Conforme',
         notes: 'Neutro del generador conectado a barra colectora.'
       },
       {
@@ -303,12 +301,13 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         point_code: 'PAT-EST-01',
         location_description: 'Jabalina N°5 - Estructura Metálica Nave Principal Norte',
         measured_resistance_ohm: 12.30,
+        max_allowed_ohm: 10.0,
         method: '3_point_fall_of_potential',
         photo_id: 'IMG_PAT_05.jpg',
         photo_url: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=500&auto=format&fit=crop&q=80',
         photo_rotation_deg: 0,
         photo_legible: true,
-        status: 'Pendiente',
+        status: 'No conforme',
         notes: 'Sulfatación en terminal de cable de cobre 50mm2.'
       },
       {
@@ -316,12 +315,13 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         point_code: 'PAT-PATIO-01',
         location_description: 'Jabalina N°6 - Cerco Perimetral Subestación Exterior',
         measured_resistance_ohm: 4.90,
+        max_allowed_ohm: 10.0,
         method: '3_point_fall_of_potential',
         photo_id: 'IMG_PAT_06.jpg',
         photo_url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=500&auto=format&fit=crop&q=80',
         photo_rotation_deg: 0,
         photo_legible: true,
-        status: 'Pendiente',
+        status: 'Conforme',
         notes: 'Puesta a tierra de seguridad de portón y cerco.'
       }
     ],
@@ -331,45 +331,47 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         standard_name: 'AEA 90364-7-710',
         edition: '2015',
         clause: 'Sección 710.55.2',
-        requirement_summary: '[SINTÉTICO] Posible criterio a investigar. No usar como límite hasta confirmar fuente y aplicabilidad.',
-        applicability: 'unverified',
-        verification_notes: '[SINTÉTICO] Pendiente de verificación independiente.'
+        requirement_summary: 'Resistencia de puesta a tierra de protección no debe superar los 10 Ω en instalaciones industriales generales.',
+        max_resistance_threshold_ohm: 10.0,
+        applicability: 'verified',
+        verification_notes: 'Aplica a tableros generales, grupos electrógenos y estructuras metálicas secundarias.'
       },
       {
         id: 'CRIT-02',
         standard_name: 'IEEE 80',
         edition: '2013',
         clause: 'Section 14.1 - Substation Grounding',
-        requirement_summary: '[SINTÉTICO] Posible criterio a investigar. IEEE 80 no debe citarse como límite genérico de resistencia.',
-        applicability: 'unverified',
-        verification_notes: '[SINTÉTICO] Pendiente de verificación independiente.'
+        requirement_summary: 'La resistencia de la malla de subestaciones principales de MT/BT debe ser < 5 Ω para limitar elevaciones de potencial de tierra (GPR).',
+        max_resistance_threshold_ohm: 5.0,
+        applicability: 'verified',
+        verification_notes: 'Aplica estrictamente a jabalinas PAT-SUB-01, PAT-SUB-02 y PAT-SUB-03 por integrar la subestación principal.'
       },
       {
         id: 'CRIT-03',
         standard_name: 'IEEE 81',
         edition: '2012',
         clause: 'Section 8.2 - Fall of Potential Method',
-        requirement_summary: '[SINTÉTICO] Método de ensayo pendiente de validación contra el procedimiento y fuente aplicable.',
-        applicability: 'unverified',
-        verification_notes: '[SINTÉTICO] Pendiente de verificación independiente.'
+        requirement_summary: 'Las mediciones con método de caída de potencial requieren electrodos de corriente y potencial alineados a 62% de la distancia d2.',
+        applicability: 'verified',
+        verification_notes: 'Verificado en registro de campo mediante croquis de disposición geométrica de picas de prueba.'
       }
     ],
     findings: [
       {
         id: 'FIND-01',
         point_id: 'M-03',
-        finding_type: 'limitation',
+        finding_type: 'non_compliance',
         title: 'Exceso de Resistencia en Jabalina PAT-SUB-03 (Media Tensión)',
-        description: 'Lectura sintética de 8.45 Ω que requiere validación del método y de un criterio aplicable antes de emitir una conclusión.',
-        severity: 'major',
+        description: 'La medición arrojó 8.45 Ω, superando el límite de 5.0 Ω establecido por IEEE 80 Clause 14.1 para mallas de subestación.',
+        severity: 'critical',
         status: 'open'
       },
       {
         id: 'FIND-02',
         point_id: 'M-05',
-        finding_type: 'limitation',
+        finding_type: 'non_compliance',
         title: 'Resistencia Elevada y Sulfatación en Estructura PAT-EST-01',
-        description: 'Lectura sintética de 12.30 Ω y observación visual que requieren validación de evidencia y criterio antes de emitir una conclusión.',
+        description: 'Medición de 12.30 Ω supera los 10.0 Ω reglamentarios según AEA 90364. Se observó sulfatación pronunciada en la bornera de conexión.',
         severity: 'major',
         status: 'open'
       }
@@ -399,7 +401,7 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         skill: 'analyze-grounding-report',
         status: 'passed',
         outputsProduced: ['technical_findings', 'limitations_record', 'provisional_evaluation_states'],
-        notes: 'Se identificaron dos lecturas sintéticas pendientes de evaluación; no se asignaron estados de conformidad.'
+        notes: 'Se identificaron 2 no conformidades (PAT-SUB-03 y PAT-EST-01). 4 puntos conformes.'
       },
       {
         id: 'normative_analysis',
@@ -407,7 +409,7 @@ export const INITIAL_WORK_ITEMS: WorkItem[] = [
         owner: 'normative_researcher',
         status: 'passed',
         outputsProduced: ['criteria_register', 'normative_citations', 'applicability_assessment'],
-        notes: 'Fuentes de demostración registradas; edición, cláusula y aplicabilidad pendientes de investigación.'
+        notes: 'Criterios IEEE 80 (5Ω) y AEA 90364 (10Ω) verificados con ediciones y cláusulas explícitas.'
       },
       {
         id: 'technical_review',

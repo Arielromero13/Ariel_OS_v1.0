@@ -62,6 +62,9 @@ export const Header: React.FC<HeaderProps> = ({
                   Ariel Agent OS
                   <span className="text-xs px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">v0.1.0</span>
                 </h1>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-800 font-mono font-semibold flex items-center gap-1">
+                  ⚡ Cockpit Control Room (Simulation Mode)
+                </span>
               </div>
               <p className="text-xs text-slate-400">Sistema Portable de Agentes & Verificar Informe P.A.T.</p>
             </div>
