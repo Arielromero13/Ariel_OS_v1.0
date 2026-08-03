@@ -1,7 +1,7 @@
 workflow:
   id: grounding-report
   name: Informe de verificación P.A.T.
-  version: 0.1.0
+  version: 0.1.1
   status: draft
   portable: true
 
@@ -103,6 +103,13 @@ workflow:
     - id: evidence_control
       owner: domain_specialist
       skill: analyze-grounding-report
+      transversal_skills:
+        - id: validate-spreadsheet-input
+          purpose: Verificar estructura, unidades, celdas y duplicados de la matriz de mediciones antes de consolidarla.
+        - id: manage-photo-evidence-gallery
+          purpose: Ordenar y vincular la evidencia fotográfica inicial con su lectura y punto correspondiente.
+        - id: validate-technical-traceability
+          purpose: Confirmar que cada lectura consolidada enlaza con una evidencia identificada, generando el traceability_map.
       depends_on:
         - intake_and_plan
       purpose: Consolidar matriz, identificar evidencias y verificar trazabilidad inicial.
@@ -142,6 +149,9 @@ workflow:
 
     - id: normative_analysis
       owner: normative_researcher
+      transversal_skills:
+        - id: research-normative-criterion
+          purpose: Documentar fuente, edición, cláusula y aplicabilidad de cada criterio normativo citado.
       depends_on:
         - evidence_control
       run_in_parallel_with:
@@ -162,6 +172,9 @@ workflow:
 
     - id: technical_review
       owner: technical_reviewer
+      transversal_skills:
+        - id: validate-technical-traceability
+          purpose: Reverificar el enlace medición→evidencia→finding→criterio antes de aprobar el análisis.
       depends_on:
         - technical_analysis
         - normative_analysis
@@ -182,6 +195,11 @@ workflow:
 
     - id: report_integration
       owner: integrator
+      transversal_skills:
+        - id: write-document-from-template
+          purpose: Integrar únicamente contenido aprobado (matriz, hallazgos, criterios) en la plantilla maestra vigente.
+        - id: manage-photo-evidence-gallery
+          purpose: Ensamblar la galería final en el orden declarado, sin alterar orientación ni vínculo foto-lectura.
       depends_on:
         - technical_review
       purpose: Integrar resultados aprobados en la plantilla maestra.
@@ -201,6 +219,9 @@ workflow:
 
     - id: visual_evidence_qa
       owner: visual_reviewer
+      transversal_skills:
+        - id: render-and-review-document
+          purpose: Renderizar el borrador y revisar orientación, orden, cortes, pies de foto, legibilidad y paginación.
       depends_on:
         - report_integration
       purpose: Validar visualmente la galería y maquetación en el documento renderizado.
