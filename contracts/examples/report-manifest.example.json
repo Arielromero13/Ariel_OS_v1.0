@@ -1,0 +1,87 @@
+{
+  "manifest_id": "MAN-FICT-001",
+  "context": {
+    "case_id": "CASE-PAT-FICT-001",
+    "revision_id": "REV-01",
+    "work_item_id": "WI-FICT-2026-001",
+    "workflow_id": "grounding-report"
+  },
+  "deliverable": {
+    "deliverable_id": "DEL-FICT-001",
+    "title": "Informe de verificación P.A.T. — Planta Ficticia Norte — Campaña 2026-Q1",
+    "purpose": "Documentar de forma trazable el estado de la puesta a tierra evaluada en la campaña 2026-Q1 (caso ficticio de referencia).",
+    "candidate_status": "candidate_for_human_approval",
+    "template": {
+      "artifact_id": "TPL-PAT-001",
+      "version_or_revision": "v3"
+    }
+  },
+  "artifacts": [
+    {
+      "artifact_id": "ART-MATRIX-001",
+      "role": "validated_control_matrix",
+      "artifact_type": "spreadsheet",
+      "format": "xlsx",
+      "location": "fictional://outputs/matriz_validada.xlsx",
+      "version_or_revision": "REV-01",
+      "integrity": { "status": "verified" },
+      "source_revision_id": "REV-01",
+      "produced_by": { "role": "domain_specialist", "agent_id": "domain-specialist-fict-01" },
+      "depends_on_artifact_ids": [],
+      "linked_record_ids": ["FND-FICT-001", "EVD-FICT-001"],
+      "status": "included"
+    },
+    {
+      "artifact_id": "ART-REPORT-001",
+      "role": "primary_report",
+      "artifact_type": "documento",
+      "format": "docx",
+      "location": "fictional://outputs/informe_pat_fict.docx",
+      "version_or_revision": "REV-01",
+      "integrity": { "status": "verified" },
+      "source_revision_id": "REV-01",
+      "produced_by": { "role": "integrator", "agent_id": "integrator-fict-01" },
+      "depends_on_artifact_ids": ["ART-MATRIX-001"],
+      "linked_record_ids": ["FND-FICT-001"],
+      "status": "included"
+    },
+    {
+      "artifact_id": "ART-GALLERY-001",
+      "role": "evidence_gallery",
+      "artifact_type": "galería fotográfica",
+      "format": "docx",
+      "location": "fictional://outputs/galeria_fict.docx",
+      "version_or_revision": "REV-01",
+      "integrity": { "status": "verified" },
+      "source_revision_id": "REV-01",
+      "depends_on_artifact_ids": [],
+      "linked_record_ids": ["EVD-FICT-001"],
+      "status": "included"
+    }
+  ],
+  "completeness": {
+    "definition_of_done_checks": [
+      { "dod_item_id": "DOD-01", "requirement": "Toda lectura enlaza con evidencia o queda pendiente.", "result": "satisfied", "basis": ["EVD-FICT-001"] },
+      { "dod_item_id": "DOD-02", "requirement": "Cada criterio cita fuente, edición y cláusula verificadas.", "result": "satisfied", "basis": ["FND-FICT-001"] }
+    ],
+    "missing_required_artifact_count": 0,
+    "open_critical_item_count": 0
+  },
+  "quality_controls": {
+    "technical_review": { "record_id": "REV-TECH-FICT-001", "status": "approved" },
+    "visual_qa": { "record_id": "REV-VISUAL-FICT-001", "status": "approved" },
+    "intent_validation": { "record_id": "IV-FICT-001", "status": "passed" },
+    "audit_decision": { "record_id": "AUD-FICT-001", "status": "approved" }
+  },
+  "distribution": {
+    "classification": "internal",
+    "intended_recipients": ["Gerencia de Ingeniería (ficticio)"],
+    "human_approval_required": true,
+    "human_approval_record_id": "HA-FICT-001",
+    "status": "pending_human_approval"
+  },
+  "lifecycle": {
+    "status": "issued",
+    "created_at": "2026-08-03T16:30:00Z"
+  }
+}

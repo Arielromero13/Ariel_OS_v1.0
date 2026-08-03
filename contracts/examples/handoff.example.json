@@ -1,0 +1,54 @@
+{
+  "handoff_id": "HO-FICT-001",
+  "context": {
+    "work_item_id": "WI-FICT-2026-001",
+    "case_id": "CASE-PAT-FICT-001",
+    "revision_id": "REV-01",
+    "workflow": "grounding-report",
+    "domain": "electrical-grounding"
+  },
+  "routing": {
+    "from_role": "domain_specialist",
+    "to_role": "technical_reviewer",
+    "stage_completed": "technical_analysis",
+    "next_expected_action": "Validar hallazgo FND-FICT-001 y su trazabilidad antes de aprobarlo."
+  },
+  "status": {
+    "readiness": "ready_for_review",
+    "confidence": "high",
+    "correction_cycle": 0
+  },
+  "summary": {
+    "completed_work": "Se consolidó la matriz de mediciones de la campaña 2026-Q1 (ficticia) y se analizó el punto P-01 dentro del método y alcance documentados.",
+    "key_result": "El punto P-01 arrojó una resistencia de puesta a tierra de 3.8 ohm, dentro de la matriz validada.",
+    "scope_covered": "Patio de 34.5 kV, punto P-01.",
+    "scope_not_covered": "Casa de control, punto P-02, pendiente de análisis."
+  },
+  "artifacts": [
+    { "artifact_id": "ART-MATRIX-001", "type": "validated_control_matrix", "location": "fictional://outputs/matrix_validada.xlsx", "status": "approved_for_review", "source_revision": "REV-01" },
+    { "artifact_id": "ART-PHOTO-001", "type": "evidence_photo", "location": "fictional://inputs/photo_p01.jpg", "status": "approved_for_review", "source_revision": "REV-01" }
+  ],
+  "findings": [
+    { "finding_id": "FND-FICT-001", "summary": "Resistencia de puesta a tierra en P-01 dentro del límite aplicable.", "evidence_links": ["EVD-FICT-001"], "proposed_state": "Conforme", "criterion_reference": "CRIT-FICT-001" }
+  ],
+  "limitations": [
+    { "item": "No se dispone de lectura de temporada seca para P-01.", "impact": "La comparación estacional queda pendiente.", "required_resolution": "Programar medición adicional en temporada seca." }
+  ],
+  "open_decisions": [
+    { "decision_needed": "Confirmar si el punto P-02 se incluye en esta revisión o en la siguiente.", "owner": "orchestrator", "blocking": false }
+  ],
+  "preservation": {
+    "artifacts_not_to_modify": ["ART-MATRIX-001"],
+    "reason": "La matriz ya fue validada por domain_specialist; cambios requieren nueva revisión."
+  },
+  "request_to_recipient": {
+    "objective": "Validar exactitud, trazabilidad y criterios usados en el hallazgo FND-FICT-001.",
+    "acceptance_criteria": ["Estado Conforme/No conforme justificado con criterio verificado", "Trazabilidad medición-evidencia-hallazgo confirmada"],
+    "allowed_actions": ["Aprobar el hallazgo", "Solicitar corrección"],
+    "prohibited_actions": ["Modificar la matriz validada sin justificación"]
+  },
+  "traceability": {
+    "source_revision": "REV-01",
+    "generated_at": "2026-08-03T10:00:00Z"
+  }
+}
