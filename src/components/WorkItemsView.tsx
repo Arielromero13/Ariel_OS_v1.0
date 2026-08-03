@@ -23,7 +23,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-ink-700 pb-4 mb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800">
+              <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800">
                 {workItem.case.case_id}
               </span>
               <span className="text-xs font-mono px-2 py-0.5 rounded bg-ink-800 text-ink-200">
@@ -35,7 +35,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
                 </span>
               )}
             </div>
-            <h2 className="text-xl font-bold text-white">{workItem.case.plant_name}</h2>
+            <h2 className="text-xl font-semibold text-white">{workItem.case.plant_name}</h2>
             <p className="text-xs text-ink-300 flex items-center gap-1 mt-0.5">
               <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />Ubicación:</span> {workItem.case.location}
             </p>
@@ -66,14 +66,14 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
         
         {/* Scope IN */}
         <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md">
-          <h3 className="text-sm font-bold text-pass-400 flex items-center gap-2 mb-3">
+          <h3 className="text-sm font-semibold text-pass-400 flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-pass-500"></span>
             Alcance Incluido (Scope IN)
           </h3>
           <ul className="space-y-2 text-xs text-ink-200">
             {workItem.request.scope_in.map((item, i) => (
               <li key={i} className="flex items-start gap-2 bg-ink-950/60 p-2 rounded border border-ink-700/80">
-                <span className="text-pass-400 font-bold">•</span>
+                <span className="text-pass-400 font-semibold">•</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -82,14 +82,14 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
 
         {/* Scope OUT */}
         <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md">
-          <h3 className="text-sm font-bold text-pending-400 flex items-center gap-2 mb-3">
+          <h3 className="text-sm font-semibold text-pending-400 flex items-center gap-2 mb-3">
             <span className="w-2 h-2 rounded-full bg-pending-500"></span>
             Alcance Excluido (Scope OUT)
           </h3>
           <ul className="space-y-2 text-xs text-ink-300">
             {workItem.request.scope_out.map((item, i) => (
               <li key={i} className="flex items-start gap-2 bg-ink-950/60 p-2 rounded border border-ink-700/80">
-                <span className="text-pending-500 font-bold">•</span>
+                <span className="text-pending-500 font-semibold">•</span>
                 <span>{item}</span>
               </li>
             ))}
@@ -105,13 +105,13 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
         <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
           <div className="flex items-center justify-between border-b border-ink-700 pb-3">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-signal-400" />
                 Definition of Done (DoD Criterios Cierre)
               </h3>
               <p className="text-xs text-ink-300">Requisitos obligatorios antes de la emisión final</p>
             </div>
-            <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800">
               {workItem.definition_of_done.filter(d => d.completed).length} / {workItem.definition_of_done.length}
             </span>
           </div>
@@ -138,7 +138,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
                   <div className="text-xs font-medium flex items-center justify-between">
                     <span>{item.criterion}</span>
                     {item.mandatory && (
-                      <span className="text-[10px] font-mono uppercase font-bold text-fail-400 px-1.5 py-0.2 rounded bg-fail-950 border border-fail-800 ml-2">
+                      <span className="text-[10px] font-mono uppercase font-semibold text-fail-400 px-1.5 py-0.2 rounded bg-fail-950 border border-fail-800 ml-2">
                         Obligatorio
                       </span>
                     )}
@@ -158,7 +158,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
         <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
           <div className="flex items-center justify-between border-b border-ink-700 pb-3">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                 <FileText className="w-4 h-4 text-signal-400" />
                 Input Manifest (Inventario de Fuentes)
               </h3>
@@ -174,7 +174,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
               <div key={art.artifact_id} className="bg-ink-950 p-3 rounded-lg border border-ink-700 space-y-1">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-semibold text-ink-100 font-mono">{art.name}</span>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-bold ${
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono uppercase font-semibold ${
                     art.status === 'available' ? 'bg-pass-950 text-pass-400 border border-pass-800' : 'bg-fail-950 text-fail-400 border border-fail-800'
                   }`}>
                     {art.status}
@@ -198,7 +198,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
 
       {/* Open Decisions & Blocking Reasons */}
       <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-3">
-        <h3 className="text-sm font-bold text-pending-400 flex items-center gap-2">
+        <h3 className="text-sm font-semibold text-pending-400 flex items-center gap-2">
           <AlertCircle className="w-4 h-4" />
           Decisiones Abiertas & Razones de Bloqueo para Emisión
         </h3>
@@ -209,7 +209,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
             <ul className="space-y-1.5 text-xs text-ink-300">
               {workItem.open_decisions.map((dec, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-pending-400 font-bold">•</span>
+                  <span className="text-pending-400 font-semibold">•</span>
                   <span>{dec}</span>
                 </li>
               ))}
@@ -221,7 +221,7 @@ export const WorkItemsView: React.FC<WorkItemsViewProps> = ({ workItem, onUpdate
             <ul className="space-y-1.5 text-xs text-fail-300/90">
               {workItem.lifecycle.readiness.blocking_reasons.map((reason, idx) => (
                 <li key={idx} className="flex items-start gap-2">
-                  <span className="text-fail-400 font-bold">•</span>
+                  <span className="text-fail-400 font-semibold">•</span>
                   <span>{reason}</span>
                 </li>
               ))}

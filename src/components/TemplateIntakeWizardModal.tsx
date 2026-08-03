@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { WorkItem, ReportTemplateInfo, ReportTemplateType } from '../types';
 import { AVAILABLE_TEMPLATES } from '../data/mockData';
-import { FileText, Upload, Sparkles, Check, ArrowRight, ShieldCheck, Layers, X, Plus, AlertCircle } from 'lucide-react';
+import { FileText, Upload, Check, ArrowRight, ShieldCheck, Layers, X, Plus, AlertCircle } from 'lucide-react';
 
 interface TemplateIntakeWizardModalProps {
   onComplete: (newWorkItem: WorkItem) => void;
@@ -231,16 +231,16 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
 
   return (
     <div className="fixed inset-0 z-50 bg-ink-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-ink-900 border border-ink-700 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         
         {/* Header */}
         <div className="p-5 border-b border-ink-700 bg-ink-950 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-signal-500/20 text-signal-400 border border-signal-500/30">
-              <Sparkles className="w-6 h-6" />
+            <div className="p-2 rounded-lg bg-signal-500/20 text-signal-400 border border-signal-500/30">
+              <Upload className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-semibold text-white flex items-center gap-2">
                 Asistente de Intake & Selección de Plantilla (.DOCX)
               </h2>
               <p className="text-xs text-ink-300">
@@ -269,7 +269,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
               key={s.num}
               className={`flex items-center gap-2 cursor-pointer transition ${
                 step === s.num
-                  ? 'text-signal-400 font-bold'
+                  ? 'text-signal-400 font-semibold'
                   : step > s.num
                   ? 'text-pass-400'
                   : 'text-ink-400'
@@ -279,7 +279,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-mono ${
                   step === s.num
-                    ? 'bg-signal-600 text-white font-bold ring-2 ring-signal-400'
+                    ? 'bg-signal-600 text-white font-semibold ring-2 ring-signal-400'
                     : step > s.num
                     ? 'bg-pass-950 text-pass-400 border border-pass-700'
                     : 'bg-ink-800 text-ink-300'
@@ -299,7 +299,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           {step === 1 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white mb-1">Paso 1: ¿De qué tratará el reporte técnico?</h3>
+                <h3 className="text-sm font-semibold text-white mb-1">Paso 1: ¿De qué tratará el reporte técnico?</h3>
                 <p className="text-xs text-ink-300">
                   Selecciona una plantilla estandarizada o sube tu propia plantilla en formato Microsoft Word (.docx).
                 </p>
@@ -312,7 +312,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
                     <div
                       key={tpl.id}
                       onClick={() => handleTemplateSelect(tpl)}
-                      className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
+                      className={`p-4 rounded-lg border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
                         isSelected
                           ? 'bg-signal-950/40 border-signal-500 ring-2 ring-signal-500/50 shadow-lg'
                           : 'bg-ink-950/60 border-ink-700 hover:border-ink-600 hover:bg-ink-800/30'
@@ -322,13 +322,13 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
                         <div className="p-2 rounded-lg bg-signal-500/10 text-signal-400 border border-signal-500/20">
                           <FileText className="w-5 h-5" />
                         </div>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-ink-900 border border-ink-700 text-ink-200 font-bold">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-ink-900 border border-ink-700 text-ink-200 font-semibold">
                           {tpl.version}
                         </span>
                       </div>
 
                       <div>
-                        <h4 className="text-xs font-bold text-white mb-1">{tpl.title}</h4>
+                        <h4 className="text-xs font-semibold text-white mb-1">{tpl.title}</h4>
                         <p className="text-[11px] text-ink-300 leading-relaxed">{tpl.description}</p>
                       </div>
 
@@ -348,20 +348,20 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
               </div>
 
               {/* Custom Upload Card */}
-              <div className="p-4 rounded-xl border border-dashed border-signal-500/40 bg-signal-950/10 hover:bg-signal-950/20 transition flex items-center justify-between">
+              <div className="p-4 rounded-lg border border-dashed border-signal-500/40 bg-signal-950/10 hover:bg-signal-950/20 transition flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-signal-500/20 text-signal-300">
                     <Upload className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">¿Tienes tu propia plantilla .DOCX o .PPTX?</h4>
+                    <h4 className="text-xs font-semibold text-white">¿Tienes tu propia plantilla .DOCX o .PPTX?</h4>
                     <p className="text-[11px] text-ink-300">
                       {customFileName ? `Archivo cargado: ${customFileName}` : 'Subir archivo Microsoft Word (.docx) o PowerPoint (.pptx) con tus patrones de diseño corporativos.'}
                     </p>
                   </div>
                 </div>
 
-                <label className="px-4 py-2 rounded-lg bg-signal-600 hover:bg-signal-500 text-white text-xs font-bold cursor-pointer transition">
+                <label className="px-4 py-2 rounded-lg bg-signal-600 hover:bg-signal-500 text-white text-xs font-semibold cursor-pointer transition">
                   <span>Buscar Archivo</span>
                   <input
                     type="file"
@@ -378,13 +378,13 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           {step === 2 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white mb-1">Paso 2: Datos de la Planta y Alcance</h3>
+                <h3 className="text-sm font-semibold text-white mb-1">Paso 2: Datos de la Planta y Alcance</h3>
                 <p className="text-xs text-ink-300">
                   Especifica los datos generales de la instalación para personalizar la carátula y el expediente.
                 </p>
               </div>
 
-              <div className="bg-ink-950 p-4 rounded-xl border border-ink-700 space-y-4 text-xs">
+              <div className="bg-ink-950 p-4 rounded-lg border border-ink-700 space-y-4 text-xs">
                 <div>
                   <label className="font-semibold text-ink-200 block mb-1">Nombre de la Planta / Instalación:</label>
                   <input
@@ -423,7 +423,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           {step === 3 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white mb-1">Paso 3: Carga de Archivos y Evidencias de Campo</h3>
+                <h3 className="text-sm font-semibold text-white mb-1">Paso 3: Carga de Archivos y Evidencias de Campo</h3>
                 <p className="text-xs text-ink-300">
                   Adjunta las planillas Excel con mediciones, fotos o certificados para que los agentes extraigan los datos.
                 </p>
@@ -431,7 +431,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-ink-200 uppercase tracking-wider">
+                  <span className="text-xs font-semibold text-ink-200 uppercase tracking-wider">
                     Evidencias Adjuntas ({uploadedFiles.length})
                   </span>
 
@@ -448,7 +448,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
                   {uploadedFiles.map((file, idx) => (
                     <div
                       key={idx}
-                      className="p-3 bg-ink-950 rounded-xl border border-ink-700 flex items-center justify-between text-xs"
+                      className="p-3 bg-ink-950 rounded-lg border border-ink-700 flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-3">
                         <FileText className="w-4 h-4 text-signal-400" />
@@ -472,13 +472,13 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           {step === 4 && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-bold text-white mb-1">Paso 4: Resumen & Confirmación de Equipo ChatDev</h3>
+                <h3 className="text-sm font-semibold text-white mb-1">Paso 4: Resumen & Confirmación de Equipo ChatDev</h3>
                 <p className="text-xs text-ink-300">
                   Revisa los datos antes de desplegar el equipo multi-agente de Ariel Agent OS.
                 </p>
               </div>
 
-              <div className="bg-ink-950 p-5 rounded-xl border border-ink-700 space-y-4 text-xs">
+              <div className="bg-ink-950 p-5 rounded-lg border border-ink-700 space-y-4 text-xs">
                 <div className="grid grid-cols-2 gap-4 border-b border-ink-700/80 pb-3">
                   <div>
                     <span className="text-ink-400 block">Plantilla Seleccionada:</span>
@@ -537,7 +537,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           {step < 4 ? (
             <button
               onClick={() => setStep((prev) => Math.min(4, prev + 1))}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal-600 hover:bg-signal-500 text-white font-bold text-xs cursor-pointer transition-colors transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-signal-600 hover:bg-signal-500 text-white font-semibold text-xs cursor-pointer transition-colors transition-all"
             >
               <span>Siguiente</span>
               <ArrowRight className="w-4 h-4" />
@@ -545,10 +545,10 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           ) : (
             <button
               onClick={handleFinishWizard}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-pass-600 hover:bg-pass-500 text-white font-bold text-xs cursor-pointer transition-colors"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-pass-600 hover:bg-pass-500 text-white font-semibold text-xs cursor-pointer transition-colors"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>Lanzar Equipo Multi-Agente ChatDev</span>
+              <Layers className="w-4 h-4" />
+              <span>Lanzar equipo multiagente</span>
             </button>
           )}
         </div>

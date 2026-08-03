@@ -155,10 +155,10 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
     <div className="space-y-6">
       
       {/* Workflow Controller Banner */}
-      <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-bold text-white">Workflow: Informe de Verificación P.A.T.</h2>
+            <h2 className="text-lg font-semibold text-white">Workflow: Informe de Verificación P.A.T.</h2>
             <span className="text-xs px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800 font-mono">v0.1.0</span>
           </div>
           <p className="text-xs text-ink-300 mt-1">
@@ -170,7 +170,7 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
           <button
             onClick={advancePipeline}
             disabled={workItem.lifecycle.status === 'blocked' || workItem.stages.every(s => s.status === 'passed')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-signal-600 hover:bg-signal-500 disabled:opacity-50 text-white text-xs font-bold transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-signal-600 hover:bg-signal-500 disabled:opacity-50 text-white text-xs font-semibold transition-all cursor-pointer"
           >
             <Play className="w-4 h-4 fill-current" />
             <span>Avanzar Siguiente Etapa</span>
@@ -178,7 +178,7 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
 
           <button
             onClick={toggleHumanApproval}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
               workItem.human_approval_received
                 ? 'bg-pass-950/80 text-pass-300 border-pass-700 '
                 : 'bg-ink-800 hover:bg-ink-700 text-ink-200 border-ink-600'
@@ -191,8 +191,8 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
       </div>
 
       {/* 9 Stages Interactive Pipeline Visualizer */}
-      <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
-        <h3 className="text-xs font-bold text-ink-300 uppercase tracking-wider">Secuencia de Etapas del Workflow</h3>
+      <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-4">
+        <h3 className="text-xs font-semibold text-ink-300 uppercase tracking-wider">Secuencia de Etapas del Workflow</h3>
         
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-9 gap-2">
           {workItem.stages.map((st, index) => {
@@ -237,15 +237,15 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Stage Inspection Details */}
-        <div className="lg:col-span-2 bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
+        <div className="lg:col-span-2 bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-4">
           <div className="flex items-center justify-between border-b border-ink-700 pb-3">
             <div>
               <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-ink-800 text-signal-400">
                 Rol Propietario: {ROLE_LABELS[currentStage.owner]}
               </span>
-              <h3 className="text-base font-bold text-white mt-1">{currentStage.name}</h3>
+              <h3 className="text-base font-semibold text-white mt-1">{currentStage.name}</h3>
             </div>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase ${
+            <span className={`px-2.5 py-1 rounded-full text-xs font-mono font-semibold uppercase ${
               currentStage.status === 'passed' ? 'bg-pass-950 text-pass-400 border border-pass-800' :
               currentStage.status === 'in_progress' ? 'bg-pending-950 text-pending-300 border border-pending-800' :
               currentStage.status === 'failed' ? 'bg-fail-950 text-fail-400 border border-fail-800' :
@@ -284,7 +284,7 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
 
           {/* Handoff Records for this stage */}
           <div className="border-t border-ink-700 pt-4 space-y-3">
-            <h4 className="text-xs font-bold text-ink-200 uppercase flex items-center gap-2">
+            <h4 className="text-xs font-semibold text-ink-200 uppercase flex items-center gap-2">
               <FileText className="w-4 h-4 text-signal-400" />
               Handoff de Entrada / Salida entre Agentes
             </h4>
@@ -321,9 +321,9 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
         </div>
 
         {/* Correction Loop Simulator & Budget Safeguard */}
-        <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
+        <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-4">
           <div>
-            <h3 className="text-sm font-bold text-pending-400 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-pending-400 flex items-center gap-2">
               <RefreshCw className="w-4 h-4" />
               Simulador de Bucle de Corrección
             </h3>
@@ -335,7 +335,7 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
           <div className="bg-ink-950 p-3.5 rounded-lg border border-ink-700 space-y-3">
             <div className="flex items-center justify-between text-xs font-mono">
               <span className="text-ink-300">Presupuesto de Ciclos:</span>
-              <span className={`font-bold px-2 py-0.5 rounded ${
+              <span className={`font-semibold px-2 py-0.5 rounded ${
                 workItem.lifecycle.iteration_count >= 3 ? 'bg-fail-950 text-fail-400 border border-fail-800' : 'bg-ink-900 text-pending-400'
               }`}>
                 {workItem.lifecycle.iteration_count} / 3 consumidos
@@ -369,7 +369,7 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
             <button
               onClick={handleTriggerCorrection}
               disabled={workItem.lifecycle.status === 'blocked'}
-              className="w-full py-2 px-3 rounded-lg bg-pending-600 hover:bg-pending-500 disabled:opacity-50 text-ink-950 font-bold text-xs transition-all shadow cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-2 px-3 rounded-lg bg-pending-600 hover:bg-pending-500 disabled:opacity-50 text-ink-950 font-semibold text-xs transition-all shadow cursor-pointer flex items-center justify-center gap-1.5"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Solicitar Corrección (Consumir Ciclo)</span>
@@ -379,7 +379,7 @@ export const WorkflowStudioView: React.FC<WorkflowStudioViewProps> = ({ workItem
           {/* Circuit Breaker Warning */}
           {workItem.lifecycle.iteration_count >= 3 && (
             <div className="bg-fail-950/40 border border-fail-800 p-3.5 rounded-lg text-xs space-y-1 text-fail-200">
-              <div className="flex items-center gap-1.5 font-bold text-fail-400">
+              <div className="flex items-center gap-1.5 font-semibold text-fail-400">
                 <Lock className="w-4 h-4" />
                 <span>CIRCUIT BREAKER ACTIVADO</span>
               </div>

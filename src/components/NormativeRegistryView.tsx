@@ -23,9 +23,9 @@ export const NormativeRegistryView: React.FC<NormativeRegistryViewProps> = ({ wo
     <div className="space-y-6">
       
       {/* Header */}
-      <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             Registro de Criterios & Normativa Técnica
             <span className="text-xs px-2 py-0.5 rounded bg-signal-950 text-signal-300 border border-signal-800 font-mono">
               Skill: research-normative-criterion
@@ -38,7 +38,7 @@ export const NormativeRegistryView: React.FC<NormativeRegistryViewProps> = ({ wo
 
         <div className="bg-ink-950 px-3 py-2 rounded-lg border border-ink-700 text-xs flex items-center gap-2">
           <span className="text-ink-300">Máxima Resistencia Medida:</span>
-          <span className={`font-mono font-bold text-sm ${maxMeasuredResistance > 5 ? 'text-fail-400' : 'text-pass-400'}`}>
+          <span className={`font-mono font-semibold text-sm ${maxMeasuredResistance > 5 ? 'text-fail-400' : 'text-pass-400'}`}>
             {maxMeasuredResistance} Ω
           </span>
         </div>
@@ -52,11 +52,11 @@ export const NormativeRegistryView: React.FC<NormativeRegistryViewProps> = ({ wo
           {workItem.normative_criteria.map((crit) => {
             const isCompliant = !crit.max_resistance_threshold_ohm || maxMeasuredResistance <= crit.max_resistance_threshold_ohm;
             return (
-              <div key={crit.id} className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-3">
+              <div key={crit.id} className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-ink-700 pb-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-base font-bold text-white">{crit.standard_name}</h3>
+                      <h3 className="text-base font-semibold text-white">{crit.standard_name}</h3>
                       <span className="text-xs font-mono px-2 py-0.5 rounded bg-ink-800 text-ink-200">
                         Edición {crit.edition}
                       </span>
@@ -67,7 +67,7 @@ export const NormativeRegistryView: React.FC<NormativeRegistryViewProps> = ({ wo
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => toggleApplicability(crit.id)}
-                      className={`px-2.5 py-1 rounded text-xs font-mono font-bold border transition cursor-pointer ${
+                      className={`px-2.5 py-1 rounded text-xs font-mono font-semibold border transition cursor-pointer ${
                         crit.applicability === 'verified'
                           ? 'bg-pass-950 text-pass-300 border-pass-800'
                           : 'bg-pending-950 text-pending-300 border-pending-800'
@@ -102,8 +102,8 @@ export const NormativeRegistryView: React.FC<NormativeRegistryViewProps> = ({ wo
 
         {/* Normative Compliance Summary & Rule Policy */}
         <div className="space-y-4">
-          <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-3">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+          <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-3">
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-pass-400" />
               Política de Atribución Normativa
             </h3>
@@ -117,8 +117,8 @@ export const NormativeRegistryView: React.FC<NormativeRegistryViewProps> = ({ wo
             </div>
           </div>
 
-          <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-3">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+          <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-3">
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-signal-400" />
               Fuentes Bibliográficas del Expediente
             </h3>

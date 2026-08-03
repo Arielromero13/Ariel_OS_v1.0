@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { AGENTS_CATALOG, SKILLS_CATALOG } from '../data/mockData';
-import { Users, Cpu, FileCode, BookOpen, ShieldCheck, Check, Sparkles, Code } from 'lucide-react';
+import { Users, Cpu, FileCode, BookOpen, ShieldCheck, Check, Code } from 'lucide-react';
 
 export const SystemRegistryView: React.FC = () => {
   const [activeSection, setActiveSection] = useState<'agents' | 'skills' | 'contracts' | 'rules'>('agents');
@@ -9,9 +9,9 @@ export const SystemRegistryView: React.FC = () => {
     <div className="space-y-6">
       
       {/* Header */}
-      <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             Arquitectura & Catálogo de Registro (Ariel Agent OS)
           </h2>
           <p className="text-xs text-ink-300 mt-1">
@@ -50,10 +50,10 @@ export const SystemRegistryView: React.FC = () => {
       {activeSection === 'agents' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {AGENTS_CATALOG.map((ag) => (
-            <div key={ag.id} className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-3 flex flex-col justify-between">
+            <div key={ag.id} className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-3 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-bold text-white">{ag.title}</h3>
+                  <h3 className="text-sm font-semibold text-white">{ag.title}</h3>
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800">
                     {ag.badge}
                   </span>
@@ -95,9 +95,9 @@ export const SystemRegistryView: React.FC = () => {
       {activeSection === 'skills' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {SKILLS_CATALOG.map((sk) => (
-            <div key={sk.id} className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-3">
+            <div key={sk.id} className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-3">
               <div className="flex items-center justify-between border-b border-ink-700 pb-2">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-white flex items-center gap-2">
                   <Cpu className="w-4 h-4 text-signal-400" />
                   {sk.name}
                 </h3>
@@ -120,8 +120,8 @@ export const SystemRegistryView: React.FC = () => {
 
       {/* CONTRACTS SECTION */}
       {activeSection === 'contracts' && (
-        <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-4">
+          <h3 className="text-sm font-semibold text-white flex items-center gap-2">
             <Code className="w-4 h-4 text-signal-400" />
             Contratos de Dominio (JSON Schemas)
           </h3>
@@ -139,7 +139,7 @@ export const SystemRegistryView: React.FC = () => {
               { name: 'handoff.schema.json', desc: 'Pasaje de contexto y solicitudes entre agentes.' },
             ].map((cnt, i) => (
               <div key={i} className="bg-ink-950 p-3 rounded-lg border border-ink-700 space-y-1">
-                <div className="font-bold text-signal-400">{cnt.name}</div>
+                <div className="font-semibold text-signal-400">{cnt.name}</div>
                 <div className="text-[11px] text-ink-300 font-sans">{cnt.desc}</div>
               </div>
             ))}
@@ -149,30 +149,30 @@ export const SystemRegistryView: React.FC = () => {
 
       {/* RULES SECTION */}
       {activeSection === 'rules' && (
-        <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-4">
+          <h3 className="text-sm font-semibold text-white flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-pass-400" />
             Reglas No Negociables de AGENTS.md
           </h3>
 
           <div className="space-y-3 text-xs text-ink-200 leading-relaxed">
             <div className="bg-ink-950 p-3 rounded-lg border border-ink-700 space-y-1">
-              <strong className="text-pending-400 block font-sans font-bold">1. Sin Invención de Valores o Criterios:</strong>
+              <strong className="text-pending-400 block font-sans font-semibold">1. Sin Invención de Valores o Criterios:</strong>
               <p>No inventar valores, fechas, evidencia, criterios, configuraciones, fuentes normativas ni conclusiones.</p>
             </div>
 
             <div className="bg-ink-950 p-3 rounded-lg border border-ink-700 space-y-1">
-              <strong className="text-pending-400 block font-sans font-bold">2. Trazabilidad Estricta:</strong>
+              <strong className="text-pending-400 block font-sans font-semibold">2. Trazabilidad Estricta:</strong>
               <p>Conservar la trazabilidad desde la evidencia hasta el finding, criterio, recomendación y entregable.</p>
             </div>
 
             <div className="bg-ink-950 p-3 rounded-lg border border-ink-700 space-y-1">
-              <strong className="text-pending-400 block font-sans font-bold">3. Presupuesto de Correcciones (3 Ciclos Max):</strong>
+              <strong className="text-pending-400 block font-sans font-semibold">3. Presupuesto de Correcciones (3 Ciclos Max):</strong>
               <p>Cada work item permite hasta tres ciclos internos de corrección. Al agotarse los tres ciclos sin un entregable válido, bloquear el trabajo y emitir un reporte de bloqueo.</p>
             </div>
 
             <div className="bg-ink-950 p-3 rounded-lg border border-ink-700 space-y-1">
-              <strong className="text-pending-400 block font-sans font-bold">4. Estado "NO EMITIR" Obligatorio:</strong>
+              <strong className="text-pending-400 block font-sans font-semibold">4. Estado "NO EMITIR" Obligatorio:</strong>
               <p>Mantener NO EMITIR cuando existan inconsistencias críticas, evidencia insuficiente o decisiones abiertas que afecten la validez del entregable.</p>
             </div>
           </div>

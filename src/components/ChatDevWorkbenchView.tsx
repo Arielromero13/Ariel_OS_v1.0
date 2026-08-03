@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { WorkItem, RoleId, AgentChatMessage } from '../types';
 import { AGENTS_CATALOG } from '../data/mockData';
-import { Bot, Send, Sparkles, AlertTriangle, ShieldCheck, FileText, CheckCircle2, UserCheck, MessageSquare, Play, HelpCircle, Layers, ArrowRight } from 'lucide-react';
+import { Bot, Send, AlertTriangle, ShieldCheck, FileText, CheckCircle2, UserCheck, MessageSquare, Play, HelpCircle, Layers, ArrowRight } from 'lucide-react';
 
 interface ChatDevWorkbenchViewProps {
   workItem: WorkItem;
@@ -165,17 +165,17 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
     <div className="flex-1 flex flex-col lg:flex-row gap-4 p-4 md:p-6 overflow-hidden max-w-7xl mx-auto w-full">
       
       {/* Left Chat / Conversational Panel */}
-      <div className="flex-1 flex flex-col bg-ink-900 border border-ink-700 rounded-2xl overflow-hidden shadow-xl">
+      <div className="flex-1 flex flex-col bg-ink-900 border border-ink-700 rounded-lg overflow-hidden shadow-xl">
         
         {/* Top Chat Bar */}
         <div className="p-4 border-b border-ink-700 bg-ink-950 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-signal-500/20 text-signal-400 border border-signal-500/30">
+            <div className="p-2 rounded-lg bg-signal-500/20 text-signal-400 border border-signal-500/30">
               <MessageSquare className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm font-bold text-white">Mesa de Trabajo ChatDev Multi-Agente</h2>
+                <h2 className="text-sm font-semibold text-white">Mesa de Trabajo ChatDev Multi-Agente</h2>
                 <span className="px-2 py-0.5 rounded-full bg-signal-950 border border-signal-800 text-[10px] text-signal-300 font-mono">
                   {workItem.template_config?.title || 'Plantilla Maestra'}
                 </span>
@@ -190,7 +190,7 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
             <button
               onClick={() => triggerNextAgentTurn(workItem)}
               disabled={isSimulatingAgentTurn}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-signal-600 hover:bg-signal-500 disabled:opacity-50 text-white text-xs font-bold transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-signal-600 hover:bg-signal-500 disabled:opacity-50 text-white text-xs font-semibold transition cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 fill-current" />
               <span>Siguiente Discusión</span>
@@ -215,20 +215,20 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
                 className={`flex gap-3 max-w-3xl ${isUser ? 'ml-auto flex-row-reverse' : ''}`}
               >
                 {/* Role Avatar */}
-                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 font-bold text-xs border ${getRoleColor(msg.senderRole)}`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-semibold text-xs border ${getRoleColor(msg.senderRole)}`}>
                   {isUser ? <UserCheck className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                 </div>
 
                 {/* Message Bubble */}
                 <div
-                  className={`p-4 rounded-2xl border space-y-2 text-xs leading-relaxed ${
+                  className={`p-4 rounded-lg border space-y-2 text-xs leading-relaxed ${
                     isUser
                       ? 'bg-signal-950/60 border-signal-700 text-signal-100 rounded-tr-none'
                       : 'bg-ink-900 border-ink-700 text-ink-100 rounded-tl-none shadow-md'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-4 border-b border-ink-700/80 pb-1.5 text-[11px]">
-                    <span className="font-bold text-white">{msg.senderName}</span>
+                    <span className="font-semibold text-white">{msg.senderName}</span>
                     <span className="text-ink-400 font-mono text-[10px]">{msg.timestamp}</span>
                   </div>
 
@@ -236,8 +236,8 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
 
                   {/* Message Action Prompt if needed */}
                   {msg.requiresUserAction && (
-                    <div className="p-3 bg-pending-950/40 border border-pending-800/80 rounded-xl space-y-2 mt-2 text-pending-200">
-                      <div className="flex items-center gap-1.5 font-bold text-pending-300">
+                    <div className="p-3 bg-pending-950/40 border border-pending-800/80 rounded-lg space-y-2 mt-2 text-pending-200">
+                      <div className="flex items-center gap-1.5 font-semibold text-pending-300">
                         <AlertTriangle className="w-4 h-4" />
                         <span>Aclaración Humana Requerida:</span>
                       </div>
@@ -271,13 +271,13 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
             onChange={(e) => setUserInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
             placeholder="Escribe tus instrucciones o confirma decisiones para el equipo de agentes..."
-            className="flex-1 bg-ink-900 border border-ink-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-signal-500 font-sans placeholder:text-ink-400"
+            className="flex-1 bg-ink-900 border border-ink-700 rounded-lg px-4 py-2.5 text-xs text-white focus:outline-none focus:border-signal-500 font-sans placeholder:text-ink-400"
           />
 
           <button
             onClick={handleSendMessage}
             disabled={!userInput.trim()}
-            className="px-4 py-2.5 rounded-xl bg-signal-600 hover:bg-signal-500 disabled:opacity-40 text-white font-bold text-xs flex items-center gap-2 cursor-pointer transition transition-colors"
+            className="px-4 py-2.5 rounded-lg bg-signal-600 hover:bg-signal-500 disabled:opacity-40 text-white font-semibold text-xs flex items-center gap-2 cursor-pointer transition transition-colors"
           >
             <span>Enviar</span>
             <Send className="w-3.5 h-3.5" />
@@ -290,9 +290,9 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
       <div className="w-full lg:w-80 flex flex-col gap-4">
         
         {/* Template & Intake Info Card */}
-        <div className="p-4 bg-ink-900 border border-ink-700 rounded-2xl space-y-3">
+        <div className="p-4 bg-ink-900 border border-ink-700 rounded-lg space-y-3">
           <div className="flex items-center justify-between border-b border-ink-700 pb-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-ink-300 flex items-center gap-1.5">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-300 flex items-center gap-1.5">
               <FileText className="w-4 h-4 text-signal-400" />
               Plantilla Activa
             </h3>
@@ -306,22 +306,22 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="font-bold text-white">
+            <div className="font-semibold text-white">
               {workItem.template_config?.title || 'Plantilla Maestra P.A.T.'}
             </div>
             <p className="text-ink-300 text-[11px] leading-relaxed">
               {workItem.template_config?.description || 'Plantilla de verificación técnica trazable.'}
             </p>
 
-            <div className="p-2.5 bg-ink-950 rounded-xl border border-ink-700 font-mono text-[11px] text-signal-400">
+            <div className="p-2.5 bg-ink-950 rounded-lg border border-ink-700 font-mono text-[11px] text-signal-400">
               {workItem.template_config?.fileName || 'Plantilla_Maestra_PAT_v2.docx'}
             </div>
           </div>
         </div>
 
         {/* Stage Workflow Pipeline */}
-        <div className="p-4 bg-ink-900 border border-ink-700 rounded-2xl space-y-3 flex-1 overflow-y-auto">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-ink-300 flex items-center gap-1.5">
+        <div className="p-4 bg-ink-900 border border-ink-700 rounded-lg space-y-3 flex-1 overflow-y-auto">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-300 flex items-center gap-1.5">
             <Layers className="w-4 h-4 text-signal-400" />
             Workflow de Agentes
           </h3>
@@ -333,7 +333,7 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
               return (
                 <div
                   key={st.id}
-                  className={`p-2.5 rounded-xl border text-xs flex items-center justify-between transition ${
+                  className={`p-2.5 rounded-lg border text-xs flex items-center justify-between transition ${
                     isPassed
                       ? 'bg-pass-950/20 border-pass-800/60 text-pass-300'
                       : isInProgress
@@ -346,7 +346,7 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
                     <span className="font-semibold text-white">{st.name}</span>
                   </div>
 
-                  <span className="text-[10px] uppercase font-mono font-bold">
+                  <span className="text-[10px] uppercase font-mono font-semibold">
                     {st.status}
                   </span>
                 </div>
@@ -356,11 +356,11 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
         </div>
 
         {/* Human Approval Status Card */}
-        <div className="p-4 bg-ink-900 border border-ink-700 rounded-2xl space-y-3">
+        <div className="p-4 bg-ink-900 border border-ink-700 rounded-lg space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-ink-200">Aprobación Humana</span>
+            <span className="text-xs font-semibold text-ink-200">Aprobación Humana</span>
             <span
-              className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase ${
+              className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase ${
                 workItem.human_approval_received
                   ? 'bg-pass-950 text-pass-300 border border-pass-700'
                   : 'bg-fail-950 text-fail-300 border border-fail-800'
@@ -381,7 +381,7 @@ export const ChatDevWorkbenchView: React.FC<ChatDevWorkbenchViewProps> = ({
                 human_approval_received: !workItem.human_approval_received,
               });
             }}
-            className={`w-full py-2 rounded-xl font-bold text-xs cursor-pointer transition ${
+            className={`w-full py-2 rounded-lg font-semibold text-xs cursor-pointer transition ${
               workItem.human_approval_received
                 ? 'bg-ink-800 hover:bg-ink-700 text-ink-200'
                 : 'bg-pass-600 hover:bg-pass-500 text-white '

@@ -101,9 +101,9 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
     <div className="space-y-6">
       
       {/* Header Banner */}
-      <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
             Matriz de Control de Mediciones de P.A.T.
             <span className="text-xs px-2 py-0.5 rounded bg-signal-950 text-signal-300 border border-signal-800 font-mono">
               Skill: analyze-grounding-report
@@ -116,7 +116,7 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
 
         <button
           onClick={handleAddPoint}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-signal-600 hover:bg-signal-500 text-white text-xs font-bold transition-all shadow cursor-pointer whitespace-nowrap"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-signal-600 hover:bg-signal-500 text-white text-xs font-semibold transition-all shadow cursor-pointer whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           <span>Agregar Punto de Medición</span>
@@ -124,7 +124,7 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
       </div>
 
       {/* Measurement Points Table */}
-      <div className="bg-ink-900 border border-ink-700 rounded-xl shadow-md overflow-hidden">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg shadow-md overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
@@ -146,7 +146,7 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
                   <tr key={pt.id} className={`hover:bg-ink-850/50 transition-colors ${isNonCompliant ? 'bg-fail-950/10' : ''}`}>
                     
                     {/* Code */}
-                    <td className="p-3 font-mono font-bold text-signal-300">{pt.point_code}</td>
+                    <td className="p-3 font-mono font-semibold text-signal-300">{pt.point_code}</td>
 
                     {/* Location Description */}
                     <td className="p-3 max-w-[240px]">
@@ -165,7 +165,7 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
                         step="0.01"
                         value={pt.measured_resistance_ohm}
                         onChange={(e) => updateMeasurement(pt.id, { measured_resistance_ohm: parseFloat(e.target.value) || 0 })}
-                        className={`w-20 text-center font-bold border rounded px-1.5 py-1 text-xs focus:outline-none ${
+                        className={`w-20 text-center font-semibold border rounded px-1.5 py-1 text-xs focus:outline-none ${
                           isNonCompliant ? 'bg-fail-950/80 border-fail-700 text-fail-200' : 'bg-ink-950 border-ink-700 text-pass-300'
                         }`}
                       />
@@ -197,7 +197,7 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
 
                     {/* Status Badge */}
                     <td className="p-3 text-center">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold ${
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-semibold ${
                         pt.status === 'Conforme' ? 'bg-pass-950 text-pass-400 border border-pass-800' :
                         pt.status === 'No conforme' ? 'bg-fail-950 text-fail-400 border border-fail-800 animate-pulse' :
                         'bg-pending-950 text-pending-400 border border-pending-800'
@@ -240,10 +240,10 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
       </div>
 
       {/* Skill: manage-photo-evidence-gallery (Galería de Evidencias Fotográficas) */}
-      <div className="bg-ink-900 border border-ink-700 rounded-xl p-5 shadow-md space-y-4">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg p-5 shadow-md space-y-4">
         <div className="flex items-center justify-between border-b border-ink-700 pb-3">
           <div>
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-white flex items-center gap-2">
               <ImageIcon className="w-4 h-4 text-signal-400" />
               Galería de Evidencias Fotográficas & Control Visual QA
             </h3>
@@ -260,8 +260,8 @@ export const MeasurementMatrixView: React.FC<MeasurementMatrixViewProps> = ({ wo
           {workItem.measurements.map((pt) => (
             <div key={pt.id} className="bg-ink-950 border border-ink-700 rounded-lg p-3 space-y-2">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="font-bold text-signal-300">{pt.point_code}</span>
-                <span className={`px-2 py-0.2 rounded text-[10px] font-bold ${
+                <span className="font-semibold text-signal-300">{pt.point_code}</span>
+                <span className={`px-2 py-0.2 rounded text-[10px] font-semibold ${
                   pt.status === 'Conforme' ? 'bg-pass-950 text-pass-400' : 'bg-fail-950 text-fail-400'
                 }`}>
                   {pt.measured_resistance_ohm} Ω

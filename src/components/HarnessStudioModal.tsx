@@ -67,7 +67,7 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
 
   return (
     <div className="fixed inset-0 z-50 bg-ink-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-ink-900 border border-ink-700 rounded-2xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+      <div className="bg-ink-900 border border-ink-700 rounded-lg max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
         
         {/* Header */}
         <div className="p-4 border-b border-ink-700 flex items-center justify-between bg-ink-950">
@@ -76,7 +76,7 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
               <Cpu className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-semibold text-white flex items-center gap-2">
                 Arnés de Ejecución Adaptable (Ariel Harness OS)
               </h2>
               <p className="text-xs text-ink-300">
@@ -98,7 +98,7 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
           
           {/* Model Selector Cards */}
           <div className="space-y-3">
-            <label className="text-xs font-bold uppercase tracking-wider text-ink-300 block">
+            <label className="text-xs font-semibold uppercase tracking-wider text-ink-300 block">
               1. Seleccionar Conector de Modelo
             </label>
 
@@ -255,7 +255,7 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
 
           {/* Execution Output Console */}
           <div className="space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-ink-300 flex items-center gap-2">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-300 flex items-center gap-2">
               <Terminal className="w-4 h-4 text-signal-400" />
               Consola de Salida del Arnés & Logs de Ejecución
             </h3>
@@ -263,10 +263,10 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
             {executionLogs.length > 0 ? (
               <div className="space-y-3">
                 {executionLogs.map((log, idx) => (
-                  <div key={idx} className="bg-ink-950 p-4 rounded-xl border border-ink-700 space-y-2 text-xs font-mono">
+                  <div key={idx} className="bg-ink-950 p-4 rounded-lg border border-ink-700 space-y-2 text-xs font-mono">
                     <div className="flex items-center justify-between border-b border-ink-700 pb-2">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800 font-bold uppercase">
+                        <span className="px-2 py-0.5 rounded bg-signal-950 text-signal-400 border border-signal-800 font-semibold uppercase">
                           {log.modelResponse.provider}
                         </span>
                         <span className="text-ink-200 font-sans font-semibold">
@@ -294,7 +294,7 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
                 ))}
               </div>
             ) : (
-              <div className="bg-ink-950 p-8 rounded-xl border border-ink-700 text-center text-xs text-ink-400 italic">
+              <div className="bg-ink-950 p-8 rounded-lg border border-ink-700 text-center text-xs text-ink-400 italic">
                 Presione "Ejecutar Siguiente Turno en Arnés" para probar la interacción entre el núcleo de reglas y el conector de modelo seleccionado.
               </div>
             )}
