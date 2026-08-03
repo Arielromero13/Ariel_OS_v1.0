@@ -300,12 +300,12 @@ Si la memoria falla o se retoma el proyecto tras una pausa, este es el orden rec
 
 ## 🛣️ Próximos hitos
 
-- [ ] Declarar en el workflow P.A.T. qué skill transversal se activa en cada etapa.
-- [ ] Crear ejemplos ficticios válidos para cada contrato.
-- [ ] Ejecutar un caso P.A.T. de prueba de punta a punta.
+- [x] Declarar en el workflow P.A.T. qué skill transversal se activa en cada etapa.
+- [x] Crear ejemplos ficticios válidos para cada contrato.
+- [x] Ejecutar un caso P.A.T. de prueba de punta a punta.
 - [x] Definir el adaptador inicial para Codex Cloud.
 - [ ] Enlazar herramientas reales de forma controlada.
-- [ ] Preparar un expediente histórico anonimizado para piloto interno.
+- [x] Preparar un expediente histórico anonimizado para piloto interno.
 - [ ] Ajustar contratos, roles y skills con evidencia de uso.
 - [ ] Diseñar la skill y workflow de análisis COMTRADE.
 
