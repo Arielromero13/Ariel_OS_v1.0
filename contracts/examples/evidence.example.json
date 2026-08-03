@@ -1,0 +1,51 @@
+{
+  "evidence_id": "EVD-FICT-001",
+  "context": {
+    "case_id": "CASE-PAT-FICT-001",
+    "revision_id": "REV-01",
+    "captured_or_received_at": "2026-03-15T09:30:00Z",
+    "campaign_or_event_id": "CAMP-2026-Q1-FICT"
+  },
+  "source": {
+    "artifact_id": "ART-PHOTO-001",
+    "file_name": "photo_p01.jpg",
+    "location": "fictional://inputs/photo_p01.jpg",
+    "type": "field_photo",
+    "role": "current_evidence",
+    "source_page_or_row": null
+  },
+  "content": {
+    "description": "Fotografía del electrodo de prueba en el punto P-01, mostrando el instrumento de medición y la lectura visible.",
+    "related_point_ids": ["P-01"],
+    "related_asset_ids": ["MALLA-PATIO-345KV"],
+    "observed_values": [
+      { "name": "resistencia_tierra", "value": 3.8, "unit": "ohm", "confidence": "alta" }
+    ],
+    "claims_supported": ["La resistencia medida en P-01 es 3.8 ohm."]
+  },
+  "quality": {
+    "readability": "verified",
+    "orientation": "correct",
+    "completeness": "complete",
+    "ambiguity": null,
+    "visual_qa_status": "approved"
+  },
+  "links": {
+    "measurement_ids": ["MED-P01-2026Q1"],
+    "finding_ids": ["FND-FICT-001"],
+    "criterion_ids": ["CRIT-FICT-001"],
+    "gallery_reference": "GAL-FICT-001",
+    "related_evidence_ids": []
+  },
+  "limitations": ["No permite verificar la humedad del suelo al momento de la medición."],
+  "integrity": {
+    "source_hash": null,
+    "artifact_version": "v1",
+    "supersedes_evidence_id": null
+  },
+  "lifecycle": {
+    "status": "accepted",
+    "reviewed_by": "visual_reviewer",
+    "reviewed_at": "2026-03-20T14:00:00Z"
+  }
+}

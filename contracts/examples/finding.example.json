@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-FICT-001",
+  "context": {
+    "case_id": "CASE-PAT-FICT-001",
+    "revision_id": "REV-01",
+    "domain": "electrical-grounding",
+    "work_item_id": "WI-FICT-2026-001"
+  },
+  "statement": {
+    "title": "Resistencia de puesta a tierra conforme en punto P-01",
+    "conclusion": "La resistencia de puesta a tierra medida en P-01 (3.8 ohm) cumple el límite aplicable de 5 ohm para patios de 34.5 kV.",
+    "classification": "resistencia_de_tierra"
+  },
+  "scope": {
+    "point_ids": ["P-01"],
+    "asset_ids": ["MALLA-PATIO-345KV"],
+    "system_ids": ["SIST-PAT-PATIO"],
+    "sections": ["4.2 Resultados por punto"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-FICT-001"],
+    "reasoning": "El valor medido (3.8 ohm) se ubica por debajo del límite normativo de 5 ohm, con instrumento y método declarados en la matriz validada.",
+    "method_reference": "Método de caída de potencial (63%), telurómetro digital."
+  },
+  "evaluation": {
+    "state": "Conforme",
+    "criterion_id": "CRIT-FICT-001",
+    "criterion_status": "verified",
+    "criterion_rationale": "Criterio verificado contra la norma ficticia NF-EL-100, edición 2020, cláusula 7.3, que exige resistencia menor o igual a 5 ohm para patios de 34.5 kV."
+  },
+  "limitations": ["No incluye lectura de temporada seca."],
+  "impact": {
+    "severity": "low",
+    "decision_impact": "No bloquea la emisión del informe.",
+    "risk_statement": "Riesgo residual bajo por falta de dato estacional."
+  },
+  "recommendation": {
+    "action": "Programar medición adicional en temporada seca para la próxima campaña.",
+    "priority": "low",
+    "owner": "domain_specialist",
+    "justification": "Permite confirmar estabilidad del valor ante variación estacional."
+  },
+  "links": {
+    "related_finding_ids": [],
+    "handoff_ids": ["HO-FICT-001"],
+    "deliverable_sections": ["4.2 Resultados por punto"]
+  },
+  "lifecycle": {
+    "status": "approved",
+    "created_by": "domain_specialist",
+    "reviewed_by": "technical_reviewer",
+    "superseded_by": null
+  }
+}

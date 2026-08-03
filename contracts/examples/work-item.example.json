@@ -1,0 +1,59 @@
+{
+  "task_id": "WI-FICT-2026-001",
+  "case": {
+    "case_id": "CASE-PAT-FICT-001",
+    "revision_id": "REV-01",
+    "based_on_revision": null,
+    "revision_reason": "Primera revisión del caso ficticio de referencia."
+  },
+  "request": {
+    "objective": "Preparar informe de verificación P.A.T. de la subestación ficticia Planta Norte a partir de la campaña de medición 2026-Q1.",
+    "requester": "Jefe de Mantenimiento (ficticio)",
+    "context": "Caso de referencia creado para validar el workflow grounding-report antes de usarlo con un expediente real.",
+    "scope_in": ["Puesta a tierra de patio de 34.5 kV", "Puesta a tierra de casa de control"],
+    "scope_out": ["Sistema de pararrayos", "Protección catódica"]
+  },
+  "domain": {
+    "name": "electrical-grounding",
+    "specific_request": {
+      "campaign_id": "CAMP-2026-Q1-FICT",
+      "grounding_system_type": "malla enterrada con varillas Copperweld"
+    }
+  },
+  "deliverables": [
+    { "name": "Informe de verificación P.A.T.", "format": "docx", "recipient": "Gerencia de Ingeniería (ficticio)" }
+  ],
+  "definition_of_done": [
+    { "id": "DOD-01", "criterion": "Toda lectura de la matriz enlaza con evidencia fotográfica o queda declarada pendiente.", "verification_method": "Revisión cruzada matriz-galería", "mandatory": true },
+    { "id": "DOD-02", "criterion": "Cada criterio de aceptación cita fuente, edición y cláusula verificadas.", "verification_method": "Revisión normativa", "mandatory": true }
+  ],
+  "constraints": {
+    "deadline": "2026-08-15",
+    "confidentiality": "internal",
+    "approvals_required": ["Gerente de Ingeniería (ficticio)"],
+    "allowed_tools": ["analyze-grounding-report", "validate-spreadsheet-input", "manage-photo-evidence-gallery"],
+    "prohibited_actions": ["Emitir el informe sin aprobación humana registrada"]
+  },
+  "input_manifest": [
+    { "artifact_id": "ART-MATRIX-001", "name": "Matriz de mediciones campaña 2026-Q1 (ficticia).xlsx", "location": "fictional://inputs/matrix.xlsx", "role": "current_evidence", "status": "available" },
+    { "artifact_id": "ART-PHOTO-001", "name": "Foto P-01 electrodo de prueba.jpg", "location": "fictional://inputs/photo_p01.jpg", "role": "current_evidence", "status": "available" },
+    { "artifact_id": "ART-HIST-001", "name": "Informe P.A.T. campaña 2024 (ficticio).pdf", "location": "fictional://inputs/hist_2024.pdf", "role": "historical_reference", "status": "available" }
+  ],
+  "workflow_hint": "grounding-report",
+  "orchestration": {
+    "workflow_selected": "grounding-report",
+    "skills_selected": ["analyze-grounding-report", "validate-spreadsheet-input", "manage-photo-evidence-gallery", "research-normative-criterion", "validate-technical-traceability", "write-document-from-template", "render-and-review-document"],
+    "acceptance_criteria": ["Todos los DOD satisfechos", "Aprobación humana registrada antes de emisión"]
+  },
+  "open_decisions": [],
+  "lifecycle": {
+    "status": "in_progress",
+    "iteration_count": 0,
+    "superseded_by": null,
+    "readiness": {
+      "execution_gate": "passed",
+      "emission_gate": "not_evaluated",
+      "blocking_reasons": []
+    }
+  }
+}

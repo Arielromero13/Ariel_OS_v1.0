@@ -1,0 +1,35 @@
+{
+  "review_id": "REV-TECH-FICT-001",
+  "context": {
+    "case_id": "CASE-PAT-FICT-001",
+    "revision_id": "REV-01",
+    "work_item_id": "WI-FICT-2026-001",
+    "workflow": "grounding-report"
+  },
+  "reviewer": {
+    "role": "technical_reviewer",
+    "review_type": "technical",
+    "independence_confirmed": true
+  },
+  "scope": {
+    "target_artifact_ids": ["ART-MATRIX-001"],
+    "target_finding_ids": ["FND-FICT-001"],
+    "target_evidence_ids": ["EVD-FICT-001"],
+    "target_pages_or_sections": ["4.2 Resultados por punto"]
+  },
+  "checks": [
+    { "check_id": "CHK-001", "area": "trazabilidad medición-evidencia", "result": "pass", "notes": "El valor de P-01 enlaza correctamente con EVD-FICT-001.", "evidence_links": ["EVD-FICT-001"] },
+    { "check_id": "CHK-002", "area": "aplicabilidad del criterio normativo", "result": "pass", "notes": "CRIT-FICT-001 corresponde al tipo de instalación evaluado.", "evidence_links": [] },
+    { "check_id": "CHK-003", "area": "alcance de la conclusión frente a la evidencia", "result": "pass", "notes": "La conclusión no excede lo que soporta la evidencia disponible.", "evidence_links": [] }
+  ],
+  "issues": [],
+  "decision": {
+    "outcome": "approve",
+    "rationale": "Los tres controles pasaron; el hallazgo FND-FICT-001 queda aprobado para integración."
+  },
+  "lifecycle": {
+    "status": "resolved",
+    "correction_cycle": 0,
+    "superseded_by": null
+  }
+}

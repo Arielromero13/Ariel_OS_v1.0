@@ -1,0 +1,73 @@
+{
+  "audit_id": "AUD-FICT-001",
+  "context": {
+    "case_id": "CASE-PAT-FICT-001",
+    "revision_id": "REV-01",
+    "work_item_id": "WI-FICT-2026-001",
+    "workflow_id": "grounding-report",
+    "candidate_deliverable_id": "DEL-FICT-001",
+    "report_manifest_id": "MAN-FICT-001"
+  },
+  "auditor": {
+    "role": "auditor",
+    "agent_id": "auditor-fict-01",
+    "independence_confirmed": true,
+    "domain_skill_context": ["analyze-grounding-report"]
+  },
+  "scope": {
+    "audit_type": "emission_gate",
+    "included_records": [
+      { "record_type": "finding", "record_id": "FND-FICT-001" },
+      { "record_type": "review", "record_id": "REV-TECH-FICT-001" },
+      { "record_type": "report_manifest", "record_id": "MAN-FICT-001" }
+    ],
+    "excluded_checks": ["No se recalculó la resistencia de puesta a tierra de forma independiente."]
+  },
+  "gates": [
+    {
+      "gate_id": "GATE-DOD",
+      "name": "Definition of Done satisfecho",
+      "required": true,
+      "result": "pass",
+      "basis": [{ "record_type": "report_manifest", "record_id": "MAN-FICT-001", "note": "Todos los ítems de DoD en estado satisfied." }]
+    },
+    {
+      "gate_id": "GATE-TECH-REVIEW",
+      "name": "Revisión técnica aprobada",
+      "required": true,
+      "result": "pass",
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-FICT-001" }]
+    },
+    {
+      "gate_id": "GATE-VISUAL-QA",
+      "name": "QA visual aprobada",
+      "required": true,
+      "result": "pass",
+      "basis": [{ "record_type": "review", "record_id": "REV-VISUAL-FICT-001", "note": "Galería aprobada sin correcciones pendientes." }]
+    }
+  ],
+  "gate_summary": {
+    "failed_required_gate_count": 0,
+    "pending_required_gate_count": 0,
+    "critical_open_decision_count": 0
+  },
+  "decision": {
+    "outcome": "approve_for_human_approval",
+    "rationale": "Los tres gates obligatorios pasaron y no quedan decisiones críticas abiertas; el paquete queda listo para aprobación humana.",
+    "conditions_before_emission": ["Registrar la aprobación humana antes de distribuir el informe."]
+  },
+  "residual_risks": [
+    { "risk_id": "RISK-001", "description": "Falta lectura de temporada seca en P-01.", "severity": "low", "treatment": "accepted", "linked_record_ids": ["FND-FICT-001"] }
+  ],
+  "required_actions": [],
+  "human_approval": {
+    "required": true,
+    "status": "pending",
+    "approver_role": "Gerente de Ingeniería (ficticio)"
+  },
+  "lifecycle": {
+    "status": "issued",
+    "correction_cycle": 0,
+    "issued_at": "2026-08-03T16:00:00Z"
+  }
+}
