@@ -1,0 +1,62 @@
+{
+  "task_id": "WI-ALTAVISTA-2026-001",
+  "case": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "based_on_revision": null,
+    "revision_reason": "Corrida de prueba de punta a punta del workflow grounding-report contra un caso real ya aprobado (Rev03), para validar el sistema."
+  },
+  "request": {
+    "objective": "Correr el workflow grounding-report contra la campaña real de Parque Solar Fotovoltaico Altavista y contrastar el resultado contra el informe Rev03 ya aprobado.",
+    "requester": "Responsable técnico del proyecto",
+    "context": "Ejercicio de validación interna del sistema Ariel Agent OS; no se emite ni sustituye el informe real ya aprobado.",
+    "scope_in": ["14 Power Stations (2 puntos de malla + 1 punta Franklin cada una)", "6 puntos de la subestación"],
+    "scope_out": ["Verificación de GPR y tensiones de paso y contacto (mencionada como pendiente en el propio criterio)"]
+  },
+  "domain": {
+    "name": "electrical-grounding",
+    "specific_request": {
+      "campaign_id": "EGEHAINA-PRO-PAT-REF-001",
+      "grounding_system_type": "malla enterrada de Power Stations + subestación, con puntas Franklin"
+    }
+  },
+  "deliverables": [
+    { "name": "Informe de verificación P.A.T. (ejercicio de prueba, no destinado a emisión)", "format": "docx", "recipient": "Uso interno — validación de sistema" }
+  ],
+  "definition_of_done": [
+    { "id": "DOD-01", "criterion": "Toda lectura de la matriz enlaza con evidencia fotográfica identificada o queda declarada pendiente.", "verification_method": "Revisión cruzada matriz-galería", "mandatory": true },
+    { "id": "DOD-02", "criterion": "Cada criterio de aceptación aplicado corresponde al tipo de punto evaluado (resistencia vs. continuidad/equipotencialidad).", "verification_method": "Revisión normativa por tipo de punto", "mandatory": true },
+    { "id": "DOD-03", "criterion": "Ninguna observación de campo que señale un valor fuera de rango queda sin resolver en el estado de evaluación final.", "verification_method": "Revisión técnica cruzando Observaciones vs. Resultado", "mandatory": true }
+  ],
+  "constraints": {
+    "deadline": null,
+    "confidentiality": "internal",
+    "approvals_required": ["Responsable técnico del proyecto"],
+    "allowed_tools": ["analyze-grounding-report", "validate-spreadsheet-input", "manage-photo-evidence-gallery", "research-normative-criterion", "validate-technical-traceability"],
+    "prohibited_actions": ["Emitir o distribuir este ejercicio como informe oficial", "Subir datos de esta campaña real a un repositorio no anonimizado"]
+  },
+  "input_manifest": [
+    { "artifact_id": "ART-MATRIX-REF", "name": "para_reporte_Central_PSFV_ALTAVISTA.xlsx", "location": "local://uploads/para_reporte_Central_PSFV_ALTAVISTA.xlsx", "role": "current_evidence", "status": "available" },
+    { "artifact_id": "ART-TEMPLATE-MASTER", "name": "plantilla_maestra_informe_pat.docx", "location": "local://uploads/plantilla_maestra_informe_pat.docx", "role": "template", "status": "available" },
+    { "artifact_id": "ART-HIST-REF-R03", "name": "Informe_PAT_Altavista_Rev03_marco_normativo.docx", "location": "local://uploads/Informe_PAT_Altavista_Rev03_marco_normativo.docx", "role": "historical_reference", "status": "available", "authority_note": "Versión ya aprobada; usada aquí solo como contraste, no como fuente de hechos para esta corrida." }
+  ],
+  "workflow_hint": "grounding-report",
+  "orchestration": {
+    "workflow_selected": "grounding-report",
+    "skills_selected": ["analyze-grounding-report", "validate-spreadsheet-input", "validate-technical-traceability", "research-normative-criterion"],
+    "acceptance_criteria": ["Los tres DOD verificados explícitamente", "Contraste documentado contra Rev03"]
+  },
+  "open_decisions": [
+    "Confirmar si la verificación de GPR y tensiones de paso/contacto mencionada en el criterio de Power Stations ya se completó fuera de esta matriz."
+  ],
+  "lifecycle": {
+    "status": "in_progress",
+    "iteration_count": 0,
+    "superseded_by": null,
+    "readiness": {
+      "execution_gate": "passed",
+      "emission_gate": "not_evaluated",
+      "blocking_reasons": []
+    }
+  }
+}

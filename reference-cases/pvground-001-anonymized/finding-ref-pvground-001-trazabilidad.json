@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-001",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "domain": "electrical-grounding",
+    "work_item_id": "WI-ALTAVISTA-2026-001"
+  },
+  "statement": {
+    "title": "CORREGIDO — 'Foto de lectura' sí contiene fotos reales embebidas; el error inicial fue una limitación de mi herramienta de lectura, no del archivo",
+    "conclusion": "Investigué el origen del '#VALUE!' con más profundidad: la columna 'Foto de lectura' usa la función moderna de Excel 'Insertar imagen en la celda' (rich value / place-in-cell), que openpyxl no sabe interpretar y por eso reporta un error. Rastreando xl/richData/richValueRel.xml y xl/metadata.xml confirmé que cada una de las 48 filas sí tiene una imagen real asociada (image1.png a image48.png), y extraje 5 de forma representativa (PS1_01, PS1_03, PS4_02, PS12_03, SE_01): las cinco muestran el telurómetro con una lectura que coincide exactamente con el valor de la matriz. La brecha real de trazabilidad está en la OTRA columna: 'Foto ubicación / configuración' sigue con el texto de plantilla sin completar ([[P0X_config.jpg]]) en las 48 filas — esas fotos de configuración nunca se adjuntaron.",
+    "classification": "trazabilidad_evidencia"
+  },
+  "scope": {
+    "point_ids": ["PS1_01", "PS1_03", "PS4_02", "PS12_03", "SE_01", "…(48 puntos en total, columna 'Foto ubicación/configuración')"],
+    "asset_ids": ["MATRIZ-ALTAVISTA-2026Q1"],
+    "system_ids": [],
+    "sections": ["4. Registro de mediciones", "5. Galería de evidencias"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-MATRIX-COL-H-RICHVALUE", "EVD-REF-MATRIX-COL-I-PLACEHOLDER"],
+    "reasoning": "Se confirmó vía xl/worksheets/sheet2.xml que la celda H42 (PS12_03) referencia vm=36, que via xl/metadata.xml y xl/richData/rdrichvalue.xml apunta al índice 35, que via xl/richData/richValueRel.xml y su .rels resuelve a xl/media/image36.png. Se extrajo y se vio la imagen: muestra '21.82' en el visor del telurómetro, coincidiendo con el valor de la matriz. Se repitió el mismo rastreo para 4 puntos más, con el mismo resultado positivo.",
+    "method_reference": "Inspección directa del paquete OOXML (zip) — worksheets, metadata.xml, richData — y verificación visual de las imágenes extraídas."
+  },
+  "evaluation": {
+    "state": "Conforme",
+    "criterion_id": "DOD-01",
+    "criterion_status": "verified",
+    "criterion_rationale": "El enlace lectura-evidencia sí existe y es correcto para la muestra verificada; DOD-01 se da por cumplido para 'Foto de lectura'. La columna 'Foto ubicación / configuración', en cambio, no cumple DOD-01 porque nunca se completó."
+  },
+  "limitations": ["Solo se verificaron 5 de 48 imágenes de 'Foto de lectura' de forma visual directa; el resto se infiere por el mismo patrón de vm secuencial (1 a 48), no se abrieron una por una.", "No se investigó si existen fotos de configuración guardadas por fuera de la matriz (ej. en una carpeta aparte) que simplemente no se referenciaron."],
+  "impact": {
+    "severity": "low",
+    "decision_impact": "No bloquea: el vínculo que sí importa para trazabilidad numérica (lectura↔evidencia) está intacto. La falta de fotos de configuración es un vacío de calidad, no de trazabilidad de la medición en sí.",
+    "risk_statement": "Sin foto de configuración, no queda registro visual de cómo se conectó el electrodo bajo prueba, lo cual el propio criterio de malla exige declarar para dar la medición por concluyente."
+  },
+  "recommendation": {
+    "action": "Adjuntar las fotos de configuración pendientes, o declarar explícitamente que no se tomaron y dejar el criterio de validez del método como parcialmente sustentado.",
+    "priority": "medium",
+    "owner": "domain_specialist",
+    "justification": "El propio criterio de malla exige 'geometría, configuración o condición sustentada' para declarar una lectura concluyente."
+  },
+  "links": {
+    "related_finding_ids": [],
+    "handoff_ids": ["HO-REF-001"],
+    "deliverable_sections": ["5. Galería de evidencias"]
+  },
+  "lifecycle": {
+    "status": "approved",
+    "created_by": "domain_specialist",
+    "reviewed_by": "technical_reviewer",
+    "superseded_by": null
+  }
+}
