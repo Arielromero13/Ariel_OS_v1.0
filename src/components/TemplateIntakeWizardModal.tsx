@@ -230,20 +230,20 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-ink-950/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-ink-900 border border-ink-700 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
         
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
+        <div className="p-5 border-b border-ink-700 bg-ink-950 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+            <div className="p-2 rounded-xl bg-signal-500/20 text-signal-400 border border-signal-500/30">
               <Sparkles className="w-6 h-6" />
             </div>
             <div>
               <h2 className="text-base font-bold text-white flex items-center gap-2">
                 Asistente de Intake & Selección de Plantilla (.DOCX)
               </h2>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-ink-300">
                 Define el espíritu y tipo de reporte antes de activar el equipo de agentes
               </p>
             </div>
@@ -251,14 +251,14 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-ink-300 hover:text-white hover:bg-ink-800 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Wizard Step Indicators */}
-        <div className="bg-slate-950/60 px-6 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-semibold">
+        <div className="bg-ink-950/60 px-6 py-3 border-b border-ink-700 flex items-center justify-between text-xs font-semibold">
           {[
             { num: 1, title: '1. Plantilla Maestra' },
             { num: 2, title: '2. Datos de la Planta' },
@@ -269,20 +269,20 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
               key={s.num}
               className={`flex items-center gap-2 cursor-pointer transition ${
                 step === s.num
-                  ? 'text-indigo-400 font-bold'
+                  ? 'text-signal-400 font-bold'
                   : step > s.num
-                  ? 'text-emerald-400'
-                  : 'text-slate-500'
+                  ? 'text-pass-400'
+                  : 'text-ink-400'
               }`}
               onClick={() => setStep(s.num)}
             >
               <div
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-mono ${
                   step === s.num
-                    ? 'bg-indigo-600 text-white font-bold ring-2 ring-indigo-400'
+                    ? 'bg-signal-600 text-white font-bold ring-2 ring-signal-400'
                     : step > s.num
-                    ? 'bg-emerald-950 text-emerald-400 border border-emerald-700'
-                    : 'bg-slate-800 text-slate-400'
+                    ? 'bg-pass-950 text-pass-400 border border-pass-700'
+                    : 'bg-ink-800 text-ink-300'
                 }`}
               >
                 {step > s.num ? <Check className="w-3.5 h-3.5" /> : s.num}
@@ -300,7 +300,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-white mb-1">Paso 1: ¿De qué tratará el reporte técnico?</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-ink-300">
                   Selecciona una plantilla estandarizada o sube tu propia plantilla en formato Microsoft Word (.docx).
                 </p>
               </div>
@@ -314,31 +314,31 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
                       onClick={() => handleTemplateSelect(tpl)}
                       className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
                         isSelected
-                          ? 'bg-indigo-950/40 border-indigo-500 ring-2 ring-indigo-500/50 shadow-lg'
-                          : 'bg-slate-950/60 border-slate-800 hover:border-slate-700 hover:bg-slate-800/30'
+                          ? 'bg-signal-950/40 border-signal-500 ring-2 ring-signal-500/50 shadow-lg'
+                          : 'bg-ink-950/60 border-ink-700 hover:border-ink-600 hover:bg-ink-800/30'
                       }`}
                     >
                       <div className="flex items-start justify-between">
-                        <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                        <div className="p-2 rounded-lg bg-signal-500/10 text-signal-400 border border-signal-500/20">
                           <FileText className="w-5 h-5" />
                         </div>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-300 font-bold">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-ink-900 border border-ink-700 text-ink-200 font-bold">
                           {tpl.version}
                         </span>
                       </div>
 
                       <div>
                         <h4 className="text-xs font-bold text-white mb-1">{tpl.title}</h4>
-                        <p className="text-[11px] text-slate-400 leading-relaxed">{tpl.description}</p>
+                        <p className="text-[11px] text-ink-300 leading-relaxed">{tpl.description}</p>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-800/80 text-[10px] text-slate-400 space-y-1">
+                      <div className="pt-2 border-t border-ink-700/80 text-[10px] text-ink-300 space-y-1">
                         <div>
-                          <strong className="text-slate-300">Evidencias requeridas:</strong>{' '}
+                          <strong className="text-ink-200">Evidencias requeridas:</strong>{' '}
                           {tpl.requiredEvidences.join(', ')}
                         </div>
                         <div>
-                          <strong className="text-slate-300">Normas aplicables:</strong>{' '}
+                          <strong className="text-ink-200">Normas aplicables:</strong>{' '}
                           {tpl.applicableStandards.join(', ')}
                         </div>
                       </div>
@@ -348,20 +348,20 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
               </div>
 
               {/* Custom Upload Card */}
-              <div className="p-4 rounded-xl border border-dashed border-indigo-500/40 bg-indigo-950/10 hover:bg-indigo-950/20 transition flex items-center justify-between">
+              <div className="p-4 rounded-xl border border-dashed border-signal-500/40 bg-signal-950/10 hover:bg-signal-950/20 transition flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-indigo-500/20 text-indigo-300">
+                  <div className="p-2 rounded-lg bg-signal-500/20 text-signal-300">
                     <Upload className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="text-xs font-bold text-white">¿Tienes tu propia plantilla .DOCX o .PPTX?</h4>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-ink-300">
                       {customFileName ? `Archivo cargado: ${customFileName}` : 'Subir archivo Microsoft Word (.docx) o PowerPoint (.pptx) con tus patrones de diseño corporativos.'}
                     </p>
                   </div>
                 </div>
 
-                <label className="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold cursor-pointer transition">
+                <label className="px-4 py-2 rounded-lg bg-signal-600 hover:bg-signal-500 text-white text-xs font-bold cursor-pointer transition">
                   <span>Buscar Archivo</span>
                   <input
                     type="file"
@@ -379,40 +379,40 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-white mb-1">Paso 2: Datos de la Planta y Alcance</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-ink-300">
                   Especifica los datos generales de la instalación para personalizar la carátula y el expediente.
                 </p>
               </div>
 
-              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4 text-xs">
+              <div className="bg-ink-950 p-4 rounded-xl border border-ink-700 space-y-4 text-xs">
                 <div>
-                  <label className="font-semibold text-slate-300 block mb-1">Nombre de la Planta / Instalación:</label>
+                  <label className="font-semibold text-ink-200 block mb-1">Nombre de la Planta / Instalación:</label>
                   <input
                     type="text"
                     value={plantName}
                     onChange={(e) => setPlantName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-800 rounded p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full bg-ink-900 border border-ink-700 rounded p-2.5 text-xs text-white focus:outline-none focus:border-signal-500 font-sans"
                   />
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-300 block mb-1">Ubicación / Sector Interno:</label>
+                  <label className="font-semibold text-ink-200 block mb-1">Ubicación / Sector Interno:</label>
                   <input
                     type="text"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-800 rounded p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full bg-ink-900 border border-ink-700 rounded p-2.5 text-xs text-white focus:outline-none focus:border-signal-500 font-sans"
                   />
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-300 block mb-1">Objetivo del Reporte:</label>
+                  <label className="font-semibold text-ink-200 block mb-1">Objetivo del Reporte:</label>
                   <textarea
                     rows={3}
                     value={objective}
                     onChange={(e) => setObjective(e.target.value)}
                     placeholder="Ej: Verificación periódica anual para cumplimiento de auditoría técnica..."
-                    className="w-full bg-slate-900 border border-slate-800 rounded p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+                    className="w-full bg-ink-900 border border-ink-700 rounded p-2.5 text-xs text-white focus:outline-none focus:border-signal-500 font-sans"
                   />
                 </div>
               </div>
@@ -424,20 +424,20 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-white mb-1">Paso 3: Carga de Archivos y Evidencias de Campo</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-ink-300">
                   Adjunta las planillas Excel con mediciones, fotos o certificados para que los agentes extraigan los datos.
                 </p>
               </div>
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  <span className="text-xs font-bold text-ink-200 uppercase tracking-wider">
                     Evidencias Adjuntas ({uploadedFiles.length})
                   </span>
 
                   <button
                     onClick={handleAddEvidenceFile}
-                    className="flex items-center gap-1.5 px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-indigo-400 text-xs font-semibold cursor-pointer transition"
+                    className="flex items-center gap-1.5 px-3 py-1 rounded bg-ink-800 hover:bg-ink-700 text-signal-400 text-xs font-semibold cursor-pointer transition"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Agregar Archivo Simulado</span>
@@ -448,17 +448,17 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
                   {uploadedFiles.map((file, idx) => (
                     <div
                       key={idx}
-                      className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs"
+                      className="p-3 bg-ink-950 rounded-xl border border-ink-700 flex items-center justify-between text-xs"
                     >
                       <div className="flex items-center gap-3">
-                        <FileText className="w-4 h-4 text-indigo-400" />
+                        <FileText className="w-4 h-4 text-signal-400" />
                         <div>
                           <div className="font-semibold text-white">{file.name}</div>
-                          <div className="text-[10px] text-slate-500 font-mono">{file.size}</div>
+                          <div className="text-[10px] text-ink-400 font-mono">{file.size}</div>
                         </div>
                       </div>
 
-                      <span className="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 text-[10px] font-mono">
+                      <span className="px-2 py-0.5 rounded bg-signal-950 text-signal-300 border border-signal-800 text-[10px] font-mono">
                         {file.role}
                       </span>
                     </div>
@@ -473,47 +473,47 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-white mb-1">Paso 4: Resumen & Confirmación de Equipo ChatDev</h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-ink-300">
                   Revisa los datos antes de desplegar el equipo multi-agente de Ariel Agent OS.
                 </p>
               </div>
 
-              <div className="bg-slate-950 p-5 rounded-xl border border-slate-800 space-y-4 text-xs">
-                <div className="grid grid-cols-2 gap-4 border-b border-slate-800/80 pb-3">
+              <div className="bg-ink-950 p-5 rounded-xl border border-ink-700 space-y-4 text-xs">
+                <div className="grid grid-cols-2 gap-4 border-b border-ink-700/80 pb-3">
                   <div>
-                    <span className="text-slate-500 block">Plantilla Seleccionada:</span>
-                    <strong className="text-indigo-400">{selectedTemplate.title}</strong>
+                    <span className="text-ink-400 block">Plantilla Seleccionada:</span>
+                    <strong className="text-signal-400">{selectedTemplate.title}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-500 block">Archivo de Salida:</span>
+                    <span className="text-ink-400 block">Archivo de Salida:</span>
                     <strong className="text-white font-mono">{selectedTemplate.fileName}</strong>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 border-b border-slate-800/80 pb-3">
+                <div className="grid grid-cols-2 gap-4 border-b border-ink-700/80 pb-3">
                   <div>
-                    <span className="text-slate-500 block">Planta / Instalación:</span>
+                    <span className="text-ink-400 block">Planta / Instalación:</span>
                     <strong className="text-white">{plantName}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-500 block">Ubicación:</span>
-                    <strong className="text-slate-300">{location}</strong>
+                    <span className="text-ink-400 block">Ubicación:</span>
+                    <strong className="text-ink-200">{location}</strong>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-slate-500 block mb-1">Normativa & Criterios Aprobados:</span>
+                  <span className="text-ink-400 block mb-1">Normativa & Criterios Aprobados:</span>
                   <div className="flex flex-wrap gap-1.5">
                     {selectedTemplate.applicableStandards.map((s, i) => (
-                      <span key={i} className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-sky-300 font-mono text-[10px]">
+                      <span key={i} className="px-2 py-0.5 rounded bg-ink-900 border border-ink-700 text-signal-300 font-mono text-[10px]">
                         {s}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                <div className="p-3 bg-emerald-950/30 border border-emerald-800/60 rounded-lg text-emerald-300 text-[11px] flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+                <div className="p-3 bg-pass-950/30 border border-pass-800/60 rounded-lg text-pass-300 text-[11px] flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-pass-400 shrink-0" />
                   <span>
                     El orquestador creará el Work Item y asignará las tareas secuenciales entre el Especialista de Dominio, Investigador Normativo y Revisor Técnico.
                   </span>
@@ -525,11 +525,11 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
         </div>
 
         {/* Wizard Footer Controls */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center justify-between">
+        <div className="p-4 border-t border-ink-700 bg-ink-950 flex items-center justify-between">
           <button
             onClick={() => setStep((prev) => Math.max(1, prev - 1))}
             disabled={step === 1}
-            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 text-xs font-semibold cursor-pointer transition"
+            className="px-4 py-2 rounded-lg bg-ink-800 hover:bg-ink-700 disabled:opacity-40 text-ink-200 text-xs font-semibold cursor-pointer transition"
           >
             Atrás
           </button>
@@ -537,7 +537,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           {step < 4 ? (
             <button
               onClick={() => setStep((prev) => Math.min(4, prev + 1))}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs cursor-pointer shadow-lg shadow-indigo-600/30 transition-all"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-signal-600 hover:bg-signal-500 text-white font-bold text-xs cursor-pointer transition-colors transition-all"
             >
               <span>Siguiente</span>
               <ArrowRight className="w-4 h-4" />
@@ -545,7 +545,7 @@ export const TemplateIntakeWizardModal: React.FC<TemplateIntakeWizardModalProps>
           ) : (
             <button
               onClick={handleFinishWizard}
-              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs cursor-pointer shadow-lg shadow-emerald-600/30 transition-all"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-pass-600 hover:bg-pass-500 text-white font-bold text-xs cursor-pointer transition-colors"
             >
               <Sparkles className="w-4 h-4" />
               <span>Lanzar Equipo Multi-Agente ChatDev</span>

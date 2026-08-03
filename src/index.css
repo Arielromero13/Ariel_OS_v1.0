@@ -4,25 +4,51 @@
 
 @layer base {
   body {
-    @apply bg-slate-900 text-slate-100 font-sans antialiased;
+    @apply bg-ink-950 text-ink-50 font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-signal-500 text-ink-950;
+  }
+
+  /* Foco de teclado visible en todo momento — nunca decorativo únicamente. */
+  :focus-visible {
+    outline: 2px solid theme('colors.signal.400');
+    outline-offset: 2px;
   }
 }
 
-/* Custom scrollbars */
+/* Cifras, IDs y códigos técnicos siempre en monoespaciada tabular */
+.font-data {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Reduced motion respetado en toda la app */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom scrollbars — grafito, no el azul genérico del navegador */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #0A0B10;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #383D4E;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #4B5165;
 }
