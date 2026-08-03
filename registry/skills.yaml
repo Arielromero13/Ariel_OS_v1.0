@@ -28,7 +28,7 @@ skills:
     name: Análisis de informe de verificación P.A.T.
     kind: domain
     status: draft
-    version: 0.1.0
+    version: 0.2.0
     path: skills/analyze-grounding-report/SKILL.md
     domains:
       - electrical-grounding
