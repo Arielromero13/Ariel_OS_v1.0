@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-002",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "domain": "electrical-grounding",
+    "work_item_id": "WI-ALTAVISTA-2026-001"
+  },
+  "statement": {
+    "title": "Los 14 puntos 'Punta Franklin' (_03) usan un criterio cualitativo de interconexión, no un umbral numérico de resistencia",
+    "conclusion": "En los 14 puntos '_03' (uno por Power Station), la 'Fuente del criterio' cita IEC 62305-3:2006 §5.4/6.2.2/6.3, cuyo texto exige interconexión equipotencial de bajantes y electrodos del SPDA, no un valor de resistencia máxima. Sin embargo, la columna 'Resultado preliminar' marca 'CONFORME' en las 14 filas con el mismo criterio que parece aplicarse a los puntos de malla (Rg ≤ 1.0 Ω), y las lecturas de estos 14 puntos van de 1.135 Ω a 21.82 Ω — todas por encima de ese umbral.",
+    "classification": "aplicabilidad_de_criterio"
+  },
+  "scope": {
+    "point_ids": ["PS1_03", "PS2_03", "PS3_03", "PS4_03", "PS5_03", "PS6_03", "PS7_03", "PS8_03", "PS9_03", "PS10_03", "PS11_03", "PS12_03", "PS13_03", "PS14_03"],
+    "asset_ids": ["SPDA-PUNTAS-FRANKLIN"],
+    "system_ids": [],
+    "sections": ["6. Criterio de aceptación y análisis"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-MATRIX-COL-F-G"],
+    "reasoning": "El texto del criterio citado (columnas 'Criterio (Ω)' y 'Fuente del criterio') en las 14 filas '_03' no define un valor numérico de Ω — describe una obligación de interconexión equipotencial. La columna 'Resultado preliminar', sin embargo, es un campo calculado que aparenta comparar la lectura contra un umbral numérico heredado de los puntos de malla, no contra el criterio de interconexión realmente citado.",
+    "method_reference": "Comparación directa del texto de criterio contra el estado calculado, fila por fila."
+  },
+  "evaluation": {
+    "state": "No concluyente",
+    "criterion_id": "DOD-02",
+    "criterion_status": "pending_validation",
+    "criterion_rationale": "No se puede confirmar si 'CONFORME' en estas 14 filas refleja una verificación real de continuidad/interconexión (hecha por otro medio, no documentado en la matriz) o si es un arrastre del mismo cálculo de umbral usado para los puntos de malla. La matriz, tal como está, no distingue el tipo de verificación aplicada por tipo de punto."
+  },
+  "limitations": ["No se inspeccionaron las fotografías de configuración de estos 14 puntos, que podrían mostrar evidencia visual de la interconexión aunque la matriz no la capture como criterio evaluado."],
+  "impact": {
+    "severity": "high",
+    "decision_impact": "No permite confirmar el estado de aceptación de 14 de los 48 puntos evaluados (el 29% de la campaña) sin aclaración.",
+    "risk_statement": "Si el criterio de interconexión no se verificó realmente, el sistema estaría reportando 'Conforme' en puntos de protección contra rayos sin respaldo del criterio correcto."
+  },
+  "recommendation": {
+    "action": "Confirmar con el especialista de campo si la verificación de continuidad/interconexión de las puntas Franklin se hizo por un método distinto a la medición de Rg (ej. continuidad óhmica de bajante a malla), y documentarlo explícitamente en la matriz en lugar de heredar el mismo campo 'Resultado preliminar' calculado para los puntos de malla.",
+    "priority": "high",
+    "owner": "normative_researcher",
+    "justification": "Es la única forma de cerrar la distinción entre lo que el criterio exige y lo que la matriz reporta como cumplido."
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-003"],
+    "handoff_ids": ["HO-REF-001"],
+    "deliverable_sections": ["6. Criterio de aceptación y análisis"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "normative_researcher",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

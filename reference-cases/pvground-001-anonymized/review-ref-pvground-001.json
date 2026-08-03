@@ -1,0 +1,51 @@
+{
+  "review_id": "REV-TECH-REF-001",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "work_item_id": "WI-ALTAVISTA-2026-001",
+    "workflow": "grounding-report"
+  },
+  "reviewer": {
+    "role": "technical_reviewer",
+    "review_type": "technical",
+    "independence_confirmed": true
+  },
+  "scope": {
+    "target_artifact_ids": ["ART-MATRIX-REF"],
+    "target_finding_ids": ["FND-REF-001", "FND-REF-002", "FND-REF-003", "FND-REF-004"],
+    "target_evidence_ids": ["EVD-REF-MATRIX-COL-H", "EVD-REF-MATRIX-COL-F-G", "EVD-REF-MATRIX-ROW-PS12-03", "EVD-REF-MATRIX-MESH-POINTS"],
+    "target_pages_or_sections": ["4. Registro de mediciones", "6. Criterio de aceptación y análisis"]
+  },
+  "checks": [
+    { "check_id": "CHK-REF-01", "area": "trazabilidad lectura-evidencia", "result": "fail", "notes": "48 de 48 filas sin enlace resoluble en 'Foto de lectura'.", "evidence_links": ["EVD-REF-MATRIX-COL-H"] },
+    { "check_id": "CHK-REF-02", "area": "aplicabilidad del criterio por tipo de punto", "result": "fail", "notes": "14 puntos Franklin evaluados con un criterio de resistencia que no corresponde al criterio de interconexión citado.", "evidence_links": ["EVD-REF-MATRIX-COL-F-G"] },
+    { "check_id": "CHK-REF-03", "area": "coherencia observación-resultado", "result": "fail", "notes": "PS12_03 con observación de valor fuera de rango sin reflejar en el resultado.", "evidence_links": ["EVD-REF-MATRIX-ROW-PS12-03"] },
+    { "check_id": "CHK-REF-04", "area": "puntos de malla (34 de 48)", "result": "pass", "notes": "Lecturas, criterio y observaciones consistentes entre sí.", "evidence_links": ["EVD-REF-MATRIX-MESH-POINTS"] }
+  ],
+  "issues": [
+    { "issue_id": "ISS-REF-01", "severity": "medium", "blocking": true, "description": "Enlace foto-lectura roto en toda la matriz.", "related_artifact_ids": ["ART-MATRIX-REF"], "related_finding_ids": ["FND-REF-001"], "related_evidence_ids": ["EVD-REF-MATRIX-COL-H"] },
+    { "issue_id": "ISS-REF-02", "severity": "high", "blocking": true, "description": "Criterio de interconexión aplicado como umbral de resistencia en 14 puntos.", "related_artifact_ids": ["ART-MATRIX-REF"], "related_finding_ids": ["FND-REF-002"], "related_evidence_ids": ["EVD-REF-MATRIX-COL-F-G"] },
+    { "issue_id": "ISS-REF-03", "severity": "high", "blocking": true, "description": "Contradicción sin resolver en PS12_03.", "related_artifact_ids": ["ART-MATRIX-REF"], "related_finding_ids": ["FND-REF-003"], "related_evidence_ids": ["EVD-REF-MATRIX-ROW-PS12-03"] }
+  ],
+  "decision": {
+    "outcome": "partial_rework",
+    "rationale": "34 de 48 puntos (el grupo de malla) están limpios y se aprueban sin cambios. Los 14 puntos Franklin y la columna de referencia fotográfica requieren aclaración y corrección antes de integrar el paquete completo — no se puede declarar el conjunto aprobado mientras dos issues de severidad alta queden sin resolver."
+  },
+  "correction_request": {
+    "responsible_role": "domain_specialist",
+    "correction_type": "user_clarification",
+    "artifacts_to_modify": ["ART-MATRIX-REF"],
+    "artifacts_to_preserve": ["FND-REF-004"],
+    "acceptance_criteria": [
+      "Confirmación explícita de cómo se verificó la interconexión de las 14 puntas Franklin",
+      "Resolución documentada de la observación 'Valor fuera de rango' en PS12_03",
+      "Enlace foto-lectura resuelto o justificado como no aplicable para las 48 filas"
+    ]
+  },
+  "lifecycle": {
+    "status": "issued",
+    "correction_cycle": 0,
+    "superseded_by": null
+  }
+}

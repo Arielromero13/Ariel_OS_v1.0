@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-006",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "domain": "electrical-grounding",
+    "work_item_id": "WI-ALTAVISTA-2026-001"
+  },
+  "statement": {
+    "title": "4 de 5 fotos de lectura muestreadas están rotadas ~90°; los valores siguen siendo legibles inclinando la vista, ninguna resultó ilegible",
+    "conclusion": "Se extrajeron y revisaron visualmente 5 fotos de lectura representativas (PS1_01, PS1_03, PS4_02, PS12_03, SE_01). Las 5 muestran el visor del telurómetro con un valor legible que coincide exactamente con la matriz. De las 5, solo PS1_01 aparece en orientación 'natural' (terminales abajo a la izquierda); las otras 4 (PS1_03, PS4_02, PS12_03, SE_01) están giradas aproximadamente 90° respecto a esa — los dígitos se leen inclinando la cabeza, no al revés ni ilegibles. El patrón sugiere que el técnico sostuvo el equipo de forma consistente en la mayoría de las tomas, salvo en la primera.",
+    "classification": "qa_visual_evidencia"
+  },
+  "scope": {
+    "point_ids": ["PS1_01", "PS1_03", "PS4_02", "PS12_03", "SE_01"],
+    "asset_ids": [],
+    "system_ids": [],
+    "sections": ["5. Galería de evidencias"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-IMG1", "EVD-REF-IMG3", "EVD-REF-IMG11", "EVD-REF-IMG36", "EVD-REF-IMG43"],
+    "reasoning": "Inspección visual directa de las 5 imágenes extraídas del archivo, redimensionadas para revisión (no se alteró el archivo original). En las 5, el valor numérico en pantalla coincide con la matriz, confirmando que no hay error de referencia entre foto e ID — el problema es solo de orientación de presentación, no de trazabilidad.",
+    "method_reference": "Revisión visual directa; no se usaron metadatos EXIF, según la regla de la propia skill de no confiar solo en EXIF para orientación."
+  },
+  "evaluation": {
+    "state": "No conforme",
+    "criterion_id": "QA-VISUAL-ORIENTACION",
+    "criterion_status": "verified",
+    "criterion_rationale": "Regla de QA visual ya definida en la skill analyze-grounding-report: la orientación debe ser correcta para lectura humana, corrigiendo giros de 90°, 180° o 270° cuando sean necesarios, sin confiar solo en metadatos EXIF."
+  },
+  "limitations": ["Muestra de 5 de 48 fotos — no se revisaron las 43 restantes ni las fotos de 'ubicación/configuración' (que, según FND-REF-001, no existen todavía)."],
+  "impact": {
+    "severity": "low",
+    "decision_impact": "No bloquea el valor técnico del hallazgo (los valores son correctos y trazables), pero si esta galería se usa en un informe final, debe corregirse la orientación antes de insertarla — es exactamente la regla que la propia skill ya exige para QA visual.",
+    "risk_statement": null
+  },
+  "recommendation": {
+    "action": "Antes de integrar la galería en un informe, rotar las fotos giradas a orientación de lectura natural (0°) y revisar la muestra completa de 48, no solo las 5 verificadas aquí.",
+    "priority": "low",
+    "owner": "visual_reviewer",
+    "justification": "Cumple la regla ya escrita en la skill: corregir giros de 90/180/270° antes de la emisión."
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-001"],
+    "handoff_ids": [],
+    "deliverable_sections": ["5. Galería de evidencias"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "visual_reviewer",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

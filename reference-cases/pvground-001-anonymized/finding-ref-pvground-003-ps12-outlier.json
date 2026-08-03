@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-003",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "domain": "electrical-grounding",
+    "work_item_id": "WI-ALTAVISTA-2026-001"
+  },
+  "statement": {
+    "title": "PS12_03 = 21.82 Ω, marcado 'Valor fuera de rango' en Observaciones, pero calificado 'CONFORME' en Resultado preliminar",
+    "conclusion": "El punto PS12_03 (Punta Franklin, Power Station 12) registra la lectura más alta de toda la campaña — 21.82 Ω, entre 6 y 20 veces mayor que las demás lecturas '_03' (que van de 1.135 Ω a 5.39 Ω). La propia columna 'Observaciones' de esa fila dice 'Valor fuera de rango', una señal de alerta puesta por quien cargó el dato. Pese a eso, 'Resultado preliminar' mantiene 'CONFORME', igual que el resto de la fila.",
+    "classification": "inconsistencia_interna"
+  },
+  "scope": {
+    "point_ids": ["PS12_03"],
+    "asset_ids": ["PS12-PUNTA-FRANKLIN"],
+    "system_ids": [],
+    "sections": ["4. Registro de mediciones"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-MATRIX-ROW-PS12-03"],
+    "reasoning": "Comparación directa entre la columna 'Observaciones' (texto libre cargado por el técnico) y la columna 'Resultado preliminar' (campo calculado) para la misma fila.",
+    "method_reference": "Lectura directa de la fila PS12_03 en la hoja Mediciones."
+  },
+  "evaluation": {
+    "state": "No conforme",
+    "criterion_id": "DOD-03",
+    "criterion_status": "verified",
+    "criterion_rationale": "El propio DOD-03 de este ejercicio exige que ninguna observación de valor fuera de rango quede sin resolver en el estado final. Aquí la observación de campo contradice directamente el estado calculado, y esa contradicción no está resuelta ni explicada en la matriz."
+  },
+  "limitations": ["No hay forma, desde la matriz, de saber si 'Valor fuera de rango' fue una nota provisional que el técnico olvidó limpiar, o una alerta real que nunca se resolvió."],
+  "impact": {
+    "severity": "high",
+    "decision_impact": "Bloquea la aprobación limpia de PS12_03 hasta que se aclare la discrepancia.",
+    "risk_statement": "Un valor 4 a 6 veces más alto que el resto de las puntas Franklin, marcado como fuera de rango por el propio técnico y luego calificado conforme sin comentario adicional, es exactamente el tipo de contradicción que una revisión superficial puede pasar por alto."
+  },
+  "recommendation": {
+    "action": "Confirmar con el especialista de campo si PS12_03 se remidió, si la observación 'Valor fuera de rango' sigue vigente, y documentar explícitamente la resolución antes de mantener el estado 'Conforme'.",
+    "priority": "high",
+    "owner": "domain_specialist",
+    "justification": "Es el único punto de toda la campaña con una alerta de campo explícita no resuelta en el estado final."
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-002"],
+    "handoff_ids": ["HO-REF-001"],
+    "deliverable_sections": ["4. Registro de mediciones"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "domain_specialist",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

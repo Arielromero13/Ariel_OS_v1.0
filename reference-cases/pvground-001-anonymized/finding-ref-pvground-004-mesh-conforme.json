@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-004",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "domain": "electrical-grounding",
+    "work_item_id": "WI-ALTAVISTA-2026-001"
+  },
+  "statement": {
+    "title": "CORREGIDO — 33 de los 34 puntos de malla cumplen el criterio Rg ≤ 1.0 Ω con margen amplio; PS4_02 se trata aparte en FND-REF-005",
+    "conclusion": "De los 34 puntos evaluados contra el criterio de malla (Rg ≤ 1.0 Ω), 33 registran lecturas entre 0.025 Ω y 0.222 Ω, muy por debajo del umbral. El punto restante, PS4_02 (1.109 Ω), excede el umbral y se analiza por separado en FND-REF-005 — mi primera versión de este finding lo incluyó por error dentro del grupo 'conforme sin problemas'; quedó corregido tras que el responsable técnico señalara que esos valores cercanos al límite merecen un tratamiento distinto.",
+    "classification": "resistencia_de_tierra"
+  },
+  "scope": {
+    "point_ids": ["PS1_01", "PS1_02", "PS2-01", "PS2_02", "…(33 puntos de malla, excluye PS4_02)"],
+    "asset_ids": ["MALLA-POWER-STATIONS", "MALLA-SUBESTACION"],
+    "system_ids": [],
+    "sections": ["4. Registro de mediciones"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-MATRIX-MESH-POINTS"],
+    "reasoning": "Todas las lecturas de este grupo (excluyendo PS4_02) están al menos un orden de magnitud por debajo del criterio de 1.0 Ω.",
+    "method_reference": "Caída de potencial (FOP), 62%, Fluke 1625-2 GEO."
+  },
+  "evaluation": {
+    "state": "Conforme",
+    "criterion_id": "CRIT-REF-MESH-RG",
+    "criterion_status": "verified",
+    "criterion_rationale": "Rg ≤ 1.0 Ω (IEEE Std 142-1991 §4.1.2 como referencia histórica, IEEE Std 80 para evaluación de seguridad, IEEE Std 2760-2020 para plantas fotovoltaicas utility-scale); estos 33 puntos cumplen el umbral con margen amplio, sin lecturas cercanas al límite."
+  },
+  "limitations": ["El propio criterio citado aclara que la aceptación definitiva queda sujeta a verificación de GPR y tensiones de paso y contacto, no completada en esta campaña."],
+  "impact": {
+    "severity": "low",
+    "decision_impact": "No bloquea; este grupo no requiere corrección.",
+    "risk_statement": null
+  },
+  "recommendation": {
+    "action": "Ninguna acción requerida sobre este grupo de puntos.",
+    "priority": "low",
+    "owner": null,
+    "justification": null
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-005"],
+    "handoff_ids": ["HO-REF-001"],
+    "deliverable_sections": ["4. Registro de mediciones"]
+  },
+  "lifecycle": {
+    "status": "approved",
+    "created_by": "domain_specialist",
+    "reviewed_by": "technical_reviewer",
+    "superseded_by": null
+  }
+}
