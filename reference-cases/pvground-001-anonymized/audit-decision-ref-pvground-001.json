@@ -1,0 +1,81 @@
+{
+  "audit_id": "AUD-REF-001",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "work_item_id": "WI-ALTAVISTA-2026-001",
+    "workflow_id": "grounding-report",
+    "candidate_deliverable_id": "DEL-REF-001"
+  },
+  "auditor": {
+    "role": "auditor",
+    "agent_id": "auditor-run-001",
+    "independence_confirmed": true,
+    "domain_skill_context": ["analyze-grounding-report"]
+  },
+  "scope": {
+    "audit_type": "emission_gate",
+    "included_records": [
+      { "record_type": "finding", "record_id": "FND-REF-001" },
+      { "record_type": "finding", "record_id": "FND-REF-002" },
+      { "record_type": "finding", "record_id": "FND-REF-003" },
+      { "record_type": "finding", "record_id": "FND-REF-004" },
+      { "record_type": "review", "record_id": "REV-TECH-REF-001" }
+    ],
+    "excluded_checks": ["No se realizó QA visual de la galería fotográfica (imágenes embebidas no inspeccionadas en este ejercicio)."]
+  },
+  "gates": [
+    {
+      "gate_id": "GATE-DOD",
+      "name": "Definition of Done satisfecho",
+      "required": true,
+      "result": "fail",
+      "basis": [{ "record_type": "finding", "record_id": "FND-REF-001", "note": "DOD-01 no verificable con la matriz en su estado actual." }, { "record_type": "finding", "record_id": "FND-REF-003", "note": "DOD-03 incumplido en PS12_03." }]
+    },
+    {
+      "gate_id": "GATE-TECH-REVIEW",
+      "name": "Revisión técnica aprobada",
+      "required": true,
+      "result": "fail",
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-001", "note": "Outcome partial_rework, no approve." }]
+    },
+    {
+      "gate_id": "GATE-VISUAL-QA",
+      "name": "QA visual aprobada",
+      "required": true,
+      "result": "pending",
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-001", "note": "No ejecutada en este ejercicio; fuera de alcance." }]
+    }
+  ],
+  "gate_summary": {
+    "failed_required_gate_count": 2,
+    "pending_required_gate_count": 1,
+    "critical_open_decision_count": 2
+  },
+  "decision": {
+    "outcome": "no_emit",
+    "rationale": "Dos gates obligatorios fallan (Definition of Done y revisión técnica) y uno queda pendiente (QA visual, fuera de alcance de este ejercicio). El paquete no está listo para aprobación humana. Esto es consistente con lo esperado: el ejercicio no buscaba producir un informe emitible, sino probar si el sistema detecta problemas reales en un caso real — y los detectó.",
+    "conditions_before_emission": [
+      "Resolver ISS-REF-01, ISS-REF-02 e ISS-REF-03 del review REV-TECH-REF-001",
+      "Ejecutar QA visual de la galería fotográfica",
+      "Confirmar los dos open_decisions bloqueantes del handoff HO-REF-001"
+    ]
+  },
+  "residual_risks": [
+    { "risk_id": "RISK-REF-01", "description": "El informe Rev03 ya aprobado no documenta cómo se resolvieron estos tres puntos.", "severity": "medium", "treatment": "escalated", "linked_record_ids": ["FND-REF-002", "FND-REF-003"] }
+  ],
+  "required_actions": [
+    { "action_id": "ACT-REF-01", "action_type": "user_clarification", "owner": "Responsable técnico del proyecto", "acceptance_criterion": "Confirmar si la verificación de interconexión de puntas Franklin se hizo por método distinto al de resistencia.", "artifacts_to_preserve": ["FND-REF-004"], "artifacts_to_modify": ["ART-MATRIX-REF"] },
+    { "action_id": "ACT-REF-02", "action_type": "user_clarification", "owner": "Responsable técnico del proyecto", "acceptance_criterion": "Confirmar el estado real de PS12_03 (remedido, corregido o sigue fuera de rango).", "artifacts_to_preserve": [], "artifacts_to_modify": ["ART-MATRIX-REF"] }
+  ],
+  "human_approval": {
+    "required": true,
+    "status": "pending",
+    "approver_role": "Responsable técnico del proyecto"
+  },
+  "lifecycle": {
+    "status": "issued",
+    "correction_cycle": 0,
+    "issued_at": "2026-08-03T18:30:00Z"
+  }
+}

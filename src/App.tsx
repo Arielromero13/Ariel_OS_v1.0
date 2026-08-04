@@ -57,7 +57,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-ink-950 text-ink-50 flex flex-col font-sans">
       
       {/* Header Bar */}
       <Header
@@ -117,8 +117,8 @@ export const App: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-500">
-        <p>Ariel Agent OS — Portable Agent OS Framework | P.A.T. Verification Workbench</p>
+      <footer className="border-t border-ink-800 bg-ink-950 py-3.5 text-center text-[11px] text-ink-500 font-mono">
+        <p>Ariel Agent OS · oficina técnica digital portable, gobernada por evidencia y contratos</p>
       </footer>
 
       {/* Report Manifest Modal */}

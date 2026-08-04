@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-005",
+  "context": {
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "domain": "electrical-grounding",
+    "work_item_id": "WI-ALTAVISTA-2026-001"
+  },
+  "statement": {
+    "title": "PS4_02 = 1.109 Ω, apenas por encima del criterio de malla (≤1.0 Ω) — no se declara 'No conforme' de plano; se recomienda verificación y observación de tendencia",
+    "conclusion": "PS4_02 mide 1.109 Ω, 0.109 Ω por encima del criterio Rg ≤ 1.0 Ω — un exceso marginal, no un valor claramente fuera de rango como PS12_03 (21.82 Ω, ~22 veces el criterio). Foto de lectura verificada visualmente: el valor 1.109 en pantalla coincide con la matriz. Consistente con el criterio acordado de no tratar excesos marginales como no conformidad automática, este punto se marca 'No concluyente' con recomendación de repetición — no 'No conforme'.",
+    "classification": "resistencia_de_tierra"
+  },
+  "scope": {
+    "point_ids": ["PS4_02"],
+    "asset_ids": ["PS4-MALLA-LADO-DERECHO"],
+    "system_ids": [],
+    "sections": ["4. Registro de mediciones"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-IMG11-PS4-02"],
+    "reasoning": "El valor excede el criterio en un margen pequeño (10.9%), sin nota de campo que indique falla evidente (a diferencia de PS12_03, que sí trae 'Valor fuera de rango' en observaciones). Un solo exceso marginal, sin lectura histórica previa de este punto para comparar tendencia, no sustenta por sí solo una conclusión de no conformidad — pero tampoco debe archivarse como resuelto sin más.",
+    "method_reference": "Caída de potencial (FOP), 62%, Fluke 1625-2 GEO. Foto de lectura verificada visualmente (image11.png), orientación rotada 90° pero legible."
+  },
+  "evaluation": {
+    "state": "No concluyente",
+    "criterion_id": "CRIT-REF-MESH-RG",
+    "criterion_status": "pending_validation",
+    "criterion_rationale": "El exceso es marginal (10.9% sobre el límite) y no hay lectura histórica del mismo punto para confirmar si es una condición estable o una desviación puntual; declarar 'No conforme' de plano sería tan injustificado como declarar 'Conforme' sin más, dado el propio criterio de malla."
+  },
+  "limitations": ["No existe medición previa (histórica) de PS4_02 para esta instalación — esta es la revisión 01, primera campaña registrada — por lo que no se puede evaluar tendencia todavía; queda como línea base para comparar en la próxima campaña."],
+  "impact": {
+    "severity": "low",
+    "decision_impact": "No bloquea la emisión por sí solo, pero requiere quedar visible como punto a repetir/monitorear — no debe presentarse como 'Conforme' sin matiz.",
+    "risk_statement": "Un valor que hoy excede el criterio por poco puede ser ruido de medición o el inicio de una degradación real de la conexión; solo la comparación contra la próxima campaña lo distingue."
+  },
+  "recommendation": {
+    "action": "Mantener PS4_02 bajo observación en la próxima campaña. Si la próxima lectura es igual o menor, se considera dentro de la variabilidad normal de medición. Si la próxima lectura es mayor que 1.109 Ω, ordenar revisión del punto de unión del electrodo con la malla, independientemente de si el nuevo valor sigue cerca del límite o lo supera con más margen — una tendencia al alza es la señal de alerta, no solo el valor absoluto de una sola lectura.",
+    "priority": "medium",
+    "owner": "domain_specialist",
+    "justification": "Refleja cómo se trató este mismo tipo de caso en el informe Rev03 ya aprobado, donde el equivalente exacto (un punto de malla apenas sobre 1.0 Ω) se marcó 'Verificar contacto / repetir' en vez de 'Conforme' o 'No conforme'."
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-004"],
+    "handoff_ids": ["HO-REF-001"],
+    "deliverable_sections": ["4. Registro de mediciones"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "domain_specialist",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

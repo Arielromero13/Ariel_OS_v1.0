@@ -1,0 +1,58 @@
+{
+  "handoff_id": "HO-REF-001",
+  "context": {
+    "work_item_id": "WI-ALTAVISTA-2026-001",
+    "case_id": "CASE-ALTAVISTA-2026-Q1",
+    "revision_id": "REV-01",
+    "workflow": "grounding-report",
+    "domain": "electrical-grounding"
+  },
+  "routing": {
+    "from_role": "domain_specialist",
+    "to_role": "technical_reviewer",
+    "stage_completed": "technical_analysis",
+    "next_expected_action": "Validar los 4 hallazgos (FND-REF-001 a 004) y decidir si el paquete puede avanzar o requiere corrección antes de integración."
+  },
+  "status": {
+    "readiness": "ready_for_review",
+    "confidence": "medium",
+    "correction_cycle": 0
+  },
+  "summary": {
+    "completed_work": "Se consolidó la matriz de 48 puntos de la campaña Altavista 2026-Q1 y se analizaron por tipo de criterio (34 puntos de malla, 14 puntas Franklin), cruzando lecturas, criterios citados y observaciones de campo.",
+    "key_result": "34 de 48 puntos (los de malla) están limpiamente conformes. Los 14 puntos de puntas Franklin tienen un problema de aplicabilidad de criterio sin resolver, uno de ellos (PS12_03) con una contradicción interna explícita, y la matriz completa tiene la columna de referencia fotográfica de lectura rota en las 48 filas.",
+    "scope_covered": "Los 48 puntos de la campaña, cruzados contra criterio, observaciones y trazabilidad fotográfica declarada en la matriz.",
+    "scope_not_covered": "No se inspeccionaron las fotografías embebidas en el Excel ni las del informe Word; el análisis se hizo solo sobre los campos de texto y valores de la matriz."
+  },
+  "artifacts": [
+    { "artifact_id": "ART-MATRIX-REF", "type": "control_matrix", "location": "local://uploads/para_reporte_Central_PSFV_ALTAVISTA.xlsx", "status": "approved_for_review", "source_revision": "REV-01" }
+  ],
+  "findings": [
+    { "finding_id": "FND-REF-001", "summary": "Columna 'Foto de lectura' en error (#VALUE!) en las 48 filas.", "evidence_links": ["EVD-REF-MATRIX-COL-H"], "proposed_state": "No concluyente", "criterion_reference": "DOD-01" },
+    { "finding_id": "FND-REF-002", "summary": "Criterio de interconexión aplicado como si fuera umbral de resistencia en 14 puntos Franklin.", "evidence_links": ["EVD-REF-MATRIX-COL-F-G"], "proposed_state": "No concluyente", "criterion_reference": "DOD-02" },
+    { "finding_id": "FND-REF-003", "summary": "PS12_03 marcado 'Valor fuera de rango' en observaciones pero 'CONFORME' en resultado.", "evidence_links": ["EVD-REF-MATRIX-ROW-PS12-03"], "proposed_state": "No conforme", "criterion_reference": "DOD-03" },
+    { "finding_id": "FND-REF-004", "summary": "34 puntos de malla conformes sin contradicciones.", "evidence_links": ["EVD-REF-MATRIX-MESH-POINTS"], "proposed_state": "Conforme", "criterion_reference": "CRIT-REF-MESH-RG" }
+  ],
+  "limitations": [
+    { "item": "No se abrió el archivo en Excel para forzar recálculo de fórmulas.", "impact": "El hallazgo FND-REF-001 podría resolverse con solo reabrir y guardar el archivo.", "required_resolution": "Confirmar con el responsable técnico si el archivo fuente, abierto en Excel, sigue mostrando el error." },
+    { "item": "No se revisaron las fotografías embebidas.", "impact": "No se puede confirmar visualmente si el vínculo foto-lectura existe pese al error de fórmula.", "required_resolution": "Revisión visual de la galería como paso posterior, fuera de este ejercicio." }
+  ],
+  "open_decisions": [
+    { "decision_needed": "¿El criterio de interconexión de las puntas Franklin se verificó por otro método no capturado en la matriz?", "owner": "Responsable técnico del proyecto", "blocking": true },
+    { "decision_needed": "¿PS12_03 sigue con el valor fuera de rango sin remedir, o ya se resolvió fuera de esta matriz?", "owner": "Responsable técnico del proyecto", "blocking": true }
+  ],
+  "preservation": {
+    "artifacts_not_to_modify": ["ART-MATRIX-REF"],
+    "reason": "Es el archivo real del usuario; cualquier corrección debe hacerla él sobre su copia de trabajo, no este ejercicio."
+  },
+  "request_to_recipient": {
+    "objective": "Decidir si el paquete puede avanzar a integración o requiere corrección antes de continuar.",
+    "acceptance_criteria": ["Cada uno de los 4 findings recibe una decisión explícita", "Los dos open_decisions bloqueantes quedan reflejados en la decisión de revisión"],
+    "allowed_actions": ["Aprobar findings sin contradicciones (FND-REF-004)", "Solicitar corrección o aclaración en los findings con problemas (FND-REF-001, 002, 003)"],
+    "prohibited_actions": ["Aprobar el paquete completo como si no hubiera hallazgos pendientes"]
+  },
+  "traceability": {
+    "source_revision": "REV-01",
+    "generated_at": "2026-08-03T18:00:00Z"
+  }
+}

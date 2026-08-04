@@ -1,7 +1,7 @@
 ---
 name: analyze-grounding-report
 description: Prepara, revisa y controla informes de verificación de sistemas de puesta a tierra (P.A.T.) a partir de una matriz de campaña, fotografías, registros, planos y referencias aprobadas. Úsala para consolidar mediciones, verificar trazabilidad, analizar resultados con criterios técnicos verificables y preparar un informe Word para aprobación humana.
-version: 0.1.0
+version: 0.2.0
 status: draft
 ---
 
@@ -82,6 +82,19 @@ El estado sólo se asigna contra un criterio técnico explícito y aplicable, do
 - Si falta la fuente, cláusula o aplicabilidad, reporta el valor medido y deja el criterio pendiente de validación; no califiques la conformidad.
 - Distingue resultado de resistencia medido, condición visual, validez del método y criterio de aceptación. Son afirmaciones diferentes.
 - No declares una medición concluyente si su configuración, geometría o condiciones de ensayo no están suficientemente sustentadas.
+
+## Lecturas cerca del límite y comparación de tendencia
+
+No trates el criterio numérico como un corte binario limpio. Una lectura que excede el límite por un margen pequeño no se declara automáticamente `No conforme`, y una lectura muy por debajo del límite no necesita comentario adicional — pero una lectura cercana al límite, en cualquiera de los dos sentidos, sí merece criterio explícito:
+
+- Si la lectura excede el criterio por un margen reducido (orientativamente, dentro de un 10–15 % por encima del límite) y no hay otra señal de falla (observación de campo, contradicción, patrón atípico frente al resto de la campaña), clasifica el punto como `No concluyente`, no `No conforme`, con una recomendación explícita de repetir la medición o verificar el punto de contacto en la siguiente intervención.
+- Cuando exista una lectura histórica aprobada del mismo punto (de una campaña previa), compara la tendencia. Si la lectura actual es mayor que la histórica — incluso si ambas siguen dentro del criterio — señala la tendencia al alza como hallazgo y recomienda revisar la conexión del punto con la malla. Una tendencia ascendente es una señal de alerta independiente del margen respecto al umbral absoluto de una sola lectura.
+- Si no existe lectura histórica del punto (primera campaña registrada), documenta el valor como línea base explícita para la comparación de la próxima campaña, en vez de simplemente marcarlo conforme sin más.
+- Un valor muy por encima del criterio (varias veces el límite, o con una observación de campo que señale falla) sí se trata como hallazgo de mayor severidad desde la primera lectura — la tolerancia de margen aplica a excesos pequeños, no sustituye el juicio técnico ante una desviación grande.
+
+## Matrices con fotos insertadas en la celda (rich value)
+
+Algunas matrices de Excel insertan las fotos directamente en la celda con la función moderna de Excel ("Insertar imagen en la celda" / rich value), en vez de como texto de referencia o imagen flotante. Herramientas de lectura basadas en `openpyxl` no interpretan este formato y muestran `#VALUE!` en la celda — eso no significa que la foto falte. Antes de declarar una columna sin evidencia por este motivo, verifica si la celda usa rich value: revisa `xl/richData/` y `xl/metadata.xml` dentro del paquete del archivo (`.xlsx` es un zip), rastrea el atributo `vm` de la celda hasta la imagen en `xl/media/`, y extrae la imagen para confirmar visualmente antes de concluir que la trazabilidad está rota.
 
 ## QA visual de evidencias y maquetación
 
