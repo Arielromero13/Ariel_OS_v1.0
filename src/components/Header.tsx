@@ -1,6 +1,17 @@
 import React from 'react';
 import { WorkItem, LifecycleStatus } from '../types';
-import { ShieldAlert, ShieldCheck, CheckCircle2, AlertTriangle, FileCheck, RefreshCw, Lock, Sparkles, UserCheck } from 'lucide-react';
+import {
+  ShieldAlert,
+  ShieldCheck,
+  CheckCircle2,
+  RefreshCw,
+  Lock,
+  UserCheck,
+  FileCheck,
+  FileStack,
+  Cpu,
+  ChevronDown,
+} from 'lucide-react';
 
 interface HeaderProps {
   workItems: WorkItem[];
@@ -14,154 +25,178 @@ interface HeaderProps {
   setActiveTab: (tab: string) => void;
 }
 
+const TABS = [
+  { id: 'chatdev', label: 'Consola multiagente' },
+  { id: 'workflow', label: 'Etapas y handoffs' },
+  { id: 'measurements', label: 'Matriz de mediciones' },
+  { id: 'normative', label: 'Criterios normativos' },
+  { id: 'architecture', label: 'Catálogo de agentes' },
+];
+
 export const Header: React.FC<HeaderProps> = ({
   workItems,
   activeWorkItem,
   onSelectWorkItem,
-  onNewWorkItem,
   onOpenReportManifest,
   onOpenHarnessStudio,
   onOpenTemplateWizard,
   activeTab,
-  setActiveTab
+  setActiveTab,
 }) => {
   const status = activeWorkItem.lifecycle.status;
   const cycles = activeWorkItem.lifecycle.iteration_count;
-  const emissionGate = activeWorkItem.lifecycle.readiness.emission_gate;
 
   const getStatusBadge = (st: LifecycleStatus) => {
     switch (st) {
       case 'ready_for_emission':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"><CheckCircle2 className="w-3.5 h-3.5" /> EMISIÓN LISTA</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium bg-pass-950 text-pass-300 border border-pass-900">
+            <CheckCircle2 className="w-3.5 h-3.5" /> Lista para emisión
+          </span>
+        );
       case 'under_review':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30"><RefreshCw className="w-3.5 h-3.5 animate-spin" /> EN REVISIÓN</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium bg-pending-950 text-pending-300 border border-pending-900">
+            <RefreshCw className="w-3.5 h-3.5" /> En revisión
+          </span>
+        );
       case 'no_emit':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30"><ShieldAlert className="w-3.5 h-3.5" /> NO EMITIR</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium bg-fail-950 text-fail-300 border border-fail-900">
+            <ShieldAlert className="w-3.5 h-3.5" /> No emitir
+          </span>
+        );
       case 'blocked':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-600/30 text-red-400 border border-red-500/40"><Lock className="w-3.5 h-3.5" /> BLOQUEADO (3 CYCLES)</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium bg-fail-950 text-fail-300 border border-fail-900">
+            <Lock className="w-3.5 h-3.5" /> Bloqueado — 3 ciclos agotados
+          </span>
+        );
       case 'complete':
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-500/20 text-sky-400 border border-sky-500/30"><ShieldCheck className="w-3.5 h-3.5" /> COMPLETADO</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium bg-signal-950 text-signal-300 border border-signal-900">
+            <ShieldCheck className="w-3.5 h-3.5" /> Completado
+          </span>
+        );
       default:
-        return <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-700 text-slate-300 border border-slate-600">{st.toUpperCase().replace('_', ' ')}</span>;
+        return (
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-medium bg-ink-800 text-ink-200 border border-ink-600">
+            {st.replace(/_/g, ' ')}
+          </span>
+        );
     }
   };
 
   return (
-    <header className="bg-slate-950 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+    <header className="bg-ink-950 border-b border-ink-800 sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between py-3 gap-4">
-          
-          {/* Logo & Workspace Title */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500 via-indigo-600 to-blue-700 flex items-center justify-center text-white shadow-lg shadow-sky-500/20 border border-sky-400/30">
-              <Sparkles className="w-5 h-5" />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between py-3.5 gap-3">
+
+          {/* Marca */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="w-9 h-9 rounded-md bg-ink-900 border border-signal-800 flex items-center justify-center text-signal-400">
+              <ShieldCheck className="w-4.5 h-4.5" strokeWidth={2.25} />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-                  Ariel Agent OS
-                  <span className="text-xs px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-mono">v0.1.0</span>
-                </h1>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-800 font-mono font-semibold flex items-center gap-1">
-                  ⚡ Cockpit Control Room (Simulation Mode)
-                </span>
+              <div className="flex items-baseline gap-2">
+                <h1 className="text-[15px] font-semibold tracking-tight text-ink-50">Ariel Agent OS</h1>
+                <span className="font-mono text-[10px] text-ink-400">v0.2.0</span>
               </div>
-              <p className="text-xs text-slate-400">Sistema Portable de Agentes & Verificar Informe P.A.T.</p>
+              <p className="text-[11px] text-ink-400 leading-tight">Verificación P.A.T. — oficina técnica digital portable</p>
             </div>
           </div>
 
-          {/* Active Work Item Selector & Controls */}
-          <div className="flex flex-wrap items-center gap-3">
-            
-            {/* Selector */}
-            <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs">
-              <span className="text-slate-400 font-medium">Expediente:</span>
+          {/* Expediente activo + estado */}
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="relative flex items-center gap-2 bg-ink-900 border border-ink-700 rounded-md pl-3 pr-7 py-1.5">
+              <span className="text-[11px] text-ink-400 shrink-0">Expediente</span>
               <select
                 value={activeWorkItem.task_id}
                 onChange={(e) => onSelectWorkItem(e.target.value)}
-                className="bg-transparent text-white font-semibold focus:outline-none cursor-pointer"
+                className="appearance-none bg-transparent text-ink-50 text-xs font-mono font-medium focus:outline-none cursor-pointer pr-1"
               >
                 {workItems.map((item) => (
-                  <option key={item.task_id} value={item.task_id} className="bg-slate-900 text-white">
-                    {item.case.case_id} ({item.case.revision_id}) - {item.case.plant_name}
+                  <option key={item.task_id} value={item.task_id} className="bg-ink-900 text-ink-50 font-sans">
+                    {item.case.case_id} · rev. {item.case.revision_id} — {item.case.plant_name}
                   </option>
                 ))}
               </select>
+              <ChevronDown className="w-3.5 h-3.5 text-ink-400 absolute right-2.5 pointer-events-none" />
             </div>
 
-            {/* Lifecycle Status Pill */}
-            <div>{getStatusBadge(status)}</div>
+            {getStatusBadge(status)}
 
-            {/* Correction Budget Counter */}
-            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-medium border ${
-              cycles >= 3 ? 'bg-red-950/80 text-red-300 border-red-800' : cycles > 0 ? 'bg-amber-950/60 text-amber-300 border-amber-800' : 'bg-slate-900 text-slate-300 border-slate-800'
-            }`}>
-              <RefreshCw className={`w-3 h-3 ${cycles > 0 ? 'text-amber-400' : 'text-slate-400'}`} />
-              <span>Ciclos: {cycles}/3</span>
+            <div
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-mono border ${
+                cycles >= 3
+                  ? 'bg-fail-950 text-fail-300 border-fail-900'
+                  : cycles > 0
+                  ? 'bg-pending-950 text-pending-300 border-pending-900'
+                  : 'bg-ink-900 text-ink-300 border-ink-700'
+              }`}
+              title="Ciclos de corrección consumidos (máximo 3)"
+            >
+              <RefreshCw className="w-3 h-3" />
+              {cycles}/3
             </div>
 
-            {/* Human Approval Indicator */}
-            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-              activeWorkItem.human_approval_received ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-slate-900 text-slate-400 border-slate-800'
-            }`}>
+            <div
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-xs border ${
+                activeWorkItem.human_approval_received
+                  ? 'bg-pass-950 text-pass-300 border-pass-900'
+                  : 'bg-ink-900 text-ink-400 border-ink-700'
+              }`}
+              title="Aprobación humana registrada antes de emisión"
+            >
               <UserCheck className="w-3.5 h-3.5" />
-              <span>Aprobación Humana: {activeWorkItem.human_approval_received ? 'SÍ' : 'NO'}</span>
+              {activeWorkItem.human_approval_received ? 'Aprobado' : 'Sin aprobar'}
             </div>
+          </div>
 
-            {/* Template Intake Wizard Button */}
+          {/* Acciones */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={onOpenTemplateWizard}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md shadow-emerald-600/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-ink-900 hover:bg-ink-800 text-ink-100 text-xs font-medium border border-ink-700 transition-colors"
+              title="Cargar expediente desde plantillas .docx / .xlsx"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>Plantillas .DOCX / .PPTX (Intake Wizard)</span>
+              <FileStack className="w-3.5 h-3.5" />
+              Nuevo expediente
             </button>
-
-            {/* Harness Studio Button */}
             <button
               onClick={onOpenHarnessStudio}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-ink-900 hover:bg-ink-800 text-ink-100 text-xs font-medium border border-ink-700 transition-colors"
+              title="Configurar arnés de ejecución y conectores"
             >
-              <Sparkles className="w-4 h-4" />
-              <span>Arnés & Conectores IA</span>
+              <Cpu className="w-3.5 h-3.5" />
+              Arnés
             </button>
-
-            {/* Report Manifest Button */}
             <button
               onClick={onOpenReportManifest}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-md shadow-sky-600/20 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-signal-600 hover:bg-signal-500 text-ink-950 text-xs font-semibold transition-colors"
             >
-              <FileCheck className="w-4 h-4" />
-              <span>Manifest & Reporte</span>
+              <FileCheck className="w-3.5 h-3.5" />
+              Manifiesto
             </button>
-
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <nav className="flex items-center gap-1 border-t border-slate-800/80 pt-2 overflow-x-auto scrollbar-none">
-          {[
-            { id: 'chatdev', label: 'ChatDev Console (Multi-Agente)', icon: '💬' },
-            { id: 'workflow', label: 'Etapas & Handoffs (OS Workflow)', icon: '⚡' },
-            { id: 'measurements', label: 'Matriz de Mediciones & Fotos', icon: '📊' },
-            { id: 'normative', label: 'Criterios Normativos (IEEE/AEA)', icon: '📜' },
-            { id: 'architecture', label: 'Catálogo de Agentes & Roles', icon: '🧩' },
-          ].map((tab) => (
+        {/* Navegación */}
+        <nav className="flex items-center gap-1 border-t border-ink-800 -mb-px overflow-x-auto">
+          {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-3.5 py-2 text-xs font-medium rounded-t-lg transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+              className={`px-3.5 py-2.5 text-xs whitespace-nowrap border-b-2 transition-colors ${
                 activeTab === tab.id
-                  ? 'bg-slate-900 text-sky-400 border-t-2 border-sky-500 font-semibold shadow'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
+                  ? 'text-signal-400 border-signal-500 font-medium'
+                  : 'text-ink-400 border-transparent hover:text-ink-200 hover:border-ink-600'
               }`}
             >
-              <span>{tab.icon}</span>
-              <span>{tab.label}</span>
+              {tab.label}
             </button>
           ))}
         </nav>
-
       </div>
     </header>
   );
