@@ -6,6 +6,7 @@ export type ModelProvider =
   | 'native_antigravity' 
   | 'native_claude_code' 
   | 'native_codex_cli' 
+  | 'native_codex_cloud'
   | 'gemini' 
   | 'openai' 
   | 'claude' 
