@@ -8,6 +8,7 @@ import { LocalSimulatorConnector } from '../src/harness/connectors/simulatorConn
 import { NativeAntigravityAdapter } from './antigravity/antigravityAdapter';
 import { NativeClaudeCodeAdapter } from './claudeCodeAdapter';
 import { NativeCodexCliAdapter } from './codexCliAdapter';
+import { NativeCodexCloudAdapter } from './codexCloudAdapter';
 
 export function createModelConnector(config: ModelConfig): BaseModelConnector {
   switch (config.provider) {
@@ -17,6 +18,8 @@ export function createModelConnector(config: ModelConfig): BaseModelConnector {
       return new NativeClaudeCodeAdapter(config);
     case 'native_codex_cli':
       return new NativeCodexCliAdapter(config);
+    case 'native_codex_cloud':
+      return new NativeCodexCloudAdapter(config);
     case 'gemini':
       return new GeminiModelConnector(config);
     case 'openai':
@@ -38,4 +41,5 @@ export {
   NativeAntigravityAdapter,
   NativeClaudeCodeAdapter,
   NativeCodexCliAdapter,
+  NativeCodexCloudAdapter,
 };
