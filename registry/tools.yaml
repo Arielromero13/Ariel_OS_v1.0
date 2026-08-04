@@ -268,6 +268,56 @@ tools:
       - No autoriza liberación externa.
       - Una liberación requiere el registro de aprobación humana definido por el workflow.
 
+  - id: telegram_field_capture
+    name: Captura de mensajes de Telegram en campo
+    category: capture
+    status: declared_not_bound
+    required_for_pilot: false
+    purpose: >
+      Recibir fotos y texto enviados por el ingeniero desde campo durante
+      una ruta de mediciones, asociados a un punto por etiqueta declarada
+      en el propio mensaje.
+    operations:
+      - receive_message
+      - extract_photo
+      - extract_caption
+      - notify_sender
+    accepts:
+      - telegram_update
+    produces:
+      - raw_photo_file
+      - parsed_point_label
+    allowed_roles:
+      - orchestrator
+    constraints:
+      - No interpreta el contenido visual del instrumento.
+      - No evalúa ni clasifica la medición.
+      - Si la etiqueta es ambigua, pide reenvío en vez de adivinar.
+
+  - id: blob_object_store
+    name: Almacenamiento de objetos para evidencia cruda de campo
+    category: storage
+    status: declared_not_bound
+    required_for_pilot: false
+    purpose: >
+      Guardar fotos y manifiestos de campaña capturados en campo, fuera del
+      repositorio de Git, hasta que se procesen en sesión formal.
+    operations:
+      - write_object
+      - read_object
+      - list_objects_by_prefix
+    accepts:
+      - images
+      - structured_records
+    produces:
+      - object_reference
+    allowed_roles:
+      - orchestrator
+    constraints:
+      - No es el almacenamiento de artefactos del expediente formal
+        (workspace_artifact_store); es una bandeja de entrada temporal.
+      - Los datos reales de campaña no se suben al repositorio de Git.
+
 adapter_binding_template:
   required_fields:
     - tool_id

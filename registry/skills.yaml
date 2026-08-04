@@ -76,6 +76,31 @@ skills:
       - Cada estado Conforme o No conforme tiene criterio verificable.
       - Sus salidas cumplen los contratos de evidencia y finding.
 
+  - id: capture-telegram-evidence
+    name: Captura de evidencia de campo por Telegram
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/capture-telegram-evidence/SKILL.md
+    domains:
+      - evidence-management
+      - field-capture
+    invocable_by:
+      - orchestrator
+    required_inputs:
+      - telegram_message_with_photo
+    produces:
+      - campaign_capture_manifest
+      - raw_evidence_files
+    requires_tools:
+      - telegram_field_capture
+      - blob_object_store
+    boundaries:
+      - No lee el valor medido en la foto ni evalúa conformidad.
+      - No arma la matriz de control ni el informe.
+      - No sustituye manage-photo-evidence-gallery ni validate-technical-traceability.
+      - El manifiesto que produce no es un evidence.schema.json validado.
+
   - id: validate-spreadsheet-input
     name: Validación de matrices y hojas de cálculo
     kind: transversal
