@@ -7,6 +7,7 @@ import { ClaudeModelConnector } from '../src/harness/connectors/claudeConnector'
 import { LocalSimulatorConnector } from '../src/harness/connectors/simulatorConnector';
 import { NativeAntigravityAdapter } from './antigravity/antigravityAdapter';
 import { NativeCodexCliAdapter } from './codexCliAdapter';
+import { NativeCodexCloudAdapter } from './codexCloudAdapter';
 
 /**
  * NativeClaudeCodeAdapter y NativeCodexCloudAdapter usan child_process/util
@@ -51,7 +52,7 @@ export async function createModelConnector(config: ModelConfig): Promise<BaseMod
     case 'native_codex_cli':
       return new NativeCodexCliAdapter(config);
     case 'native_codex_cloud':
-      return createNodeCliConnector('native_codex_cloud', config);
+      return new NativeCodexCloudAdapter(config);
     case 'gemini':
       return new GeminiModelConnector(config);
     case 'openai':
@@ -72,6 +73,7 @@ export {
   LocalSimulatorConnector,
   NativeAntigravityAdapter,
   NativeCodexCliAdapter,
+  NativeCodexCloudAdapter,
 };
 
 // NativeClaudeCodeAdapter y NativeCodexCloudAdapter ya no se re-exportan
