@@ -1,11 +1,34 @@
-import { execFile } from 'child_process';
-import { promisify } from 'util';
 import { BaseModelConnector } from '../src/harness/connectors/base';
 import { PromptPayload, ModelCompletionResponse } from '../src/harness/types';
 
-const execFileAsync = promisify(execFile);
+// 'child_process' se importa de forma dinámica DENTRO de la función, nunca
+// como import estático de nivel superior: Rollup valida en tiempo de build
+// los exports nombrados de un import estático, y el shim de navegador de
+// Vite para módulos de Node no expone ninguno — eso rompía `npm run build`
+// aunque este archivo completo ya se carga bajo demanda (ver adapters/index.ts).
+// Con import() dinámico, Rollup no valida el export en build; el fallo (si
+// ocurre) pasa a tiempo de ejecución y ya está cubierto por el try/catch.
+async function execFileAsync(
+  file: string,
+  args: string[],
+  options: { timeout: number; maxBuffer: number }
+): Promise<{ stdout: string }> {
+  const cp = await import('child_process');
+  return new Promise((resolve, reject) => {
+    cp.execFile(file, args, options, (err, stdout) => {
+      if (err) reject(err);
+      else resolve({ stdout: stdout.toString() });
+    });
+  });
+}
 
 /**
+ * NOTA: este adaptador depende de Node.js (child_process) y del binario
+ * `codex` instalado localmente — no aplica al despliegue web en Vercel.
+ * Se carga de forma dinámica desde adapters/index.ts precisamente para no
+ * romper el build del navegador; usarlo requiere una terminal local, no el
+ * sitio desplegado.
+ *
  * Adaptador para OpenAI Codex Cloud
  *
  * A diferencia de codexCliAdapter.ts (sesión local ambiental), este adaptador
