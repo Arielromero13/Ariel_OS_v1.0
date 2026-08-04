@@ -18,6 +18,14 @@ export interface ModelConfig {
   apiKey?: string;
   temperature?: number;
   maxTokens?: number;
+  /** Ruta al binario CLI, si difiere del PATH por defecto ('claude' / 'codex'). */
+  cliBinaryPath?: string;
+  /** ID del entorno de Codex Cloud ya configurado (repo + branch + setup). Requerido para native_codex_cloud. */
+  cloudEnvironmentId?: string;
+  /** Lista de herramientas permitidas para invocaciones headless (ej. 'Read,Edit,Bash'). */
+  allowedTools?: string;
+  /** Modo de permisos para Claude Code headless (ej. 'acceptEdits', 'ask'). Por defecto 'ask' — nunca escribe sin aprobación. */
+  permissionMode?: string;
 }
 
 export interface PromptPayload {
