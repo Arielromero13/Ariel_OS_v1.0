@@ -18,7 +18,7 @@ export class ArielHarnessEngine {
   }
 
   public async executeNextStage(workItem: WorkItem): Promise<HarnessExecutionResult> {
-    const connector = createModelConnector(this.config);
+    const connector = await createModelConnector(this.config);
 
     // Check circuit breaker first
     if (workItem.lifecycle.iteration_count >= 3) {

@@ -39,7 +39,7 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
         setModelName('gpt-4o');
         break;
       case 'claude':
-        setModelName('claude-3-5-sonnet-20241022');
+        setModelName('claude-sonnet-4-6');
         break;
       case 'simulator':
         setModelName('Ariel-Deterministic-Simulator');
@@ -52,7 +52,9 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
     const config: ModelConfig = {
       provider,
       modelName,
-      apiKey: apiKey.trim() || undefined,
+      // Para 'claude' la API key nunca sale del servidor (ver api/claude.ts) —
+      // cualquier valor introducido en el campo del navegador se ignora a propósito.
+      apiKey: provider === 'claude' ? undefined : (apiKey.trim() || undefined),
       temperature: 0.2,
       maxTokens: 1024,
     };
@@ -221,16 +223,19 @@ export const HarnessStudioModal: React.FC<HarnessStudioModalProps> = ({ workItem
 
               <div className="md:col-span-2">
                 <label className="text-xs font-medium text-ink-300 block mb-1">
-                  API key opcional — si se omite, usa variable de entorno o simulador
+                  {provider === 'claude'
+                    ? 'API key — configurada solo en el servidor (Vercel)'
+                    : 'API key opcional — si se omite, usa variable de entorno o simulador'}
                 </label>
                 <div className="relative">
                   <Key className="w-4 h-4 text-ink-400 absolute left-2.5 top-2.5" />
                   <input
                     type="password"
-                    value={apiKey}
+                    value={provider === 'claude' ? '' : apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
-                    placeholder="sk-..."
-                    className="w-full bg-ink-950 border border-ink-700 rounded pl-8 p-2 text-xs text-ink-50 focus:outline-none focus:border-signal-500 font-mono"
+                    placeholder={provider === 'claude' ? 'ANTHROPIC_API_KEY en Vercel — no se introduce aquí' : 'sk-...'}
+                    disabled={provider === 'claude'}
+                    className="w-full bg-ink-950 border border-ink-700 rounded pl-8 p-2 text-xs text-ink-50 focus:outline-none focus:border-signal-500 font-mono disabled:opacity-40 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
