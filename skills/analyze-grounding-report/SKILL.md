@@ -34,7 +34,7 @@ El anexo técnico del dominio debe identificar, cuando aplique:
 - Matriz o tabla de mediciones.
 - Fotografías de las mediciones.
 - Registros y notas de campo.
-- Plantilla maestra vigente.
+- Plantilla maestra vigente (ver [`templates/grounding-report/`](../../templates/grounding-report/README.md)).
 - Informes históricos aprobados.
 - Fuentes normativas o especificaciones de diseño disponibles.
 
