@@ -312,14 +312,23 @@ function buildGroundingReportDocx(data) {
   children.push(p(data.conclusions.resultado));
   children.push(pBold("7.2 Estado general del sistema"));
   children.push(p(data.conclusions.estadoGeneral));
-  children.push(pBold("7.3 Recomendaciones"));
-  data.conclusions.recomendaciones.forEach((t, i) => children.push(p(`${i + 1}. ${t}`)));
+  // Recomendaciones y anexos son la capa de rigor interno (auditoría, trazabilidad)
+  // -- se omiten en modo `light`, la versión que sale hacia clientes internos.
+  // La versión completa la conserva Ariel para sí mismo.
+  if (data.conclusions.recomendaciones && data.conclusions.recomendaciones.length) {
+    children.push(pBold("7.3 Recomendaciones"));
+    data.conclusions.recomendaciones.forEach((t, i) => children.push(p(`${i + 1}. ${t}`)));
+  }
 
-  children.push(h("Anexo A. Lista de cierre técnico", HeadingLevel.HEADING_1));
-  data.anexoA.forEach(([box, text]) => children.push(p(`${box}  ${text}`)));
+  if (data.anexoA && data.anexoA.length) {
+    children.push(h("Anexo A. Lista de cierre técnico", HeadingLevel.HEADING_1));
+    data.anexoA.forEach(([box, text]) => children.push(p(`${box}  ${text}`)));
+  }
 
-  children.push(h("Anexo B. Registro de orquestación de esta corrida (Ariel Agent OS)", HeadingLevel.HEADING_1));
-  children.push(dataTable([["Rol", "Resultado"], ...data.anexoB], [2400, 6950]));
+  if (data.anexoB && data.anexoB.length) {
+    children.push(h("Anexo B. Registro de orquestación de esta corrida (Ariel Agent OS)", HeadingLevel.HEADING_1));
+    children.push(dataTable([["Rol", "Resultado"], ...data.anexoB], [2400, 6950]));
+  }
 
   const doc = new Document({
     sections: [
