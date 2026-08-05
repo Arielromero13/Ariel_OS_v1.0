@@ -61,6 +61,7 @@ skills:
       - manage-photo-evidence-gallery
       - validate-technical-traceability
       - research-normative-criterion
+      - critique-grounding-safety-analysis
     requires_tools:
       - workspace_artifact_store
       - spreadsheet_processor
@@ -187,6 +188,39 @@ skills:
       - Registra fuente, edición, cláusula y aplicabilidad.
       - No atribuye límites genéricos ni declara cumplimiento por analogía.
       - Si la fuente no es verificable, conserva el criterio como pendiente.
+
+  - id: critique-grounding-safety-analysis
+    name: Crítica de ingeniería eléctrica en verificaciones P.A.T.
+    kind: domain
+    status: draft
+    version: 0.1.0
+    path: skills/critique-grounding-safety-analysis/SKILL.md
+    domains:
+      - electrical-grounding
+      - engineering-critique
+    applicable_workflows:
+      - grounding-report
+    invocable_by:
+      - domain_specialist
+      - technical_reviewer
+      - auditor
+    required_inputs:
+      - validated_control_matrix
+      - technical_findings_or_draft
+      - criteria_register
+    produces:
+      - technical_critique_record
+    requires_tools:
+      - workspace_artifact_store
+    boundaries:
+      - No inventa estudios, datos o mediciones no provistos; los marca como faltantes.
+      - No sustituye la verificación de fuente/edición/cláusula de research-normative-criterion.
+      - En modo auditoría no rehace el análisis técnico ni emite juicio de ingeniería propio.
+      - Declarar sin hallazgos solo es válido si cada pregunta aplicable fue respondida explícitamente.
+    validation:
+      - domain_specialist y technical_reviewer registran un technical_critique_record propio y separado.
+      - technical_reviewer llega a su conclusión antes de leer la del especialista.
+      - auditor verifica que ambos registros existen y están razonados, no solo que existen.
 
   - id: write-document-from-template
     name: Ensamblaje de documento desde plantilla

@@ -135,6 +135,8 @@ Estas contienen la metodología y el criterio técnico particular de Ariel Agent
 
 - **[analyze-grounding-report](skills/analyze-grounding-report/SKILL.md)**  
   Analiza expedientes de verificación P.A.T. con evidencia de campaña, matriz, fotos, plantilla, histórico y criterios aplicables.
+- **[critique-grounding-safety-analysis](skills/critique-grounding-safety-analysis/SKILL.md)**  
+  Aplica criterio real de ingeniería eléctrica (IEEE/IEC) a un resultado P.A.T. — suficiencia del criterio, consistencia por activo, outliers, tendencia. La usan domain-specialist (al proponer), technical-reviewer (de forma independiente, antes de leer la propuesta) y auditor (para confirmar que las otras dos la usaron, sin rehacerla).
 - **analyze-comtrade-event**  
   Registrada como futura. No se activa hasta que tenga su propio método, contratos y pruebas.
 

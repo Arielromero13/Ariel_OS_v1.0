@@ -131,6 +131,10 @@ workflow:
     - id: technical_analysis
       owner: domain_specialist
       skill: analyze-grounding-report
+      transversal_skills:
+        - id: critique-grounding-safety-analysis
+          mode: proposal
+          purpose: Responder las preguntas de ingeniería (suficiencia del criterio, consistencia por activo, outliers, tendencia, corriente de falla, alcance de "Conforme") antes de proponer un estado de evaluación — no limitarse a comparar contra el umbral numérico.
       depends_on:
         - evidence_control
       purpose: Analizar las mediciones dentro de método, geometría, alcance y condiciones sustentadas.
@@ -142,9 +146,11 @@ workflow:
         - technical_findings
         - limitations_record
         - provisional_evaluation_states
+        - technical_critique_record
       acceptance:
         - no se emite conclusión fuera de la evidencia disponible
         - toda limitación relevante queda declarada
+        - technical_critique_record en modo proposal está completo, no solo la matriz
       on_failure: partial_rework_or_user_clarification
 
     - id: normative_analysis
@@ -175,6 +181,9 @@ workflow:
       transversal_skills:
         - id: validate-technical-traceability
           purpose: Reverificar el enlace medición→evidencia→finding→criterio antes de aprobar el análisis.
+        - id: critique-grounding-safety-analysis
+          mode: independent_review
+          purpose: Responder las 7 preguntas de ingeniería por cuenta propia, sin leer antes el technical_critique_record del especialista, y solo entonces comparar y declarar coincidencia razonada o desacuerdo.
       depends_on:
         - technical_analysis
         - normative_analysis
@@ -184,13 +193,16 @@ workflow:
         - technical_findings
         - limitations_record
         - criteria_register
+        - technical_critique_record
       produces:
         - technical_review_record
         - approved_findings
         - correction_request
+        - technical_critique_record
       acceptance:
         - estados Conforme, No conforme, No concluyente o Pendiente están justificados
         - la conclusión no excede evidencia ni alcance
+        - existe un technical_critique_record en modo independent_review, producido antes de leer el del especialista
       on_failure: correction_loop
 
     - id: report_integration
@@ -258,12 +270,17 @@ workflow:
 
     - id: decision_audit
       owner: auditor
+      transversal_skills:
+        - id: critique-grounding-safety-analysis
+          mode: process_audit
+          purpose: Confirmar que domain_specialist y technical_reviewer registraron un technical_critique_record razonado cada uno — no rehacer el juicio de ingeniería, solo verificar que ocurrió. Un expediente con matriz y galería impecables pero sin este registro no queda aprobado por forma.
       depends_on:
         - intent_validation
       purpose: Determinar si aprobar, bloquear o escalar es razonable.
       consumes:
         - decision_records
         - technical_review_record
+        - technical_critique_record
         - visual_qa_record
         - intent_validation_record
       produces:
@@ -272,6 +289,7 @@ workflow:
       acceptance:
         - decisión respaldada por evidencia y reglas
         - desacuerdos materiales se escalan, no se resuelven por reescritura automática
+        - existe technical_critique_record en modo proposal e independent_review, ambos razonados
       on_failure: escalation
 
   correction_loop:
