@@ -16,6 +16,8 @@ Integrar contenido ya aprobado en una plantilla, preservando estructura, estilo 
 - Hallazgos, tablas, textos y evidencias aprobados.
 - Referencias de artefactos y reglas de formato del workflow.
 
+Para el workflow `grounding-report`, la implementación de referencia ya resuelta es [`templates/grounding-report/generate_report.js`](../../templates/grounding-report/generate_report.js) — portada con logo, encabezado/pie, TOC nativo y figuras estándar calcados de un informe aprobado. Usarla en vez de reconstruir el formato a mano; ver el README de esa carpeta para el detalle y para el paso obligatorio de normalizar fotos antes de insertarlas (JPEG progresivo se renderiza mal en Word).
+
 # Procedimiento
 
 1. Registrar versión de la plantilla y contenido aprobado recibido.

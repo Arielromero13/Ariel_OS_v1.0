@@ -1,0 +1,8 @@
+{
+  "name": "grounding-report-generator",
+  "private": true,
+  "description": "Generador de referencia (generate_report.js) para informes P.A.T. del workflow grounding-report.",
+  "dependencies": {
+    "docx": "^9.0.0"
+  }
+}
