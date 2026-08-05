@@ -225,14 +225,28 @@ function buildGroundingReportDocx(data) {
   const { header, footer } = buildHeaderFooter(data);
 
   // --- Sección 1: portada + TOC, sin encabezado/pie (igual que Girasol) ---
+  // Tamaños, color y fuente calcados de los runs reales del XML de Girasol
+  // (paras 1, 5, 6, 7 de word/document.xml), no de un valor elegido a ojo:
+  // logo 3918124x3032760 EMU = 4.28 x 3.32 in (ahí flota como imagen anclada;
+  // acá va como imagen en línea centrada -- más simple y robusto en docx-js,
+  // diferencia reconocida, no es una réplica 1:1 del anchor); título 20pt
+  // negrita (sz 40); subtítulo planta/alcance 14.5pt negrita color 1F4E79
+  // (sz 29 -- el mismo navy de encabezados y tablas, no un azul distinto);
+  // "Fecha de emisión" 10pt sin negrita (hereda el estilo Normal, sin
+  // override). Girasol no tiene una línea de código de documento en portada
+  // -- se quita para no introducir un elemento que el original no tiene.
   const coverChildren = [];
-  const coverLogo = loadImage(path.join(ASSETS_DIR, "logo_egehaina_cover.png"), 260);
+  const coverLogo = loadImage(path.join(ASSETS_DIR, "logo_egehaina_cover.png"), 411);
   coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 200 }, children: [new ImageRun({ data: coverLogo.buf, transformation: coverLogo.transformation, type: coverLogo.type })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 40 }, children: [new TextRun({ text: "INFORME DE VERIFICACIÓN DEL", bold: true, size: 30, font: FONT_HEADING })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: "SISTEMA DE PUESTA A TIERRA (P.A.T.)", bold: true, size: 30, font: FONT_HEADING })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: `${data.plant.toUpperCase()} — ${(data.scopeArea || "").toUpperCase()}`, bold: true, size: 26, color: "1F6F8B", font: FONT_HEADING })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: `Fecha de emisión: ${data.emissionDateLabel}`, size: 20, font: FONT_BODY })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: data.docCode, size: 18, italics: true, font: FONT_BODY })] }));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 340, after: 0 }, children: [
+    new TextRun({ text: "INFORME DE VERIFICACIÓN DEL", bold: true, size: 40, font: FONT_BODY }),
+    new TextRun({ text: "SISTEMA DE PUESTA A TIERRA (P.A.T.)", bold: true, size: 40, font: FONT_BODY, break: 1 }),
+  ]}));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 0 }, children: [
+    new TextRun({ text: `${data.plant.toUpperCase()}`, bold: true, size: 29, color: NAVY, font: FONT_BODY }),
+    new TextRun({ text: (data.scopeArea || "").toUpperCase(), bold: true, size: 29, color: NAVY, font: FONT_BODY, break: 1 }),
+  ]}));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 370 }, children: [new TextRun({ text: `Fecha de emisión: ${data.emissionDateLabel}`, size: 20, font: FONT_BODY })] }));
   coverChildren.push(new Paragraph({ children: [new PageBreak()] }));
   coverChildren.push(h("Tabla de contenido", HeadingLevel.HEADING_2));
   coverChildren.push(new TableOfContents("Tabla de contenido", { hyperlink: true, headingStyleRange: "1-1" }));
