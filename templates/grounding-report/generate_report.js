@@ -31,6 +31,20 @@ const ASSETS_DIR = path.join(__dirname, "assets");
 const NAVY = "1F4E79";
 const LIGHT_BLUE = "D9EAF7";
 
+// Tipografía calcada de Informe_PAT_Girasol_Rev03 (styles.xml + runs reales,
+// no el tema por defecto): cuerpo en Arial 14pt, encabezados en Calibri
+// (fuente "major" del tema) 14pt negrita color NAVY -- el mismo azul de las
+// tablas, coherencia de marca deliberada en el original. Sin esto, docx-js
+// cae a su propio default (Times New Roman) y el documento no queda
+// homogéneo con el resto de los informes.
+const FONT_BODY = "Arial";
+const FONT_HEADING = "Calibri";
+const SIZE_BODY = 28; // 14pt
+const SIZE_TABLE_FIELDVALUE = 22; // 11pt -- tabla "Datos de campaña"
+const SIZE_TABLE_DATA = 18; // 9pt -- tabla "Registro de mediciones"
+const SIZE_FIGURE_CAPTION = 17; // 8.5pt -- pie de las figuras fijas (1 y 2)
+const SIZE_GALLERY_CAPTION = 16; // 8pt -- pie de foto de la galería de evidencias
+
 // ---------- utilidades de imagen ----------
 
 // Lee ancho/alto de PNG (chunk IHDR) o JPEG (escanea marcadores SOF) sin
@@ -81,12 +95,19 @@ function loadImage(filePath, targetWidth) {
 
 // ---------- helpers de texto/tabla ----------
 
-const NORMAL = { size: 21 };
+const NORMAL = { size: SIZE_BODY, font: FONT_BODY };
 const border = { style: BorderStyle.SINGLE, size: 2, color: "999999" };
 const cellBorders = { top: border, bottom: border, left: border, right: border };
 
+// Encabezados de sección: se pasa `heading` para el outline/TOC, pero el
+// formato real (fuente, tamaño, color) va explícito en el run -- así no
+// depende del estilo Heading1 que trae docx-js por default.
 function h(text, level) {
-  return new Paragraph({ text, heading: level, spacing: { before: 240, after: 120 } });
+  return new Paragraph({
+    heading: level,
+    spacing: { before: 240, after: 120 },
+    children: [new TextRun({ text, bold: true, size: SIZE_BODY, font: FONT_HEADING, color: NAVY })],
+  });
 }
 function p(text, opts = {}) {
   return new Paragraph({ children: [new TextRun({ text, ...NORMAL, ...opts })], spacing: { after: 120 } });
@@ -99,7 +120,7 @@ function cell(text, opts = {}) {
     width: { size: opts.width || 2000, type: WidthType.DXA },
     shading: opts.fill ? { type: ShadingType.CLEAR, fill: opts.fill } : undefined,
     verticalAlign: VerticalAlign.CENTER,
-    children: [new Paragraph({ children: [new TextRun({ text, bold: !!opts.bold, size: 18, color: opts.color })] })],
+    children: [new Paragraph({ children: [new TextRun({ text, bold: !!opts.bold, size: opts.size || SIZE_TABLE_DATA, font: FONT_BODY, color: opts.color })] })],
   });
 }
 
@@ -122,16 +143,19 @@ function fieldValueTable(rows, widths) {
     width: { size: 9350, type: WidthType.DXA },
     columnWidths: widths,
     rows: rows.map(([label, value]) => new TableRow({
-      children: [cell(label, { bold: true, fill: LIGHT_BLUE, width: widths[0] }), cell(value, { width: widths[1] })],
+      children: [
+        cell(label, { bold: true, fill: LIGHT_BLUE, width: widths[0], size: SIZE_TABLE_FIELDVALUE }),
+        cell(value, { width: widths[1], size: SIZE_TABLE_FIELDVALUE }),
+      ],
     })),
   });
 }
 
-function figureBlock(imgPath, caption, width) {
+function figureBlock(imgPath, caption, width, captionSize = SIZE_FIGURE_CAPTION) {
   const img = loadImage(imgPath, width);
   return [
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 120 }, children: [new ImageRun({ data: img.buf, transformation: img.transformation, type: img.type })] }),
-    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: caption, italics: true, size: 18 })] }),
+    new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: caption, italics: true, size: captionSize, font: FONT_BODY })] }),
   ];
 }
 
@@ -142,7 +166,7 @@ function pendingPhotoBox(label) {
     rows: [new TableRow({ children: [new TableCell({
       borders: cellBorders, shading: { type: ShadingType.CLEAR, fill: "F0F0F0" }, width: { size: 9350, type: WidthType.DXA },
       children: [new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 300, after: 300 }, children: [
-        new TextRun({ text: `${label} — pendiente de embeber (falta el archivo de imagen)`, italics: true, size: 18 }),
+        new TextRun({ text: `${label} — pendiente de embeber (falta el archivo de imagen)`, italics: true, size: SIZE_GALLERY_CAPTION, font: FONT_BODY }),
       ]})],
     })] })],
   });
@@ -155,6 +179,7 @@ function buildHeaderFooter(data) {
   const noBorder = { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } };
   const hc = (children, opts = {}) => new TableCell({ borders: noBorder, columnSpan: opts.span || 1, verticalMerge: opts.vMerge, verticalAlign: VerticalAlign.CENTER, children });
   const ht = (runs) => new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 0 }, children: runs });
+  const hrun = (opts) => new TextRun({ font: FONT_BODY, ...opts });
 
   const header = new Header({
     children: [new Table({
@@ -168,16 +193,17 @@ function buildHeaderFooter(data) {
       rows: [
         new TableRow({ children: [
           hc([new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 0 }, children: [new ImageRun({ data: logoBuf, transformation: { width: 82, height: 63 }, type: "png" })] })], { vMerge: "restart" }),
-          hc([ht([new TextRun({ text: data.gerencia || "GERENCIA DE INGENIERÍA Y PROYECTOS", bold: true })])], { span: 3 }),
+          hc([ht([hrun({ text: data.gerencia || "GERENCIA DE INGENIERÍA Y PROYECTOS", bold: true })])], { span: 3 }),
         ]}),
         new TableRow({ children: [
           hc([new Paragraph({ children: [] })], { vMerge: "continue" }),
-          hc([ht([new TextRun({ text: `${data.plant} — S/E ${data.plantShortCode || data.plant}`, size: 17 })])]),
-          hc([ht([new TextRun({ text: data.campaignDateLabel, size: 16, break: 1 })])]),
+          hc([ht([hrun({ text: `${data.plant} — S/E ${data.plantShortCode || data.plant}`, size: 17 })])]),
+          // En Girasol esta fecha del encabezado coincide con la fecha de EMISIÓN, no con la de campaña -- pasar headerDateLabel en consecuencia.
+          hc([ht([hrun({ text: data.headerDateLabel, size: 16, break: 1 })])]),
           hc([ht([
-            new TextRun({ text: data.docCode, size: 15 }),
-            new TextRun({ text: "Página ", size: 15, break: 1 }),
-            new TextRun({ children: [PageNumber.CURRENT], size: 15 }),
+            hrun({ text: data.docCode, size: 15 }),
+            hrun({ text: "Página ", size: 15, break: 1 }),
+            hrun({ children: [PageNumber.CURRENT], size: 15 }),
           ])]),
         ]}),
       ],
@@ -186,7 +212,7 @@ function buildHeaderFooter(data) {
 
   const footer = new Footer({
     children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [
-      new TextRun({ text: data.footerLine || `Informe de verificación del sistema de puesta a tierra — ${data.plant}`, size: 16, italics: true, color: "646464" }),
+      hrun({ text: data.footerLine || `Informe de verificación del sistema de puesta a tierra — ${data.plant}`, size: 16, italics: true, color: "646464" }),
     ]})],
   });
 
@@ -202,11 +228,11 @@ function buildGroundingReportDocx(data) {
   const coverChildren = [];
   const coverLogo = loadImage(path.join(ASSETS_DIR, "logo_egehaina_cover.png"), 260);
   coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 200 }, children: [new ImageRun({ data: coverLogo.buf, transformation: coverLogo.transformation, type: coverLogo.type })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 40 }, children: [new TextRun({ text: "INFORME DE VERIFICACIÓN DEL", bold: true, size: 30 })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: "SISTEMA DE PUESTA A TIERRA (P.A.T.)", bold: true, size: 30 })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: `${data.plant.toUpperCase()} — ${(data.scopeArea || "").toUpperCase()}`, bold: true, size: 26, color: "1F6F8B" })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: `Fecha de emisión: ${data.emissionDateLabel}`, size: 20 })] }));
-  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: data.docCode, size: 18, italics: true })] }));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 200, after: 40 }, children: [new TextRun({ text: "INFORME DE VERIFICACIÓN DEL", bold: true, size: 30, font: FONT_HEADING })] }));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: "SISTEMA DE PUESTA A TIERRA (P.A.T.)", bold: true, size: 30, font: FONT_HEADING })] }));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: `${data.plant.toUpperCase()} — ${(data.scopeArea || "").toUpperCase()}`, bold: true, size: 26, color: "1F6F8B", font: FONT_HEADING })] }));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 40 }, children: [new TextRun({ text: `Fecha de emisión: ${data.emissionDateLabel}`, size: 20, font: FONT_BODY })] }));
+  coverChildren.push(new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 300 }, children: [new TextRun({ text: data.docCode, size: 18, italics: true, font: FONT_BODY })] }));
   coverChildren.push(new Paragraph({ children: [new PageBreak()] }));
   coverChildren.push(h("Tabla de contenido", HeadingLevel.HEADING_2));
   coverChildren.push(new TableOfContents("Tabla de contenido", { hyperlink: true, headingStyleRange: "1-1" }));
@@ -218,7 +244,7 @@ function buildGroundingReportDocx(data) {
   children.push(h("1. Descripción de los trabajos", HeadingLevel.HEADING_1));
   (data.section1.paragraphs || []).forEach((t) => children.push(p(t)));
   if (data.section1.includeFigure !== false) {
-    children.push(...figureBlock(path.join(ASSETS_DIR, "figura_telurometro_fluke.png"), data.section1.figureCaption || "Figura 1. Telurómetro Fluke 1625-2 GEO empleado en la campaña.", 260));
+    children.push(...figureBlock(path.join(ASSETS_DIR, "figura_telurometro_fluke.png"), data.section1.figureCaption || "Figura 1. Telurómetro Fluke 1625-2 GEO empleado en la campaña.", 527));
   }
   (data.section1.notes || []).forEach((t) => children.push(p(t, { italics: true })));
 
@@ -231,7 +257,7 @@ function buildGroundingReportDocx(data) {
     "Conexiones: E/C1 para el electrodo bajo prueba, S/P para la pica de potencial y H/C para la pica de corriente.",
   ]).forEach((t) => children.push(p(t)));
   if (data.section3.includeFigure !== false) {
-    children.push(...figureBlock(path.join(ASSETS_DIR, "figura_metodo_tres_puntos.png"), data.section3.figureCaption || "Figura 2. Configuración de conexión para el método de tres puntos.", 220));
+    children.push(...figureBlock(path.join(ASSETS_DIR, "figura_metodo_tres_puntos.png"), data.section3.figureCaption || "Figura 2. Configuración de conexión para el método de tres puntos.", 350));
   }
 
   children.push(h("4. Registro de mediciones", HeadingLevel.HEADING_1));
@@ -245,14 +271,14 @@ function buildGroundingReportDocx(data) {
   children.push(h("5. Galería de evidencias", HeadingLevel.HEADING_1));
   if (data.section5.intro) children.push(p(data.section5.intro));
   data.points.forEach((pt) => {
-    children.push(...figureBlock(pt.photoPath, pt.photoCaption, 260));
+    children.push(...figureBlock(pt.photoPath, pt.photoCaption, 232, SIZE_GALLERY_CAPTION));
   });
   (data.extraGallery || []).forEach((item) => {
     if (item.photoPath) {
-      children.push(...figureBlock(item.photoPath, item.caption, 260));
+      children.push(...figureBlock(item.photoPath, item.caption, 232, SIZE_GALLERY_CAPTION));
     } else {
       children.push(pendingPhotoBox(item.code));
-      children.push(p(item.caption, { italics: true, size: 18 }));
+      children.push(p(item.caption, { italics: true, size: SIZE_GALLERY_CAPTION }));
     }
   });
   if (data.section5.closingNote) children.push(p(data.section5.closingNote, { italics: true }));
