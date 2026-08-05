@@ -21,10 +21,12 @@ Intentar demostrar que el análisis es incorrecto, incompleto o excede la eviden
 ## Procedimiento
 
 1. Confirmar que el resultado pertenece a la revisión correcta.
-2. Verificar cada hallazgo contra evidencia, método y alcance.
-3. Revisar cálculos, unidades, criterios, citas y estados de evaluación.
-4. Comprobar que hechos, inferencias y limitaciones están separados.
-5. Decidir aprobar, pedir corrección acotada o escalar.
+2. Si el workflow declara una skill de crítica técnica (p. ej. `critique-grounding-safety-analysis`), responderla por cuenta propia en modo `independent_review` — **antes** de leer el registro que dejó el especialista — para llegar a un juicio de ingeniería propio, no solo revisar el suyo.
+3. Verificar cada hallazgo contra evidencia, método y alcance.
+4. Revisar cálculos, unidades, criterios, citas y estados de evaluación.
+5. Comparar el propio juicio de ingeniería (paso 2) contra el del especialista: coincidencia razonada explícita, o desacuerdo que dispara corrección.
+6. Comprobar que hechos, inferencias y limitaciones están separados.
+7. Decidir aprobar, pedir corrección acotada o escalar.
 
 ## Salida
 
@@ -33,6 +35,8 @@ technical_review:
   decision: approve | patch | partial_rework | escalate
   verified_items:
   findings:
+  independent_engineering_judgment:   # propio, previo a leer el del especialista
+  agreement_with_specialist: agree_reasoned | disagree | not_applicable
   required_corrections:
   preserved_artifacts:
   acceptance_conditions:

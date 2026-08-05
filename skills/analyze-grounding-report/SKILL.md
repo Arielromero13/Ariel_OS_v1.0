@@ -23,6 +23,7 @@ Esta skill interpreta el dominio P.A.T. y coordina resultados técnicos; no sust
 - `research-normative-criterion`: verifica fuente, edición, cláusula y aplicabilidad de criterios.
 - `write-document-from-template`: integra solo contenido aprobado en el Word.
 - `render-and-review-document`: verifica la presentación visual del documento renderizado.
+- `critique-grounding-safety-analysis`: aplica criterio real de ingeniería eléctrica (IEEE/IEC) antes de proponer un estado de evaluación — obligatoria antes de cerrar `technical_findings`, no opcional. Ver esa skill para las preguntas exactas; esta sección no las repite.
 
 Los roles conservan la responsabilidad de decisión: el especialista analiza, el revisor técnico valida, el integrador ensambla, el revisor visual aprueba lo visual y el auditor evalúa si la decisión es razonable.
 
@@ -85,12 +86,7 @@ El estado sólo se asigna contra un criterio técnico explícito y aplicable, do
 
 ## Lecturas cerca del límite y comparación de tendencia
 
-No trates el criterio numérico como un corte binario limpio. Una lectura que excede el límite por un margen pequeño no se declara automáticamente `No conforme`, y una lectura muy por debajo del límite no necesita comentario adicional — pero una lectura cercana al límite, en cualquiera de los dos sentidos, sí merece criterio explícito:
-
-- Si la lectura excede el criterio por un margen reducido (orientativamente, dentro de un 10–15 % por encima del límite) y no hay otra señal de falla (observación de campo, contradicción, patrón atípico frente al resto de la campaña), clasifica el punto como `No concluyente`, no `No conforme`, con una recomendación explícita de repetir la medición o verificar el punto de contacto en la siguiente intervención.
-- Cuando exista una lectura histórica aprobada del mismo punto (de una campaña previa), compara la tendencia. Si la lectura actual es mayor que la histórica — incluso si ambas siguen dentro del criterio — señala la tendencia al alza como hallazgo y recomienda revisar la conexión del punto con la malla. Una tendencia ascendente es una señal de alerta independiente del margen respecto al umbral absoluto de una sola lectura.
-- Si no existe lectura histórica del punto (primera campaña registrada), documenta el valor como línea base explícita para la comparación de la próxima campaña, en vez de simplemente marcarlo conforme sin más.
-- Un valor muy por encima del criterio (varias veces el límite, o con una observación de campo que señale falla) sí se trata como hallazgo de mayor severidad desde la primera lectura — la tolerancia de margen aplica a excesos pequeños, no sustituye el juicio técnico ante una desviación grande.
+Este juicio —márgenes, tendencia histórica, outliers, suficiencia del criterio— ya no vive aquí: es exactamente lo que cubre `skills/critique-grounding-safety-analysis/SKILL.md`, con sus 7 preguntas obligatorias. No trates el criterio numérico como un corte binario limpio; invoca esa skill antes de cerrar un estado de evaluación en vez de decidir Conforme/No conforme solo por comparación aritmética contra el umbral.
 
 ## Matrices con fotos insertadas en la celda (rich value)
 
@@ -127,7 +123,8 @@ Cualquier incumplimiento obliga a `patch` o `partial rework` de la galería y de
 2. Borrador de informe Word basado en la plantilla maestra.
 3. Galería de evidencias con referencias cruzadas.
 4. Análisis técnico y normativo trazable.
-5. Lista breve de datos pendientes, discrepancias, limitaciones y decisiones requeridas antes de emisión.
+5. Registro de crítica de ingeniería (`technical_critique_record`, modo `proposal`) de `critique-grounding-safety-analysis`.
+6. Lista breve de datos pendientes, discrepancias, limitaciones y decisiones requeridas antes de emisión.
 
 ## Uso del histórico aprobado
 
