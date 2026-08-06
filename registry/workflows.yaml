@@ -15,3 +15,15 @@ workflows:
     entry_gate: draft_to_ready
     emission_gate: ready_for_emission
     human_approval_required_before_external_emission: true
+
+  - id: presentation-deck
+    name: Presentación PPTX (ejecutiva / técnica / persuasiva)
+    status: draft
+    version: 0.1.0
+    path: workflows/presentation-deck.yaml
+    input_contract: contracts/work-item.schema.json
+    primary_skill: design-presentation-narrative
+    output_contract: report-manifest
+    entry_gate: draft_to_ready
+    emission_gate: ready_for_emission
+    human_approval_required_before_external_emission: true

@@ -1,0 +1,347 @@
+workflow:
+  id: presentation-deck
+  name: Presentación PPTX (ejecutiva / técnica / persuasiva)
+  version: 0.1.0
+  status: draft
+  portable: true
+
+  purpose: >
+    Preparar una presentación PPTX trazable a partir de un brief o contenido
+    fuente, con narrativa revisada de forma independiente, sistema visual
+    coherente, QA visual del renderizado y aprobación humana antes de
+    emisión o entrega externa.
+
+  applies_when:
+    domain: presentation-design
+    skill: design-presentation-narrative
+
+  contracts:
+    input: contracts/work-item.schema.json
+    handoff: contracts/handoff.schema.json
+    evidence: contracts/evidence.schema.json
+    finding: contracts/finding.schema.json
+    review: contracts/review.schema.json
+    audit_decision: contracts/audit-decision.schema.json
+    report_manifest: contracts/report-manifest.schema.json
+    primary_skill: skills/design-presentation-narrative/SKILL.md
+    output:
+      - slide_outline
+      - visual_system_spec
+      - narrative_review_record
+      - pptx_deck
+      - rendered_presentation
+      - decision_record
+
+  roles:
+    orchestrator:
+      responsibilities:
+        - Interpretar intención, planificar y seleccionar workflow.
+        - Determinar si el propósito es informativo, técnico o persuasivo (activa o no marketing_copywriter).
+        - Validar la alineación final con el mandato original.
+    content_strategist:
+      responsibilities:
+        - Convertir el brief y el contenido fuente en narrativa: audiencia, objetivo, estructura y mensajes clave.
+    visual_designer:
+      responsibilities:
+        - Definir paleta, tipografía, arquetipos de slide y reglas de layout a partir de la narrativa aprobada.
+    marketing_copywriter:
+      responsibilities:
+        - Afinar titulares, posicionamiento y llamado a la acción cuando el propósito es persuasivo o de decisión externa.
+    narrative_reviewer:
+      responsibilities:
+        - Revisar de forma independiente exactitud, trazabilidad, redundancia y ajuste a audiencia de la narrativa y el copy.
+    integrator:
+      responsibilities:
+        - Ensamblar narrativa, copy y sistema visual aprobados en el archivo PPTX.
+    visual_reviewer:
+      responsibilities:
+        - Inspeccionar la presentación renderizada y aprobar consistencia visual y legibilidad.
+    auditor:
+      responsibilities:
+        - Evaluar si aprobar, bloquear o escalar está justificado por evidencia y reglas.
+
+  entry_gate:
+    transition: draft_to_ready
+    required:
+      - case.case_id
+      - case.revision_id
+      - request.objective
+      - domain.name
+      - definition_of_done
+      - input_manifest
+      - constraints
+    sufficient_for:
+      gap_analysis:
+        - task identity
+        - objective
+        - domain
+        - input manifest
+      narrative_design:
+        - audiencia declarada
+        - contenido fuente mínimo declarado por la skill
+      external_emission:
+        - definition of done completa
+        - revisión de narrativa aprobada
+        - QA visual aprobado
+        - aprobación humana requerida
+    on_failure:
+      missing_hard_requirement: needs_clarification
+      insufficient_source_content_for_requested_phase: blocked
+      distribution_or_brand_constraint_unknown: ready_for_internal_draft_only
+
+  stages:
+    - id: intake_and_plan
+      owner: orchestrator
+      purpose: Convertir el brief en un work item ejecutable y clasificar el propósito de la presentación.
+      consumes:
+        - work_item
+        - input_manifest
+      produces:
+        - execution_brief
+        - workflow_selection_record
+        - presentation_purpose_classification
+        - initial_gap_list
+      acceptance:
+        - audiencia, objetivo, tipo de presentación y Definition of Done explícitos
+        - propósito persuasivo declarado sí/no, no asumido
+        - fase de trabajo autorizada declarada
+      on_failure: needs_clarification
+
+    - id: narrative_design
+      owner: content_strategist
+      skill: design-presentation-narrative
+      transversal_skills:
+        - id: critique-presentation-effectiveness
+          mode: proposal
+          purpose: Responder el rubric de efectividad (audiencia, un mensaje por slide, redundancia, trazabilidad de cifras) antes de proponer la estructura definitiva.
+      depends_on:
+        - intake_and_plan
+      purpose: Producir estructura de slides y mensajes clave a partir del contenido fuente.
+      consumes:
+        - execution_brief
+        - source_content
+        - definition_of_done
+      produces:
+        - slide_outline
+        - key_messages
+        - content_gap_list
+        - technical_critique_record
+      acceptance:
+        - cada mensaje clave se vincula a contenido fuente o queda pendiente
+        - un mensaje por slide
+        - technical_critique_record en modo proposal está completo
+      on_failure: user_clarification_or_block
+
+    - id: visual_system_design
+      owner: visual_designer
+      skill: apply-visual-identity-system
+      depends_on:
+        - narrative_design
+      purpose: Definir el sistema visual aplicable a la estructura de slides aprobada.
+      consumes:
+        - slide_outline
+        - brand_guideline_or_default_criteria
+        - available_visual_material
+      produces:
+        - visual_system_spec
+        - brand_source_record
+      acceptance:
+        - paleta, tipografía y arquetipos cubren cada tipo de slide del outline
+        - fuente de la guía de marca (o criterio por defecto) queda registrada
+      on_failure: partial_rework_or_user_clarification
+
+    - id: marketing_alignment
+      owner: marketing_copywriter
+      skill: write-persuasive-copy
+      depends_on:
+        - narrative_design
+      run_in_parallel_with:
+        - visual_system_design
+      activates_when: presentation_purpose_classification == persuasive_or_external_decision
+      purpose: Afinar titulares, posicionamiento y llamado a la acción sin alterar el contenido aprobado.
+      consumes:
+        - slide_outline
+        - key_messages
+        - audience_and_decision_sought
+      produces:
+        - refined_headlines
+        - refined_ctas
+        - unsupported_claims_flagged
+      acceptance:
+        - ninguna afirmación persuasiva excede el contenido aprobado sin quedar marcada
+      on_failure: mark_claim_pending
+
+    - id: narrative_review
+      owner: narrative_reviewer
+      transversal_skills:
+        - id: critique-presentation-effectiveness
+          mode: independent_review
+          purpose: Responder el rubric de efectividad por cuenta propia, sin leer antes el technical_critique_record del estratega, y solo entonces comparar y declarar coincidencia razonada o desacuerdo.
+      depends_on:
+        - narrative_design
+        - marketing_alignment
+      purpose: Validar de forma independiente narrativa, copy y trazabilidad al contenido fuente.
+      consumes:
+        - slide_outline
+        - key_messages
+        - refined_headlines
+        - refined_ctas
+        - source_content
+      produces:
+        - narrative_review_record
+        - approved_narrative
+        - correction_request
+        - technical_critique_record
+      acceptance:
+        - cada cifra o afirmación clave tiene respaldo trazable
+        - no hay redundancia de mensaje entre slides
+        - existe technical_critique_record en modo independent_review, producido antes de leer el del estratega
+      on_failure: correction_loop
+
+    - id: deck_assembly
+      owner: integrator
+      skill: assemble-pptx-deck
+      depends_on:
+        - narrative_review
+        - visual_system_design
+      purpose: Ensamblar narrativa y copy aprobados en el PPTX aplicando el sistema visual definido.
+      consumes:
+        - approved_narrative
+        - visual_system_spec
+        - available_visual_material
+      produces:
+        - pptx_deck
+        - integration_record
+      acceptance:
+        - cada slide corresponde a un bloque aprobado del outline
+        - paleta y tipografía del sistema visual se aplican de forma consistente
+      on_failure: partial_rework
+
+    - id: visual_qa
+      owner: visual_reviewer
+      transversal_skills:
+        - id: render-and-review-presentation
+          purpose: Renderizar el PPTX y revisar desbordes, contraste, alineación, consistencia con el sistema visual y calidad del material visual insertado.
+      depends_on:
+        - deck_assembly
+      purpose: Validar visualmente el renderizado del PPTX contra el sistema visual aprobado.
+      consumes:
+        - pptx_deck
+        - visual_system_spec
+      produces:
+        - rendered_presentation
+        - visual_qa_record
+        - visual_correction_request
+      acceptance:
+        - sin desbordes de texto, slides en blanco o duplicadas
+        - paleta, tipografía y arquetipos consistentes con el sistema visual aprobado
+        - material visual real insertado sin recortes ni pixelado
+      on_failure: partial_rework
+
+    - id: intent_validation
+      owner: orchestrator
+      depends_on:
+        - visual_qa
+      purpose: Comprobar que el resultado responde al mandato original y Definition of Done.
+      consumes:
+        - execution_brief
+        - pptx_deck
+        - narrative_review_record
+        - visual_qa_record
+      produces:
+        - intent_validation_record
+        - reformulation_brief
+      acceptance:
+        - todos los criterios obligatorios de Definition of Done se verifican
+        - no se cambió audiencia, objetivo o propósito persuasivo sin una reformulación declarada
+      on_failure: correction_loop
+
+    - id: decision_audit
+      owner: auditor
+      transversal_skills:
+        - id: critique-presentation-effectiveness
+          mode: process_audit
+          purpose: Confirmar que content_strategist y narrative_reviewer registraron un technical_critique_record razonado cada uno — no rehacer la crítica de efectividad. Un PPTX con QA visual impecable pero sin este registro no queda aprobado por forma.
+      depends_on:
+        - intent_validation
+      purpose: Determinar si aprobar, bloquear o escalar es razonable.
+      consumes:
+        - decision_records
+        - narrative_review_record
+        - technical_critique_record
+        - visual_qa_record
+        - intent_validation_record
+      produces:
+        - audit_decision
+        - escalation_record
+      acceptance:
+        - decisión respaldada por evidencia y reglas
+        - desacuerdos materiales se escalan, no se resuelven por reescritura automática
+        - existe technical_critique_record en modo proposal e independent_review, ambos razonados
+      on_failure: escalation
+
+  correction_loop:
+    maximum_cycles: 3
+    correction_types:
+      patch:
+        use_when: Error local y aislado (un titular, una cifra, un color).
+      partial_rework:
+        use_when: Una sección o sus dependencias directas dejaron de ser válidas (un bloque de la narrativa o su slide correspondiente).
+      full_rework:
+        use_when: Una premisa base invalida el enfoque (audiencia u objetivo mal identificados).
+      user_clarification:
+        use_when: Falta información crítica o hay desacuerdo no resoluble.
+    preservation_rule: >
+      La narrativa, el sistema visual y las slides correctas no se modifican sin
+      justificación explícita. Un full rework preserva trazabilidad y componentes
+      que no dependan de la premisa invalidada.
+    reformulation_contract:
+      required:
+        - original_mandate
+        - previous_interpretation
+        - detected_error
+        - corrected_interpretation
+        - correction_type
+        - artifacts_to_preserve
+        - artifacts_to_modify
+        - responsible_role
+        - acceptance_criterion
+    on_exhausted_cycles:
+      status: blocked
+      output: blocking_report
+
+  emission_gate:
+    transition: ready_for_emission
+    required:
+      - definition_of_done_satisfied
+      - narrative_review_approved
+      - visual_qa_approved
+      - audit_decision_approved
+      - human_approval_received
+      - no_critical_open_decisions
+    on_failure:
+      status: no_emit
+      output: pending_items_list
+
+  handoffs:
+    contract: contracts/handoff.schema.json
+    rule: >
+      Cada transición entre roles debe entregar un handoff válido con revisión,
+      artefactos enlazados, limitaciones, decisiones abiertas, preservaciones y
+      una solicitud concreta al rol receptor.
+
+  traceability:
+    required_links:
+      - key_message_to_source_content
+      - slide_to_narrative_block
+      - claim_to_approved_content
+      - visual_element_to_visual_system_spec
+      - deliverable_to_case_revision
+
+  escalation:
+    conditions:
+      - reviewer_orchestrator_auditor_disagreement
+      - missing_critical_source_content
+      - unsupported_persuasive_claim_unresolved
+      - scope_audience_or_intent_ambiguity
+    action: request_human_decision
