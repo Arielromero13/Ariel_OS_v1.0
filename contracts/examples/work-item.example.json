@@ -31,7 +31,7 @@
     "deadline": "2026-08-15",
     "confidentiality": "internal",
     "approvals_required": ["Gerente de Ingeniería (ficticio)"],
-    "allowed_tools": ["analyze-grounding-report", "validate-spreadsheet-input", "manage-photo-evidence-gallery"],
+    "allowed_tools": ["analyze-grounding-report", "validate-campaign-input", "manage-photo-evidence-gallery"],
     "prohibited_actions": ["Emitir el informe sin aprobación humana registrada"]
   },
   "input_manifest": [
@@ -42,7 +42,7 @@
   "workflow_hint": "grounding-report",
   "orchestration": {
     "workflow_selected": "grounding-report",
-    "skills_selected": ["analyze-grounding-report", "validate-spreadsheet-input", "manage-photo-evidence-gallery", "research-normative-criterion", "validate-technical-traceability", "write-document-from-template", "render-and-review-document"],
+    "skills_selected": ["analyze-grounding-report", "validate-campaign-input", "manage-photo-evidence-gallery", "research-normative-criterion", "validate-technical-traceability", "write-document-from-template", "render-and-review-document"],
     "acceptance_criteria": ["Todos los DOD satisfechos", "Aprobación humana registrada antes de emisión"]
   },
   "open_decisions": [],

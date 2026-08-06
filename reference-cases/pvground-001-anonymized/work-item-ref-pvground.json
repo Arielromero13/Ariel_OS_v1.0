@@ -32,7 +32,7 @@
     "deadline": null,
     "confidentiality": "internal",
     "approvals_required": ["Responsable técnico del proyecto"],
-    "allowed_tools": ["analyze-grounding-report", "validate-spreadsheet-input", "manage-photo-evidence-gallery", "research-normative-criterion", "validate-technical-traceability"],
+    "allowed_tools": ["analyze-grounding-report", "validate-campaign-input", "manage-photo-evidence-gallery", "research-normative-criterion", "validate-technical-traceability"],
     "prohibited_actions": ["Emitir o distribuir este ejercicio como informe oficial", "Subir datos de esta campaña real a un repositorio no anonimizado"]
   },
   "input_manifest": [
@@ -43,7 +43,7 @@
   "workflow_hint": "grounding-report",
   "orchestration": {
     "workflow_selected": "grounding-report",
-    "skills_selected": ["analyze-grounding-report", "validate-spreadsheet-input", "validate-technical-traceability", "research-normative-criterion"],
+    "skills_selected": ["analyze-grounding-report", "validate-campaign-input", "validate-technical-traceability", "research-normative-criterion"],
     "acceptance_criteria": ["Los tres DOD verificados explícitamente", "Contraste documentado contra Rev03"]
   },
   "open_decisions": [

@@ -57,14 +57,14 @@ skills:
       - provisional_evaluation_states
       - pending_items_list
     uses_skills:
-      - validate-spreadsheet-input
+      - validate-campaign-input
       - manage-photo-evidence-gallery
       - validate-technical-traceability
       - research-normative-criterion
       - critique-grounding-safety-analysis
     requires_tools:
       - workspace_artifact_store
-      - spreadsheet_processor
+      - structured_campaign_store
       - image_evidence_inspector
       - source_research
     boundaries:
@@ -77,12 +77,12 @@ skills:
       - Cada estado Conforme o No conforme tiene criterio verificable.
       - Sus salidas cumplen los contratos de evidencia y finding.
 
-  - id: validate-spreadsheet-input
-    name: Validación de matrices y hojas de cálculo
+  - id: validate-campaign-input
+    name: Validación de datos de campaña
     kind: transversal
     status: draft
     version: 0.1.0
-    path: skills/validate-spreadsheet-input/SKILL.md
+    path: skills/validate-campaign-input/SKILL.md
     domains:
       - data-quality
       - technical-reporting
@@ -91,19 +91,21 @@ skills:
       - technical_reviewer
       - integrator
     required_inputs:
-      - source_spreadsheet
+      - campaign_record
+      - measurement_points_table
       - expected_structure_or_work_item
     produces:
       - normalized_table
-      - spreadsheet_validation_record
+      - campaign_validation_record
       - data_quality_issues
     requires_tools:
       - workspace_artifact_store
-      - spreadsheet_processor
+      - structured_campaign_store
     boundaries:
       - Valida estructura y datos visibles; no evalúa aceptación técnica.
-      - No modifica el archivo fuente ni redondea mediciones.
-      - No crea valores para completar celdas faltantes.
+      - No modifica la página de campaña de origen salvo campos declarados como calculados.
+      - No crea valores para completar campos faltantes.
+      - Un .xlsx suelto no satisface esta validación; el expediente no alcanza ready hasta migrar los datos.
 
   - id: manage-photo-evidence-gallery
     name: Gestión de galería de evidencias fotográficas
@@ -246,6 +248,7 @@ skills:
       - Inserta contenido aprobado respetando la plantilla.
       - No altera hallazgos, estados, datos ni conclusiones aprobadas.
       - No aprueba ni distribuye el documento.
+      - No publica el documento fuera del espacio de trabajo del caso; ver publish-approved-deliverable.
 
   - id: render-and-review-document
     name: Renderizado y revisión visual documental
@@ -274,6 +277,70 @@ skills:
       - Evalúa presentación, orden, orientación y legibilidad.
       - No valida la corrección técnica de una conclusión.
       - No modifica el Word sin corrección y trazabilidad registradas.
+
+  - id: sync-agent-log
+    name: Sincronización de bitácora de agentes
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/sync-agent-log/SKILL.md
+    domains:
+      - traceability
+      - orchestration
+    invocable_by:
+      - orchestrator
+    required_inputs:
+      - stage_or_work_item_id
+      - responsible_subagent
+      - current_cycle
+      - correction_type
+      - decision
+    optional_inputs:
+      - campaign_record_reference
+      - evidence_reference
+      - finding
+      - criterion
+      - deliverable_reference
+    produces:
+      - log_entry_reference
+    requires_tools:
+      - traceability_log_store
+    boundaries:
+      - Solo la invoca el orquestador.
+      - No decide aprobación, rechazo, bloqueo ni escalamiento; solo registra la decisión ya tomada.
+      - No inventa evidencia, finding o criterio para completar una fila.
+      - Es historial append-only.
+
+  - id: publish-approved-deliverable
+    name: Publicación de entregable aprobado
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/publish-approved-deliverable/SKILL.md
+    domains:
+      - document-production
+      - delivery
+    invocable_by:
+      - integrator
+      - orchestrator
+    required_inputs:
+      - final_document
+      - plant_identity
+      - campaign_record_reference
+      - emission_gate_confirmation
+    produces:
+      - external_file_reference
+      - campaign_record_update
+      - log_entry_reference
+    uses_skills:
+      - sync-agent-log
+    requires_tools:
+      - external_deliverable_store
+      - traceability_log_store
+    boundaries:
+      - Solo publica lo que ya superó emission_gate.
+      - No modifica el contenido del documento.
+      - No decide por sí sola que algo puede emitirse.
 
   - id: analyze-comtrade-event
     name: Análisis de evento COMTRADE

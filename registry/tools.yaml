@@ -212,6 +212,88 @@ tools:
       - Respeta licencias, acceso autorizado y restricciones de distribución.
       - Si no hay fuente verificable, el criterio queda Pendiente o No concluyente.
 
+  - id: structured_campaign_store
+    name: Almacén estructurado de datos de campaña
+    category: data_processing
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Leer y actualizar una página de campaña y su tabla relacionada de puntos
+      de medición en un almacén estructurado externo, preservando esquema,
+      relaciones, adjuntos fotográficos y trazabilidad. Reemplaza a
+      spreadsheet_processor como fuente de ingesta para grounding-report.
+    operations:
+      - read_campaign_record
+      - read_measurement_points
+      - validate_required_fields
+      - update_computed_field
+      - export_normalized_table
+    accepts:
+      - structured_database_page
+    produces:
+      - normalized_table
+      - validation_result
+      - control_matrix
+      - campaign_record_reference
+    allowed_roles:
+      - domain_specialist
+      - technical_reviewer
+      - integrator
+      - orchestrator
+    constraints:
+      - No inventa ni completa campos vacíos.
+      - No redondea ni transforma valores de medición.
+      - Solo actualiza campos declarados como calculados por el propio esquema (ej. estado de datos).
+
+  - id: external_deliverable_store
+    name: Almacén externo de entregables
+    category: storage
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Publicar el documento final ya aprobado en un almacén de archivos externo
+      al repositorio y al espacio de trabajo efímero de la sesión, organizado
+      por planta/caso, y devolver una referencia estable.
+    operations:
+      - ensure_folder
+      - publish_file
+      - get_shareable_link
+      - list_folder
+    accepts:
+      - docx
+      - pdf
+    produces:
+      - external_file_reference
+    allowed_roles:
+      - integrator
+      - orchestrator
+    constraints:
+      - Solo publica artefactos que ya superaron emission_gate.
+      - No sobrescribe una revisión previa; cada emisión es un archivo nuevo y trazable.
+
+  - id: traceability_log_store
+    name: Almacén externo de bitácora de agentes
+    category: traceability
+    status: declared_not_bound
+    required_for_pilot: true
+    purpose: >
+      Registrar de forma persistente, fuera de la sesión activa, una entrada
+      por cada etapa de workflow que se cierra: subagente, ciclo, tipo de
+      acción, evidencia, finding, criterio, entregable y decisión.
+    operations:
+      - append_log_entry
+      - query_log_entries
+      - link_entry_to_campaign_record
+    accepts:
+      - log_entry_record
+    produces:
+      - log_entry_reference
+    allowed_roles:
+      - orchestrator
+    constraints:
+      - No decide aprobación, rechazo, bloqueo ni escalamiento; solo registra la decisión ya tomada.
+      - Es historial append-only: no edita ni elimina filas anteriores.
+
   - id: technical_calculation_runtime
     name: Entorno de cálculo técnico reproducible
     category: analysis

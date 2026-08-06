@@ -9,10 +9,20 @@ Las reglas transversales (jerarquía de fuentes, estados de evaluación, no inve
 | Archivo | Uso |
 |---|---|
 | `plantilla_maestra_informe_pat.docx` | Estructura de referencia original (portada, secciones, tabla de resultados) tal como la entregó Ariel. No tiene encabezado/pie ni logo de portada — eso se resolvió aparte, ver `generate_report.js` abajo. |
-| `matriz_control_campana_pat.xlsx` | Plantilla en blanco (celdas `[[COMPLETAR]]`) para consolidar una campaña: hoja de control (planta, alcance, fecha, personal, instrumento, criterio) y hoja de mediciones (una fila por punto). Cópiala por campaña — nunca se edita esta plantilla con datos reales de un caso. |
+| `matriz_control_campana_pat.xlsx` | **Legado.** Ya no es la vía de ingesta de una campaña real — ver "Ingesta de datos: Notion, no Excel" abajo. Se conserva porque su esquema (hoja de control + hoja de mediciones) es exactamente el que replican las bases de datos de Notion; sirve como referencia de campos, no se llena para un caso nuevo. |
 | `generate_report.js` | **Generador de referencia** del `.docx` final — portada con logo, encabezado/pie calcados campo a campo del XML de `Informe_PAT_Girasol_Rev03` (la referencia aprobada por Ariel), TOC nativo de Word, figuras estándar de las secciones 1 y 3, colores de tabla NAVY/LIGHT_BLUE. Ver detalle abajo. |
 | `assets/` | Las 4 imágenes genéricas y reutilizables que usa `generate_report.js`: logo EGE Haina (versión portada y versión encabezado) y las dos figuras fijas de método/instrumento (secciones 1 y 3). Ninguna tiene datos de una planta o campaña real. |
 | `scripts/normalize_photos.py` | Reconvierte fotos a JPEG baseline antes de insertarlas — ver "Fotos de teléfono" abajo. Paso obligatorio, no opcional. |
+
+## Ingesta de datos: Notion, no Excel
+
+Desde que se agregaron los conectores MCP de Notion y Google Drive, una campaña real ya no se recibe como un `.xlsx` suelto: vive como una página en la base de datos "Campañas P.A.T." de Notion (propiedades = antigua hoja de control) con su tabla relacionada "Puntos de medición P.A.T." (una fila por punto = antigua hoja de mediciones, con las fotos de lectura y de ubicación/configuración adjuntas directamente en la fila, no insertadas como rich value de Excel). Ver `CLAUDE.md` sección 7 para dónde vive esa estructura y `skills/validate-campaign-input/SKILL.md` para el procedimiento de validación.
+
+Si alguien todavía te entrega un `.xlsx` de campaña, el primer paso no es analizarlo directamente: es migrar sus filas a la página de campaña en Notion (mapeo de columnas 1:1, ver el esquema de `matriz_control_campana_pat.xlsx`) y recién entonces continuar. Un expediente con solo el Excel no alcanza el estado `ready` (`docs/input-contract.md`).
+
+## Entrega del documento final: Google Drive, no un archivo suelto
+
+El `.docx` final ya aprobado (después de `emission_gate`) no se entrega solo como archivo de sesión: `skills/publish-approved-deliverable/SKILL.md` lo sube a `EGEHAINA — Contextos de Planta/[Planta]/Informes P.A.T./` en Google Drive (subcarpeta por planta dentro de la carpeta ya existente `EGEHAINA — Contextos de Planta`), y actualiza la página de campaña en Notion con el enlace (`Documento final`) y el estado (`emitido`). El nombre de archivo sigue la convención de "Nomenclatura de salida sugerida" más abajo.
 
 ## `generate_report.js` — por qué existe
 
@@ -32,7 +42,7 @@ Fotos de teléfono (o extraídas como *rich value* de una celda de Excel) suelen
 
 ## Esquema de la hoja de mediciones
 
-Una fila por punto, como mínimo:
+Este esquema hoy vive en la tabla de Notion "Puntos de medición P.A.T." (ver "Ingesta de datos" arriba), no en una hoja de Excel — pero el campo por campo es el mismo. Una fila por punto, como mínimo:
 
 | Campo | Uso |
 |---|---|

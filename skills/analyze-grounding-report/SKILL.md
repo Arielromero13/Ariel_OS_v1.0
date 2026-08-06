@@ -17,7 +17,7 @@ Esta skill opera sobre un work item y una revisión concreta definidos por el co
 
 Esta skill interpreta el dominio P.A.T. y coordina resultados técnicos; no sustituye las responsabilidades transversales siguientes:
 
-- `validate-spreadsheet-input`: verifica la matriz sin juzgar aceptación técnica.
+- `validate-campaign-input`: verifica la página de campaña y su tabla de puntos sin juzgar aceptación técnica.
 - `manage-photo-evidence-gallery`: controla orientación, orden y vínculo foto–evidencia, sin inferir lecturas.
 - `validate-technical-traceability`: verifica medición → evidencia → finding → criterio → recomendación.
 - `research-normative-criterion`: verifica fuente, edición, cláusula y aplicabilidad de criterios.
@@ -32,14 +32,14 @@ Los roles conservan la responsabilidad de decisión: el especialista analiza, el
 El anexo técnico del dominio debe identificar, cuando aplique:
 
 - Planta, fecha, alcance, responsable, instrumento y criterio técnico aplicable.
-- Matriz o tabla de mediciones.
-- Fotografías de las mediciones.
+- Página de campaña con su tabla de puntos de medición relacionada (ver abajo).
+- Fotografías de las mediciones, adjuntas como archivo en cada punto, no solo referenciadas por texto.
 - Registros y notas de campo.
 - Plantilla maestra vigente (ver [`templates/grounding-report/`](../../templates/grounding-report/README.md)).
 - Informes históricos aprobados.
 - Fuentes normativas o especificaciones de diseño disponibles.
 
-La matriz debe consolidar por punto: ID, activo o electrodo, resistencia en Ω, referencia de evidencia fotográfica, observación y estado de evaluación.
+La entrada de datos de campaña es la página estructurada del almacén de datos de campaña (capacidad `structured_campaign_store`, ver `registry/tools.yaml` y `CLAUDE.md`), no un Excel suelto. Debe consolidar por punto: ID, activo o electrodo, resistencia en Ω, límite aplicable, referencia de evidencia fotográfica, observación y estado de evaluación. Si el expediente llega solo con un `.xlsx`, no alcanza `ready` (`docs/input-contract.md`): se bloquea y se solicita migrar los datos a la página de campaña antes de iniciar el análisis.
 
 ## Jerarquía de fuentes
 
@@ -88,9 +88,11 @@ El estado sólo se asigna contra un criterio técnico explícito y aplicable, do
 
 Este juicio —márgenes, tendencia histórica, outliers, suficiencia del criterio— ya no vive aquí: es exactamente lo que cubre `skills/critique-grounding-safety-analysis/SKILL.md`, con sus 7 preguntas obligatorias. No trates el criterio numérico como un corte binario limpio; invoca esa skill antes de cerrar un estado de evaluación en vez de decidir Conforme/No conforme solo por comparación aritmética contra el umbral.
 
-## Matrices con fotos insertadas en la celda (rich value)
+## Fotos adjuntas en la tabla de puntos
 
-Algunas matrices de Excel insertan las fotos directamente en la celda con la función moderna de Excel ("Insertar imagen en la celda" / rich value), en vez de como texto de referencia o imagen flotante. Herramientas de lectura basadas en `openpyxl` no interpretan este formato y muestran `#VALUE!` en la celda — eso no significa que la foto falte. Antes de declarar una columna sin evidencia por este motivo, verifica si la celda usa rich value: revisa `xl/richData/` y `xl/metadata.xml` dentro del paquete del archivo (`.xlsx` es un zip), rastrea el atributo `vm` de la celda hasta la imagen en `xl/media/`, y extrae la imagen para confirmar visualmente antes de concluir que la trazabilidad está rota.
+Cada punto de la tabla de puntos de medición lleva sus fotos (lectura y ubicación/configuración) como archivo adjunto en la propiedad correspondiente, no como texto o enlace externo. Si una propiedad de foto aparece vacía, verifica primero si el archivo se adjuntó y no se sincronizó antes de declarar la evidencia faltante.
+
+Esto reemplaza el flujo anterior por Excel: cuando la evidencia llegaba como matriz con fotos insertadas en la celda (rich value de Excel), había que rastrear `xl/richData/`, `xl/metadata.xml` y el atributo `vm` de la celda dentro del `.xlsx` (zip) para extraer la imagen — ver el historial de este archivo si aparece un caso legado en ese formato. Con la ingesta actual ese rastreo ya no debería ser necesario.
 
 ## QA visual de evidencias y maquetación
 

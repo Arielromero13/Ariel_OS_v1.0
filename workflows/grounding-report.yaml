@@ -30,6 +30,7 @@ workflow:
       - word_report_draft
       - pending_items_list
       - decision_record
+      - external_deliverable_reference
 
   roles:
     orchestrator:
@@ -104,8 +105,8 @@ workflow:
       owner: domain_specialist
       skill: analyze-grounding-report
       transversal_skills:
-        - id: validate-spreadsheet-input
-          purpose: Verificar estructura, unidades, celdas y duplicados de la matriz de mediciones antes de consolidarla.
+        - id: validate-campaign-input
+          purpose: Verificar estructura, unidades y duplicados de la página de campaña y su tabla de puntos antes de consolidarla. Un .xlsx suelto no satisface esta etapa.
         - id: manage-photo-evidence-gallery
           purpose: Ordenar y vincular la evidencia fotográfica inicial con su lectura y punto correspondiente.
         - id: validate-technical-traceability
@@ -115,6 +116,7 @@ workflow:
       purpose: Consolidar matriz, identificar evidencias y verificar trazabilidad inicial.
       consumes:
         - execution_brief
+        - campaign_record
         - current_evidence
         - historical_reference
       produces:
@@ -331,9 +333,24 @@ workflow:
       - audit_decision_approved
       - human_approval_received
       - no_critical_open_decisions
+    on_success:
+      action: publish_approved_deliverable
+      skill: publish-approved-deliverable
+      produces:
+        - external_deliverable_reference
+        - campaign_record_update
     on_failure:
       status: no_emit
       output: pending_items_list
+
+  traceability_log:
+    skill: sync-agent-log
+    rule: >
+      El orquestador registra en la bitácora de agentes externa (traceability_log_store)
+      el cierre de cada etapa de `stages`: subagente responsable, ciclo, tipo de acción,
+      evidencia, finding, criterio, entregable y decisión. Esto es independiente del
+      handoff formal entre roles y no sustituye la trazabilidad interna del work item;
+      es el registro que persiste fuera de la sesión activa (regla no negociable 2).
 
   handoffs:
     contract: contracts/handoff.schema.json

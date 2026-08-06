@@ -146,12 +146,14 @@ Estas no toman decisiones de ingeniería; dan soporte controlado a muchos domini
 
 | Skill | Hace | No hace |
 |---|---|---|
-| [validate-spreadsheet-input](skills/validate-spreadsheet-input/SKILL.md) | Verifica estructura, unidades, celdas, duplicados y datos visibles. | Decidir aceptación técnica. |
+| [validate-campaign-input](skills/validate-campaign-input/SKILL.md) | Verifica estructura, unidades, duplicados y datos visibles de la página de campaña en Notion. | Decidir aceptación técnica. |
 | [manage-photo-evidence-gallery](skills/manage-photo-evidence-gallery/SKILL.md) | Ordena y controla evidencia fotográfica y orientación visible. | Inferir lecturas o editar originales sin registro. |
 | [validate-technical-traceability](skills/validate-technical-traceability/SKILL.md) | Comprueba enlaces entre evidencia, findings y criterios. | Crear evidencia faltante. |
 | [research-normative-criterion](skills/research-normative-criterion/SKILL.md) | Documenta fuente, edición, cláusula y aplicabilidad. | Inventar requisitos normativos. |
-| [write-document-from-template](skills/write-document-from-template/SKILL.md) | Integra contenido aprobado en una plantilla Word. | Cambiar la ingeniería aprobada. |
+| [write-document-from-template](skills/write-document-from-template/SKILL.md) | Integra contenido aprobado en una plantilla Word (borrador). | Cambiar la ingeniería aprobada o publicar el entregable final. |
 | [render-and-review-document](skills/render-and-review-document/SKILL.md) | Renderiza y revisa la calidad visual final. | Aprobar la corrección técnica. |
+| [publish-approved-deliverable](skills/publish-approved-deliverable/SKILL.md) | Publica el `.docx` final aprobado en Google Drive y actualiza la página de campaña en Notion. | Decidir si algo puede emitirse. |
+| [sync-agent-log](skills/sync-agent-log/SKILL.md) | Registra en Notion una fila por cada etapa cerrada del workflow (bitácora de agentes). | Juzgar si un resultado es correcto. |
 
 El inventario formal está en [registry/skills.yaml](registry/skills.yaml).
 
@@ -167,7 +169,7 @@ Un expediente puede contener, según aplique:
 
 - solicitud clara y alcance;
 - planta, campaña, revisión y responsable;
-- matriz o Excel de mediciones;
+- página de campaña en Notion con su tabla de puntos de medición (ya no un Excel suelto — ver `templates/grounding-report/README.md`);
 - fotografías y notas de campo;
 - instrumento, método, geometría y condiciones de ensayo;
 - plantilla maestra;

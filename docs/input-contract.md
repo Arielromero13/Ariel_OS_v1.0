@@ -76,9 +76,13 @@ Por tanto, `ready` nunca equivale por sí solo a “puede emitirse”.
 
 Una revisión es una fotografía inmutable del expediente en un momento dado. Una nueva foto, una matriz corregida, un cambio de alcance o una nueva fuente normativa relevante crea una revisión sucesora. El orquestador evalúa el impacto y selecciona patch, partial rework, full rework o user clarification según el modelo operativo.
 
+## Anexo técnico por dominio: informes P.A.T.
+
+Para el workflow `grounding-report`, el inventario de entradas (punto 6 de las compuertas de preparación) no acepta una hoja de cálculo suelta como evidencia suficiente. La identidad del expediente y la matriz de mediciones viven en una página estructurada del almacén de datos de campaña (capacidad `structured_campaign_store`, `registry/tools.yaml`) — ver `skills/validate-campaign-input/SKILL.md` y `CLAUDE.md` para el binding concreto en el arnés activo. Un `.xlsx` recibido de un cliente o colega se migra a esa página antes de que el expediente pueda pasar de `draft`/`needs_clarification` a `ready`; el archivo original se conserva como referencia, no como fuente activa.
+
 ## Pendiente de definir
 
 - Convención de identificadores de caso, revisión y work item.
-- Formato del anexo técnico por dominio, empezando por informes P.A.T.
+- Formato del anexo técnico por dominio para dominios distintos de P.A.T. (ej. COMTRADE).
 - Evidencia mínima por fase para cada skill.
 - Nivel de detalle del manifest de evidencias: hash, fechas, autor y relaciones entre archivos.

@@ -27,7 +27,7 @@ Estas cinco reglas son restricciones fijas del sistema. Las secciones siguientes
 
 Al recibir un expediente nuevo (evidencia, archivos, o una petición de Ariel), el orquestador debe determinar:
 
-1. **Tipo de caso** — a qué dominio pertenece (P.A.T., COMTRADE, u otro que se agregue más adelante) según el tipo de evidencia recibida (ej. Excel + fotos de campo → P.A.T.; `.cfg`/`.dat`/`.evzip` → COMTRADE).
+1. **Tipo de caso** — a qué dominio pertenece (P.A.T., COMTRADE, u otro que se agregue más adelante) según el tipo de evidencia recibida (ej. página Notion "Campañas P.A.T." con su tabla de puntos + fotos de campo → P.A.T.; `.cfg`/`.dat`/`.evzip` → COMTRADE). Un Excel de campaña suelto ya no es evidencia suficiente para P.A.T. — ver punto 3 y `docs/input-contract.md`.
 2. **Workflow aplicable** — mapear el tipo de caso al workflow correspondiente en `workflows/`. Si no existe un workflow para ese tipo, el orquestador debe detenerse y preguntarle a Ariel antes de improvisar una secuencia nueva — no se infieren workflows no definidos. (Hoy solo existe `workflows/grounding-report.yaml` para P.A.T.; COMTRADE y otros dominios son ambición declarada en `README.md`, todavía sin workflow propio.)
 3. **Requisitos duros del expediente** — antes de crear un work item ejecutable, verificar que estén presentes los elementos que `docs/input-contract.md` exige para el estado `ready`: identidad de caso/revisión, objetivo claro, dominio identificable, alcance mínimo, Definition of Done con al menos un criterio verificable, inventario de entradas, restricciones operativas/de aprobación y workflow seleccionado. Si falta alguno, el expediente no pasa de `draft`/`needs_clarification` — no se inicia el análisis técnico como si estuviera completo.
 4. **Completitud de la evidencia de entrada** — ya con el workflow seleccionado, si falta evidencia mínima específica de ese workflow (ej. mediciones incompletas, fotos sin etiqueta de punto), el orquestador bloquea el expediente en este punto y se lo reporta a Ariel en vez de delegarlo a domain-specialist con huecos.
@@ -43,6 +43,8 @@ Al delegar en cada subagente, el orquestador debe pasar:
 - El **criterio de aceptación** específico de ese work item (qué constituye un resultado completo y correcto para ESTE expediente, no una definición genérica).
 - La **evidencia relevante** ya clasificada — evidencia actual de la campaña, nunca mezclada con datos históricos salvo que el propio workflow lo pida explícitamente.
 - El **ciclo actual** del work item (ver sección 4), para que el subagente sepa si está en el primer intento o en una revisión.
+
+Al **cerrar** cada etapa (aprobada, rechazada, bloqueada o escalada), el orquestador invoca `skills/sync-agent-log/SKILL.md` para registrar la fila correspondiente en la bitácora de agentes externa (ver sección 7). Esto es lo que hace persistente, fuera de la sesión activa, la trazabilidad que la regla 2 exige — antes de esto solo vivía en la conversación.
 
 > Nota para Ariel: los criterios de aceptación exactos por subagente y por tipo de expediente (ej. qué tolerancia numérica separa un "aprobado" de un "rechazado" en technical-reviewer para P.A.T.) no están definidos todavía a este nivel de detalle — quedan como pendiente de que tú los definas caso por caso, porque son criterio técnico tuyo, no algo que el orquestador deba inventar.
 
@@ -71,6 +73,8 @@ El orquestador cuenta los ciclos consumidos por cada work item según la mecáni
 - La trazabilidad completa evidencia → finding → criterio → entregable está intacta y documentada (regla 2).
 - Existe aprobación humana registrada de Ariel (regla 5) — el orquestador nunca emite por sí mismo sin ese registro, sin excepción.
 
+Cumplidas las tres, "emitir" implica invocar `skills/publish-approved-deliverable/SKILL.md`: el documento final se publica en la carpeta de Drive de la planta (sección 7), y la página de campaña en Notion se actualiza (`Documento final`, `Estado del expediente` → `emitido`). El entregable nunca queda solo como un archivo suelto de la sesión — si `publish-approved-deliverable` no puede ejecutarse, el expediente se bloquea en este punto en vez de darse por emitido.
+
 **Bloquear** el expediente (sin escalar todavía) cuando:
 - Falta un eslabón de trazabilidad y es corregible dentro del propio expediente (ej. falta adjuntar una fuente citada).
 - La evidencia de entrada específica del workflow está incompleta (sección 1, punto 4).
@@ -85,4 +89,16 @@ El orquestador cuenta los ciclos consumidos por cada work item según la mecáni
 
 ## 6. Manejo de datos sensibles
 
-Los datos reales de clientes/plantas específicos (mediciones, fotos, nombres de instalación) se procesan únicamente de forma local en la sesión activa. El orquestador no debe commitear, subir ni referenciar esos datos en el repositorio — el repositorio se reserva para plantillas, skills y ejemplos sin datos identificables.
+Los datos reales de clientes/plantas específicos (mediciones, fotos, nombres de instalación) viven en el almacén externo de datos de campaña y en el almacén externo de entregables (sección 7) — nunca en el repositorio de GitHub. El orquestador no debe commitear, subir ni referenciar esos datos en el repositorio, sin excepción — el repositorio se reserva para plantillas, skills y ejemplos sin datos identificables. Procesar un dato real solo dentro de la sesión activa y perderlo al cerrarla ya no es el modelo por defecto: la página de campaña y la carpeta de entregables son persistentes por diseño, precisamente para no depender de la sesión.
+
+## 7. Almacenamiento externo — binding en Claude Code
+
+`AGENTS.md` declara tres capacidades abstractas (`structured_campaign_store`, `external_deliverable_store`, `traceability_log_store`, ver `registry/tools.yaml`) sin fijar su implementación. En este arnés, el binding concreto es:
+
+| Capacidad | Implementación | Dónde |
+|---|---|---|
+| `structured_campaign_store` | Notion — bases de datos "Campañas P.A.T." y "Puntos de medición P.A.T." (relacionadas) | Página "⚡ Ariel Agent OS — P.A.T." del workspace de Ariel en Notion |
+| `traceability_log_store` | Notion — base de datos "Bitácora de Agentes — Ariel Agent OS" | Misma página "⚡ Ariel Agent OS — P.A.T." |
+| `external_deliverable_store` | Google Drive — carpeta `EGEHAINA — Contextos de Planta/[Planta]/Informes P.A.T./` (subcarpeta por planta dentro de la carpeta ya existente `EGEHAINA — Contextos de Planta`; se crea si la planta todavía no tiene una) | Google Drive de Ariel |
+
+Los conectores MCP de Google Drive y Notion ya están habilitados en las sesiones de Claude Code de este proyecto — no requieren instalación adicional. Si un expediente llega con datos que todavía no están en estas estructuras (ej. un Excel o fotos sueltas), el primer paso del orquestador es migrarlos a la página de campaña correspondiente antes de continuar (sección 1, punto 1 y `docs/input-contract.md`), no analizarlos directamente desde el archivo suelto.

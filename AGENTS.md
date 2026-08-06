@@ -29,6 +29,10 @@ Si falta un requisito duro del expediente, no asumirlo: registrar la brecha y so
 
 Ante discrepancia, prevalecen las instrucciones del usuario, luego los contratos y workflow aplicables, y después las instrucciones particulares de roles y skills.
 
+## Almacenamiento externo de datos de campaña, entregables y bitácora
+
+Los datos reales de un caso (matriz de campaña, fotos, entregables finales) y el registro de trazabilidad de cada work item no viven en el repositorio ni dependen de que la sesión activa permanezca abierta. `registry/tools.yaml` declara tres capacidades abstractas para esto: `structured_campaign_store` (datos de campaña), `external_deliverable_store` (entregables publicados) y `traceability_log_store` (bitácora de agentes). El binding concreto de cada capacidad a una implementación real es responsabilidad del arnés activo, no de este archivo — para Claude Code, ver `CLAUDE.md`.
+
 ## Reglas no negociables
 
 - No inventar valores, fechas, evidencia, criterios, configuraciones, fuentes normativas ni conclusiones.
