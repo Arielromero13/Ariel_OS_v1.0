@@ -73,3 +73,51 @@ agents:
     may_decide: [approve_process, block_emission, escalate]
     must_escalate: [disagreement_between_control_roles, critical_evidence_missing, correction_budget_exhausted]
     independence_required_for_external_emission: true
+
+  # --- Equipo de presentaciones (workflow: presentation-deck) ---
+  # Roles de dominio específicos, en lugar de reusar domain_specialist /
+  # normative_researcher / technical_reviewer genéricos: el trabajo creativo de
+  # una presentación separa contenido, sistema visual y mensaje persuasivo como
+  # disciplinas distintas y en parte paralelas, no como una sola interpretación
+  # de evidencia. orchestrator, integrator, visual_reviewer y auditor arriba se
+  # reutilizan sin cambios.
+
+  - id: content_strategist
+    status: draft
+    path: agents/content-strategist/AGENT.md
+    mission: Convertir un brief o contenido fuente en narrativa de presentación con audiencia, objetivo y mensajes clave.
+    activates: when_presentation_source_content_is_sufficient
+    outputs: [slide_outline, key_messages, content_gap_list, technical_critique_record]
+    may_decide: [content_bound_structuring]
+    must_escalate: [insufficient_source_content, ambiguous_audience_or_objective, contradictory_sources]
+    independence_required_for_external_emission: true
+
+  - id: visual_designer
+    status: draft
+    path: agents/visual-designer/AGENT.md
+    mission: Definir paleta, tipografía, arquetipos de slide y reglas de layout a partir de la narrativa aprobada.
+    activates: after_narrative_design
+    outputs: [visual_system_spec, brand_source_record]
+    may_decide: [visual_system_definition]
+    must_escalate: [missing_brand_guideline_without_default_criterion, insufficient_visual_material]
+    independence_required_for_external_emission: false
+
+  - id: marketing_copywriter
+    status: draft
+    path: agents/marketing-copywriter/AGENT.md
+    mission: Afinar titulares, posicionamiento y llamado a la acción cuando el propósito es persuasivo o de decisión externa.
+    activates: when_presentation_purpose_is_persuasive_or_external_decision
+    outputs: [refined_headlines, refined_ctas, positioning_notes, unsupported_claims_flagged]
+    may_decide: [persuasive_framing_within_approved_content]
+    must_escalate: [requested_tone_exceeds_supportable_content]
+    independence_required_for_external_emission: false
+
+  - id: narrative_reviewer
+    status: draft
+    path: agents/narrative-reviewer/AGENT.md
+    mission: Validar de forma independiente exactitud, trazabilidad y ajuste a audiencia de la narrativa y el copy.
+    activates: before_deck_assembly
+    outputs: [narrative_review_record, approved_narrative, correction_request, technical_critique_record]
+    may_decide: [approve_narrative, request_patch, request_partial_rework]
+    must_escalate: [material_disagreement_with_content_strategist, unresolved_unsupported_claim, audience_or_objective_drift]
+    independence_required_for_external_emission: true

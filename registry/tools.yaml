@@ -57,6 +57,10 @@ tools:
       - integrator
       - visual_reviewer
       - auditor
+      - content_strategist
+      - visual_designer
+      - marketing_copywriter
+      - narrative_reviewer
     constraints:
       - Nunca elimina ni sobrescribe una revisión sin crear una nueva referencia.
       - No publica ni comparte fuera del caso.
@@ -238,6 +242,59 @@ tools:
     constraints:
       - La fórmula, supuestos, unidades e insumos deben quedar registrados.
       - No reemplaza el juicio técnico ni crea criterios de aceptación.
+
+  - id: presentation_processor
+    name: Procesador de presentaciones PPTX
+    category: document_processing
+    status: declared_not_bound
+    required_for_pilot: false
+    purpose: >
+      Generar y editar archivos PPTX a partir de una narrativa aprobada y un
+      sistema visual definido, aplicando arquetipos de slide, paleta y
+      tipografía de forma programática.
+    operations:
+      - create_deck_from_outline
+      - apply_visual_system
+      - insert_slide_content
+      - insert_visual_asset
+      - export_pptx
+    accepts:
+      - slide_outline
+      - visual_system_spec
+      - images
+      - structured_records
+    produces:
+      - pptx_deck
+      - integration_record
+    allowed_roles:
+      - integrator
+    constraints:
+      - No modifica mensajes, cifras ni estructura narrativa aprobada.
+      - No decide paleta ni tipografía; las recibe del visual_system_spec.
+
+  - id: presentation_renderer
+    name: Renderizador de presentaciones
+    category: visual_quality
+    status: declared_not_bound
+    required_for_pilot: false
+    purpose: >
+      Convertir un PPTX en miniaturas o PDF revisable por slide, sin cambiar
+      su contenido, para permitir QA visual del renderizado real.
+    operations:
+      - render_to_thumbnails
+      - render_to_pdf
+      - inspect_slide_count
+    accepts:
+      - pptx_deck
+    produces:
+      - rendered_presentation
+      - slide_images
+    allowed_roles:
+      - integrator
+      - visual_reviewer
+    constraints:
+      - El renderizado es una salida derivada; no sustituye el PPTX fuente.
+      - Cada salida debe indicar el artefacto y la versión de origen.
 
   - id: report_package_manager
     name: Gestor de paquete de entrega

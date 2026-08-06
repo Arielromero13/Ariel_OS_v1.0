@@ -6,12 +6,26 @@ Este archivo es la instrucción operativa de sesión para el arnés Claude Code.
 
 Los subagentes disponibles y su función:
 
+Comunes a todo dominio (el orquestador siempre puede recurrir a ellos):
+
+- `integrator` — ensambla el entregable final (informe o PPTX) a partir de los resultados aprobados.
+- `visual-reviewer` — control de calidad visual/formato del entregable integrado (Word/PDF renderizado o PPTX renderizado).
+- `auditor` — última verificación de trazabilidad y cumplimiento de las reglas no negociables antes de habilitar la emisión.
+
+Específicos del workflow `grounding-report` (P.A.T.):
+
 - `domain-specialist` — produce el análisis técnico inicial del expediente.
 - `normative-researcher` — resuelve dudas normativas/de criterio cuando domain-specialist o technical-reviewer las señalan. Se invoca bajo demanda, no en toda ejecución.
 - `technical-reviewer` — revisa de forma independiente el resultado de domain-specialist antes de integrar.
-- `integrator` — ensambla el entregable final (informe) a partir de los resultados aprobados.
-- `visual-reviewer` — control de calidad visual/formato del entregable integrado.
-- `auditor` — última verificación de trazabilidad y cumplimiento de las reglas no negociables antes de habilitar la emisión.
+
+Específicos del workflow `presentation-deck` (PPTX ejecutivo / técnico / persuasivo):
+
+- `content-strategist` — convierte el brief y el contenido fuente en narrativa: audiencia, objetivo, estructura de slides y mensajes clave.
+- `visual-designer` — define el sistema visual (paleta, tipografía, arquetipos de slide) a partir de la narrativa aprobada.
+- `marketing-copywriter` — afina titulares, posicionamiento y llamado a la acción. Solo se invoca cuando el propósito de la presentación es persuasivo o de decisión externa; no en presentaciones puramente informativas.
+- `narrative-reviewer` — revisa de forma independiente la narrativa y el copy antes de que integrator ensamble el PPTX.
+
+Si aparece un tercer dominio sin workflow definido, el orquestador no improvisa qué subagentes usar: se detiene y pregunta a Ariel (ver sección 1, punto 2).
 
 ## 0. Reglas no negociables
 
@@ -27,8 +41,8 @@ Estas cinco reglas son restricciones fijas del sistema. Las secciones siguientes
 
 Al recibir un expediente nuevo (evidencia, archivos, o una petición de Ariel), el orquestador debe determinar:
 
-1. **Tipo de caso** — a qué dominio pertenece (P.A.T., COMTRADE, u otro que se agregue más adelante) según el tipo de evidencia recibida (ej. Excel + fotos de campo → P.A.T.; `.cfg`/`.dat`/`.evzip` → COMTRADE).
-2. **Workflow aplicable** — mapear el tipo de caso al workflow correspondiente en `workflows/`. Si no existe un workflow para ese tipo, el orquestador debe detenerse y preguntarle a Ariel antes de improvisar una secuencia nueva — no se infieren workflows no definidos. (Hoy solo existe `workflows/grounding-report.yaml` para P.A.T.; COMTRADE y otros dominios son ambición declarada en `README.md`, todavía sin workflow propio.)
+1. **Tipo de caso** — a qué dominio pertenece (P.A.T., presentación/PPTX, COMTRADE, u otro que se agregue más adelante) según el tipo de evidencia recibida (ej. Excel + fotos de campo → P.A.T.; brief + contenido fuente + audiencia → presentación PPTX; `.cfg`/`.dat`/`.evzip` → COMTRADE).
+2. **Workflow aplicable** — mapear el tipo de caso al workflow correspondiente en `workflows/`. Si no existe un workflow para ese tipo, el orquestador debe detenerse y preguntarle a Ariel antes de improvisar una secuencia nueva — no se infieren workflows no definidos. Hoy existen `workflows/grounding-report.yaml` (P.A.T.) y `workflows/presentation-deck.yaml` (presentaciones PPTX); COMTRADE y otros dominios son ambición declarada en `README.md`, todavía sin workflow propio.
 3. **Requisitos duros del expediente** — antes de crear un work item ejecutable, verificar que estén presentes los elementos que `docs/input-contract.md` exige para el estado `ready`: identidad de caso/revisión, objetivo claro, dominio identificable, alcance mínimo, Definition of Done con al menos un criterio verificable, inventario de entradas, restricciones operativas/de aprobación y workflow seleccionado. Si falta alguno, el expediente no pasa de `draft`/`needs_clarification` — no se inicia el análisis técnico como si estuviera completo.
 4. **Completitud de la evidencia de entrada** — ya con el workflow seleccionado, si falta evidencia mínima específica de ese workflow (ej. mediciones incompletas, fotos sin etiqueta de punto), el orquestador bloquea el expediente en este punto y se lo reporta a Ariel en vez de delegarlo a domain-specialist con huecos.
 

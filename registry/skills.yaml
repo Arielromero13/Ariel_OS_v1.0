@@ -275,6 +275,194 @@ skills:
       - No valida la corrección técnica de una conclusión.
       - No modifica el Word sin corrección y trazabilidad registradas.
 
+  # --- Equipo de presentaciones (workflow: presentation-deck) ---
+
+  - id: design-presentation-narrative
+    name: Diseño de narrativa de presentación
+    kind: domain
+    status: draft
+    version: 0.1.0
+    path: skills/design-presentation-narrative/SKILL.md
+    domains:
+      - presentation-design
+      - content-strategy
+    applicable_workflows:
+      - presentation-deck
+    invocable_by:
+      - orchestrator
+      - content_strategist
+      - narrative_reviewer
+    required_inputs:
+      - work_item
+      - source_content
+      - definition_of_done
+    optional_inputs:
+      - audience_profile
+      - prior_decks
+      - brand_guideline
+    produces:
+      - slide_outline
+      - key_messages
+      - content_gap_list
+      - technical_critique_record
+    uses_skills:
+      - critique-presentation-effectiveness
+    requires_tools:
+      - workspace_artifact_store
+      - document_processor
+    boundaries:
+      - No inventa cifras, resultados ni citas.
+      - No decide paleta, tipografía ni maquetación.
+      - No aprueba su propia narrativa como definitiva.
+    validation:
+      - Cada mensaje clave se vincula a contenido fuente o queda pendiente.
+      - Cada slide propuesta tiene un solo mensaje.
+      - Sus salidas cumplen los contratos de finding y handoff.
+
+  - id: critique-presentation-effectiveness
+    name: Crítica de efectividad de presentación
+    kind: domain
+    status: draft
+    version: 0.1.0
+    path: skills/critique-presentation-effectiveness/SKILL.md
+    domains:
+      - presentation-design
+      - communication-critique
+    applicable_workflows:
+      - presentation-deck
+    invocable_by:
+      - content_strategist
+      - narrative_reviewer
+      - auditor
+    required_inputs:
+      - slide_outline_or_draft
+      - approved_source_content
+    optional_inputs:
+      - refined_headlines
+      - refined_ctas
+    produces:
+      - technical_critique_record
+    requires_tools:
+      - workspace_artifact_store
+    boundaries:
+      - No inventa contenido, cifras o fuentes faltantes; las marca como pendientes.
+      - No sustituye la revisión visual del renderizado.
+      - En modo auditoría no rehace la crítica ni emite juicio propio de efectividad.
+      - Declarar sin hallazgos solo es válido si cada pregunta aplicable fue respondida explícitamente.
+    validation:
+      - content_strategist y narrative_reviewer registran un technical_critique_record propio y separado.
+      - narrative_reviewer llega a su conclusión antes de leer la del estratega.
+      - auditor verifica que ambos registros existen y están razonados, no solo que existen.
+
+  - id: apply-visual-identity-system
+    name: Aplicación de sistema de identidad visual
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/apply-visual-identity-system/SKILL.md
+    domains:
+      - visual-design
+      - brand-consistency
+    invocable_by:
+      - visual_designer
+    required_inputs:
+      - slide_outline
+      - brand_guideline_or_default_criteria
+    optional_inputs:
+      - available_visual_material
+    produces:
+      - visual_system_spec
+      - brand_source_record
+    requires_tools:
+      - workspace_artifact_store
+    boundaries:
+      - No modifica mensajes, datos ni estructura narrativa aprobada.
+      - No decide contenido persuasivo.
+      - Sin guía de marca ni criterio por defecto aplicable, lo declara pendiente en vez de inventar una paleta.
+
+  - id: write-persuasive-copy
+    name: Redacción de copy persuasivo
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/write-persuasive-copy/SKILL.md
+    domains:
+      - marketing-copy
+      - persuasion
+    invocable_by:
+      - marketing_copywriter
+    required_inputs:
+      - slide_outline
+      - key_messages
+      - audience_and_decision_sought
+    produces:
+      - refined_headlines
+      - refined_ctas
+      - positioning_notes
+      - unsupported_claims_flagged
+    requires_tools:
+      - workspace_artifact_store
+    boundaries:
+      - Solo la invoca marketing_copywriter, y solo cuando el propósito persuasivo está declarado.
+      - No inventa cifras, resultados ni promesas no sustentadas.
+      - No decide estructura narrativa ni sistema visual.
+
+  - id: assemble-pptx-deck
+    name: Ensamblaje de presentación PPTX
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/assemble-pptx-deck/SKILL.md
+    domains:
+      - document-production
+      - presentation-design
+    invocable_by:
+      - integrator
+    required_inputs:
+      - approved_narrative
+      - visual_system_spec
+    optional_inputs:
+      - refined_headlines
+      - refined_ctas
+      - available_visual_material
+    produces:
+      - pptx_deck
+      - integration_record
+    requires_tools:
+      - workspace_artifact_store
+      - presentation_processor
+    boundaries:
+      - Solo la invoca el integrador.
+      - No altera mensajes, cifras, estructura ni sistema visual aprobados.
+      - No aprueba ni distribuye la presentación.
+
+  - id: render-and-review-presentation
+    name: Renderizado y revisión visual de presentación
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/render-and-review-presentation/SKILL.md
+    domains:
+      - visual-quality
+      - presentation-design
+    invocable_by:
+      - integrator
+      - visual_reviewer
+    required_inputs:
+      - pptx_deck
+      - visual_system_spec
+    produces:
+      - rendered_presentation
+      - visual_qa_record
+      - visual_correction_request
+    requires_tools:
+      - workspace_artifact_store
+      - presentation_renderer
+    boundaries:
+      - Evalúa presentación, consistencia visual y legibilidad; no valida la narrativa ni el copy.
+      - No modifica el PPTX sin corrección y trazabilidad registradas.
+      - No aprueba emisión si el sistema visual aprobado no se respeta de forma consistente.
+
   - id: analyze-comtrade-event
     name: Análisis de evento COMTRADE
     kind: domain

@@ -44,6 +44,29 @@ Auditor → Usuario/responsable: aprobación, bloqueo o escalamiento razonado
 | Criterio normativo relevante o incierto | Análisis técnico y normativo en paralelo; revisión técnica independiente. |
 | Emisión externa o decisión sensible | Revisión técnica, QA visual, auditoría independiente y aprobación humana. |
 
+## Extensión — equipo de presentaciones (workflow `presentation-deck`)
+
+El trabajo creativo de una presentación no es una sola interpretación de evidencia: separa contenido, sistema visual y mensaje persuasivo como disciplinas distintas y en parte paralelas. Por eso este dominio no reutiliza `domain_specialist` / `normative_researcher` / `technical_reviewer` con una skill distinta — añade cuatro roles propios. `orchestrator`, `integrator`, `visual_reviewer` y `auditor` de la matriz principal se reutilizan sin cambios: el integrador actúa como maquetador (ensambla el PPTX), y el revisor visual hace QA sobre el renderizado igual que con un Word.
+
+| Rol | Recibe | Produce | Puede decidir | No puede decidir | Escala cuando | Independencia |
+|---|---|---|---|---|---|---|
+| Estratega de contenido | Brief, contenido fuente, audiencia y Definition of Done. | Estructura de slides, mensajes clave, pendientes de contenido. | Priorización y estructura dentro del contenido fuente disponible. | Inventar cifras o resultados, decidir el sistema visual, aprobar su propia narrativa. | Contenido fuente insuficiente, audiencia/objetivo ambiguos, fuentes contradictorias. | Revisión independiente de narrativa requerida para presentaciones de alta visibilidad. |
+| Diseñador visual | Narrativa aprobada, guía de marca o criterio por defecto, material visual disponible. | Sistema visual: paleta, tipografía, arquetipos de slide, reglas de layout. | Forma visual dentro de la narrativa aprobada. | Modificar mensajes, datos o estructura narrativa; decidir contenido persuasivo. | Ausencia de guía de marca sin criterio por defecto, material visual insuficiente para una slide crítica. | Su salida se audita en QA visual antes de emisión. |
+| Copywriter de marketing | Narrativa aprobada, audiencia, decisión que se busca provocar. | Titulares, llamados a la acción y posicionamiento afinados. | Framing persuasivo dentro del contenido aprobado. | Inventar cifras, resultados o promesas no sustentadas. | El tono persuasivo solicitado excede lo que el contenido aprobado puede sostener. | Rol bajo demanda — solo se activa si el propósito persuasivo está declarado explícitamente. |
+| Revisor de narrativa | Narrativa, copy, contenido fuente, audiencia y Definition of Done. | Registro de revisión, narrativa aprobada o solicitud de corrección. | Aprobar narrativa, pedir patch o partial rework, rechazar afirmaciones sin respaldo. | Decidir el sistema visual ni la maquetación. | Desacuerdo material con el estratega, cifra sin respaldo persistente, audiencia/objetivo cambiado sin reformulación. | Debe ser independiente del estratega de contenido en presentaciones de alta visibilidad. |
+
+```text
+Orquestador → Estratega de contenido: execution brief + audiencia, objetivo y contenido fuente congelados
+Estratega de contenido → Diseñador visual: narrativa aprobada + tipo de presentación
+Estratega de contenido → Copywriter de marketing (si aplica): narrativa aprobada + propósito persuasivo declarado
+Diseñador visual / Copywriter de marketing → Revisor de narrativa: sistema visual + copy afinado
+Revisor de narrativa → Integrador: narrativa aprobada + sistema visual + correcciones explícitas
+Integrador → Revisor visual: PPTX renderizado + sistema visual aprobado
+Revisor visual → Orquestador: QA visual aprobado o corrección acotada
+Orquestador → Auditor: Definition of Done + registros de decisión + PPTX candidato
+Auditor → Usuario/responsable: aprobación, bloqueo o escalamiento razonado
+```
+
 ## Próximo uso
 
 Cada archivo `AGENT.md` debe derivarse de esta matriz y contener: misión, entradas, salidas, autoridad, prohibiciones, criterios de handoff, escalamiento, herramientas permitidas y reglas de independencia.
