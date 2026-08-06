@@ -123,6 +123,19 @@ La entrega no es una línea recta ciega. Si algo falla, se corrige lo mínimo ne
 
 La matriz completa está en [docs/role-matrix.md](docs/role-matrix.md).
 
+### Un segundo equipo: presentaciones
+
+El piloto P.A.T. usa los siete roles de arriba tal cual. El dominio de presentaciones (workflow `presentation-deck`) reutiliza orquestador, integrador, revisor visual y auditor, pero sustituye especialista/investigador/revisor técnico por cuatro roles propios, porque construir un deck reparte trabajo entre disciplinas paralelas en vez de una sola cadena de análisis de evidencia:
+
+| Rol | Su pregunta central | Puede hacer | No puede hacer |
+|---|---|---|---|
+| ✍️ Estratega de contenido | "¿Qué necesita saber esta audiencia, en qué orden?" | Estructurar narrativa y mensajes clave desde el contenido fuente. | Inventar cifras ni decidir el sistema visual. |
+| 🎨 Diseñador visual | "¿Cómo se ve esta narrativa?" | Definir paleta, tipografía y arquetipos de slide. | Cambiar mensajes, datos o estructura narrativa. |
+| 📣 Copywriter de marketing | "¿Este mensaje mueve a la audiencia a decidir?" | Afinar titulares, CTA y posicionamiento — solo si el propósito es persuasivo. | Inventar promesas o resultados no sustentados. |
+| 🔍 Revisor de narrativa | "¿Esto es trazable, no redundante y ajustado a la audiencia?" | Aprobar, pedir corrección o rechazar afirmaciones sin respaldo. | Decidir el sistema visual ni la maquetación. |
+
+Detalle completo, matriz de handoffs y razonamiento de por qué no se reusan los roles genéricos: [docs/role-matrix.md](docs/role-matrix.md#extensión--equipo-de-presentaciones-workflow-presentation-deck).
+
 ---
 
 ## 🧰 Skills: el conocimiento operativo
@@ -139,6 +152,10 @@ Estas contienen la metodología y el criterio técnico particular de Ariel Agent
   Aplica criterio real de ingeniería eléctrica (IEEE/IEC) a un resultado P.A.T. — suficiencia del criterio, consistencia por activo, outliers, tendencia. La usan domain-specialist (al proponer), technical-reviewer (de forma independiente, antes de leer la propuesta) y auditor (para confirmar que las otras dos la usaron, sin rehacerla).
 - **analyze-comtrade-event**  
   Registrada como futura. No se activa hasta que tenga su propio método, contratos y pruebas.
+- **[design-presentation-narrative](skills/design-presentation-narrative/SKILL.md)**  
+  Convierte un brief o contenido fuente en estructura de slides y mensajes clave trazables. La usa content-strategist.
+- **[critique-presentation-effectiveness](skills/critique-presentation-effectiveness/SKILL.md)**  
+  Aplica un rubric de efectividad (audiencia, un mensaje por slide, redundancia, trazabilidad de cifras) a una narrativa o borrador. La usan content-strategist (al proponer), narrative-reviewer (de forma independiente) y auditor (para confirmar que las otras dos la usaron).
 
 ### Skills transversales: piezas reutilizables
 
@@ -152,6 +169,10 @@ Estas no toman decisiones de ingeniería; dan soporte controlado a muchos domini
 | [research-normative-criterion](skills/research-normative-criterion/SKILL.md) | Documenta fuente, edición, cláusula y aplicabilidad. | Inventar requisitos normativos. |
 | [write-document-from-template](skills/write-document-from-template/SKILL.md) | Integra contenido aprobado en una plantilla Word. | Cambiar la ingeniería aprobada. |
 | [render-and-review-document](skills/render-and-review-document/SKILL.md) | Renderiza y revisa la calidad visual final. | Aprobar la corrección técnica. |
+| [apply-visual-identity-system](skills/apply-visual-identity-system/SKILL.md) | Traduce una guía de marca (o criterio por defecto) en paleta, tipografía y arquetipos de slide. | Decidir mensajes ni contenido persuasivo. |
+| [write-persuasive-copy](skills/write-persuasive-copy/SKILL.md) | Afina titulares, CTA y posicionamiento cuando el propósito es persuasivo. | Inventar cifras o promesas no sustentadas. |
+| [assemble-pptx-deck](skills/assemble-pptx-deck/SKILL.md) | Ensambla narrativa y sistema visual aprobados en un PPTX. | Alterar mensajes, cifras o sistema visual aprobados. |
+| [render-and-review-presentation](skills/render-and-review-presentation/SKILL.md) | Renderiza el PPTX y revisa consistencia visual y legibilidad. | Validar la narrativa o el copy. |
 
 El inventario formal está en [registry/skills.yaml](registry/skills.yaml).
 
@@ -308,8 +329,11 @@ Si la memoria falla o se retoma el proyecto tras una pausa, este es el orden rec
 - [x] Definir el adaptador inicial para Codex Cloud.
 - [ ] Enlazar herramientas reales de forma controlada.
 - [x] Preparar un expediente histórico anonimizado para piloto interno.
+- [x] Diseñar el equipo de agentes/skills de presentaciones (PPTX) y su workflow `presentation-deck`.
 - [ ] Ajustar contratos, roles y skills con evidencia de uso.
 - [ ] Diseñar la skill y workflow de análisis COMTRADE.
+- [ ] Ejecutar un caso ficticio de `presentation-deck` de punta a punta.
+- [ ] Enlazar `presentation_processor` y `presentation_renderer` a una implementación real (ej. skill `pptx` de Claude).
 
 ---
 
