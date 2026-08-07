@@ -87,7 +87,7 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "Dominio o tipo de trabajo, por ejemplo grounding-report o comtrade-diagnosis."
+          "description": "Dominio o tipo de trabajo, por ejemplo grounding-report o comtrade-fault-analysis."
         },
         "specific_request": {
           "type": "object",

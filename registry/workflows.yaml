@@ -15,3 +15,15 @@ workflows:
     entry_gate: draft_to_ready
     emission_gate: ready_for_emission
     human_approval_required_before_external_emission: true
+
+  - id: comtrade-fault-analysis
+    name: Informe de análisis de falla (COMTRADE)
+    status: draft
+    version: 0.1.0
+    path: workflows/comtrade-fault-analysis.yaml
+    input_contract: contracts/work-item.schema.json
+    primary_skill: analyze-comtrade-event
+    output_contract: report-manifest
+    entry_gate: draft_to_ready
+    emission_gate: ready_for_emission
+    human_approval_required_before_external_emission: true
