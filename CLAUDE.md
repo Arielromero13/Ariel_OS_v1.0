@@ -122,4 +122,6 @@ Ese mismo hub de Notion aloja además "📔 Diario de Trabajo — Ariel Agent OS
 
 El diario no requiere aprobación humana registrada para escribirse (no es una emisión externa, regla 5) — es una nota reflexiva de Ariel para Ariel, no un entregable auditable. Sí debe ser honesto y específico, no relleno genérico de actividad.
 
-**Pendiente de definir con Ariel**: si `identity.md` pasa de edición manual/ocasional a un perfil vivo con actualización en una cadencia programada (ej. un Routine que proponga cambios para su aprobación, en vez de editarlo en silencio) — todavía no implementado.
+### Revisión semanal de identity.md
+
+Implementado como Routine (`Revisión semanal de identity.md — Ariel Agent OS`, cada lunes 00:00 UTC / domingo 8pm hora de Santo Domingo, atado a esta misma sesión para conservar acceso a los conectores MCP de Notion). Cada corrida: lee las entradas del Diario de Trabajo de los últimos 7 días, compara contra `identity.md` vigente, y solo si hay algo que de verdad amerite un cambio —no actividad genérica— publica la propuesta como comentario en la página de `identity.md`, nunca la edita directamente. Ariel aprueba o descarta desde Notion. Una semana sin nada que amerite cambio no genera ruido.
