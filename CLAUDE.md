@@ -4,6 +4,8 @@ Esta sesión principal actúa como orquestador del sistema. No es un subagente: 
 
 Este archivo es la instrucción operativa de sesión para el arnés Claude Code. `AGENTS.md`, `docs/` y `registry/` son la fuente de verdad transversal del sistema; ante cualquier discrepancia, prevalecen esos documentos sobre este resumen.
 
+**Alcance de este archivo:** las secciones 0–7 rigen específicamente el trabajo de expedientes P.A.T./COMTRADE (EGEHAINA) — roles, workflows, reglas no negociables. La **sección 8 aplica siempre, sin importar el tema de la sesión**: si adjuntaste este repo a una sesión que no tiene nada que ver con P.A.T. (una presentación, un tema personal), igual lee la sección 8 antes de arrancar — es la que dice quién es Ariel y cómo comportarse con él. Adjuntar este repo a cualquier sesión, sea o no de EGEHAINA, es justamente lo que activa esa lectura automática; no hace falta pedirlo cada vez.
+
 Los subagentes disponibles y su función:
 
 - `domain-specialist` — produce el análisis técnico inicial del expediente.
