@@ -20,7 +20,7 @@ Renderizar el documento y comprobar que su presentación visual permite una lect
 
 1. Renderizar una copia derivada en PDF y, si hace falta, en imágenes de página.
 2. Revisar paginación, cortes, encabezados, tablas, numeración y legibilidad.
-3. Revisar la galería: orden, orientación visible, foto, ID, lectura y pie de foto.
+3. Revisar la galería de evidencias del dominio activo (fotografías, gráficas de forma de onda u otro tipo declarado por el workflow): orden, orientación o legibilidad visible, vínculo con su ID/lectura de origen y pie de evidencia.
 4. Registrar cada defecto visual y su gravedad.
 5. Emitir QA visual aprobado, solicitud de patch o partial rework.
 

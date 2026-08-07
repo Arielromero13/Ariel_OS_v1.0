@@ -1,0 +1,375 @@
+workflow:
+  id: comtrade-fault-analysis
+  name: Informe de análisis de falla (COMTRADE)
+  version: 0.1.0
+  status: draft
+  portable: true
+
+  purpose: >
+    Preparar un informe de análisis de falla trazable a partir de una revisión
+    de expediente (evento de relé de protección), con análisis técnico y
+    normativo verificable, revisión visual de gráficas de forma de onda y
+    aprobación humana antes de emisión externa. Mismo nivel de rigor que
+    grounding-report: es el segundo dominio Tier 1 del sistema (ver
+    docs/governance.md, "Nivel de rigor por dominio").
+
+  applies_when:
+    domain: protection-fault-analysis
+    skill: analyze-comtrade-event
+
+  contracts:
+    input: contracts/work-item.schema.json
+    handoff: contracts/handoff.schema.json
+    evidence: contracts/evidence.schema.json
+    finding: contracts/finding.schema.json
+    review: contracts/review.schema.json
+    audit_decision: contracts/audit-decision.schema.json
+    report_manifest: contracts/report-manifest.schema.json
+    primary_skill: skills/analyze-comtrade-event/SKILL.md
+    output:
+      - validated_event_file
+      - waveform_evidence_gallery
+      - technical_analysis
+      - word_report_draft
+      - pending_items_list
+      - decision_record
+      - external_deliverable_reference
+
+  roles:
+    orchestrator:
+      responsibilities:
+        - Interpretar intención, planificar y seleccionar workflow.
+        - Validar la alineación final con el mandato original.
+    domain_specialist:
+      responsibilities:
+        - Consolidar el evento y analizar señales dentro del alcance documentado.
+    normative_researcher:
+      responsibilities:
+        - Verificar fuente, edición, cláusula y aplicabilidad de guías de protección citadas.
+    technical_reviewer:
+      responsibilities:
+        - Revisar exactitud, trazabilidad, limitaciones y uso de ajustes de protección.
+    integrator:
+      responsibilities:
+        - Integrar evento, gráficas, análisis y borrador Word sin alterar hallazgos aprobados.
+    visual_reviewer:
+      responsibilities:
+        - Inspeccionar el Word o PDF renderizado y aprobar la galería de gráficas.
+    auditor:
+      responsibilities:
+        - Evaluar si aprobar, bloquear o escalar está justificado por evidencia y reglas.
+
+  entry_gate:
+    transition: draft_to_ready
+    required:
+      - case.case_id
+      - case.revision_id
+      - request.objective
+      - domain.name
+      - definition_of_done
+      - input_manifest
+      - constraints
+    sufficient_for:
+      gap_analysis:
+        - task identity
+        - objective
+        - domain
+        - input manifest
+      technical_analysis:
+        - evidence minimum declared by the COMTRADE skill
+      external_emission:
+        - definition of done complete
+        - approved technical review
+        - approved visual QA
+        - required human approval
+    on_failure:
+      missing_hard_requirement: needs_clarification
+      insufficient_evidence_for_requested_phase: blocked
+      safety_or_distribution_constraint_unknown: ready_for_internal_analysis_only
+
+  stages:
+    - id: intake_and_plan
+      owner: orchestrator
+      purpose: Convertir el expediente de la revisión en un work item ejecutable.
+      consumes:
+        - work_item
+        - input_manifest
+      produces:
+        - execution_brief
+        - workflow_selection_record
+        - initial_gap_list
+      acceptance:
+        - intención, alcance y Definition of Done explícitos
+        - revisión de expediente identificada
+        - fase de trabajo autorizada declarada
+      on_failure: needs_clarification
+
+    - id: evidence_control
+      owner: domain_specialist
+      skill: analyze-comtrade-event
+      transversal_skills:
+        - id: validate-event-file-input
+          purpose: Verificar estructura, canales, muestreo y CTR/PTR del archivo de evento antes de consolidarlo.
+        - id: validate-technical-traceability
+          purpose: Confirmar que cada señal analizada enlaza con el archivo de evento y el contexto de planta, generando el traceability_map.
+      depends_on:
+        - intake_and_plan
+      purpose: Consolidar el evento, identificar canales y verificar trazabilidad inicial.
+      consumes:
+        - execution_brief
+        - event_file
+        - plant_context
+        - historical_reference
+      produces:
+        - validated_event_file
+        - evidence_manifest
+        - traceability_map
+        - evidence_gap_list
+      acceptance:
+        - cada señal analizada se vincula al archivo de evento y al contexto de planta, o queda pendiente
+        - no se transcriben ajustes de protección no verificables
+        - eventos, circuitos y plantas no se mezclan
+      on_failure: user_clarification_or_block
+
+    - id: technical_analysis
+      owner: domain_specialist
+      skill: analyze-comtrade-event
+      transversal_skills:
+        - id: critique-fault-diagnosis-analysis
+          mode: proposal
+          purpose: Responder las preguntas de ingeniería de protecciones (ecuación de disparo, ajuste vs. corriente medida, tiempo de operación, clasificación de falla, plausibilidad, falso disparo, alcance de la conclusión) antes de proponer un diagnóstico — no limitarse a describir la forma de onda.
+      depends_on:
+        - evidence_control
+      purpose: Analizar las señales dentro de ajustes, topología, alcance y condiciones sustentadas.
+      consumes:
+        - validated_event_file
+        - traceability_map
+        - plant_context
+      produces:
+        - technical_findings
+        - limitations_record
+        - provisional_evaluation_states
+        - technical_critique_record
+      acceptance:
+        - no se emite diagnóstico fuera de la evidencia disponible
+        - toda limitación relevante queda declarada
+        - technical_critique_record en modo proposal está completo, incluida la hipótesis de falso disparo
+      on_failure: partial_rework_or_user_clarification
+
+    - id: normative_analysis
+      owner: normative_researcher
+      transversal_skills:
+        - id: research-normative-criterion
+          purpose: Documentar fuente, edición, cláusula y aplicabilidad de cada guía de protección citada, cuando el caso la use.
+      depends_on:
+        - evidence_control
+      run_in_parallel_with:
+        - technical_analysis
+      purpose: Verificar criterios de coordinación de protecciones y su aplicabilidad, cuando el caso los invoque.
+      consumes:
+        - normative_source
+        - protection_philosophy_document
+        - plant_context
+      produces:
+        - criteria_register
+        - normative_citations
+        - applicability_assessment
+      acceptance:
+        - cada criterio incluye fuente, edición, cláusula o requisito y justificación
+        - no se usan criterios de coordinación genéricos atribuidos a una guía sin verificación
+      on_failure: mark_criterion_pending
+
+    - id: technical_review
+      owner: technical_reviewer
+      transversal_skills:
+        - id: validate-technical-traceability
+          purpose: Reverificar el enlace señal→evidencia→finding→criterio antes de aprobar el análisis.
+        - id: critique-fault-diagnosis-analysis
+          mode: independent_review
+          purpose: Responder las 7 preguntas de ingeniería de protecciones por cuenta propia, sin leer antes el technical_critique_record del especialista, y solo entonces comparar y declarar coincidencia razonada o desacuerdo.
+      depends_on:
+        - technical_analysis
+        - normative_analysis
+      purpose: Validar resultados, trazabilidad, estados de diagnóstico y criterios.
+      consumes:
+        - validated_event_file
+        - technical_findings
+        - limitations_record
+        - criteria_register
+        - technical_critique_record
+      produces:
+        - technical_review_record
+        - approved_findings
+        - correction_request
+        - technical_critique_record
+      acceptance:
+        - estados Falla confirmada, Falla probable, Falso disparo o No concluyente están justificados
+        - la conclusión no excede evidencia ni alcance
+        - existe un technical_critique_record en modo independent_review, producido antes de leer el del especialista
+      on_failure: correction_loop
+
+    - id: report_integration
+      owner: integrator
+      transversal_skills:
+        - id: write-document-from-template
+          purpose: Integrar únicamente contenido aprobado (evento, gráficas, hallazgos, criterios) en la plantilla vigente de análisis de falla.
+      depends_on:
+        - technical_review
+      purpose: Integrar resultados aprobados en la plantilla vigente.
+      consumes:
+        - approved_findings
+        - validated_event_file
+        - evidence_manifest
+        - template
+      produces:
+        - word_report_draft
+        - rendered_document
+        - waveform_evidence_gallery
+      acceptance:
+        - evento, gráficas, análisis y conclusiones usan referencias consistentes
+        - los ajustes de protección no se repiten fuera de la sección de análisis
+      on_failure: partial_rework
+
+    - id: visual_evidence_qa
+      owner: visual_reviewer
+      transversal_skills:
+        - id: render-and-review-document
+          purpose: Renderizar el borrador y revisar ejes, escalas, ventana temporal, cruce de ajustes marcado, orden y paginación de las gráficas.
+      depends_on:
+        - report_integration
+      purpose: Validar visualmente la galería de gráficas y maquetación en el documento renderizado.
+      consumes:
+        - rendered_document
+        - waveform_evidence_gallery
+        - validated_event_file
+      produces:
+        - visual_qa_record
+        - visual_correction_request
+      acceptance:
+        - gráfica, elemento y diagnóstico corresponden
+        - ejes, escalas y unidades correctas; ventana temporal incluye pre-falla, pickup y trip
+        - orden de evidencias, legibilidad, recortes y paginación son aceptables
+      on_failure: partial_rework
+
+    - id: intent_validation
+      owner: orchestrator
+      depends_on:
+        - visual_evidence_qa
+      purpose: Comprobar que el resultado responde al mandato original y Definition of Done.
+      consumes:
+        - execution_brief
+        - word_report_draft
+        - technical_review_record
+        - visual_qa_record
+      produces:
+        - intent_validation_record
+        - reformulation_brief
+      acceptance:
+        - todos los criterios obligatorios de Definition of Done se verifican
+        - no se cambió el objetivo original sin una reformulación declarada
+      on_failure: correction_loop
+
+    - id: decision_audit
+      owner: auditor
+      transversal_skills:
+        - id: critique-fault-diagnosis-analysis
+          mode: process_audit
+          purpose: Confirmar que domain_specialist y technical_reviewer registraron un technical_critique_record razonado cada uno, incluida la hipótesis de falso disparo — no rehacer el diagnóstico. Un expediente con gráficas y ajustes impecables pero sin este registro no queda aprobado por forma.
+      depends_on:
+        - intent_validation
+      purpose: Determinar si aprobar, bloquear o escalar es razonable.
+      consumes:
+        - decision_records
+        - technical_review_record
+        - technical_critique_record
+        - visual_qa_record
+        - intent_validation_record
+      produces:
+        - audit_decision
+        - escalation_record
+      acceptance:
+        - decisión respaldada por evidencia y reglas
+        - desacuerdos materiales se escalan, no se resuelven por reescritura automática
+        - existe technical_critique_record en modo proposal e independent_review, ambos razonados
+      on_failure: escalation
+
+  correction_loop:
+    maximum_cycles: 3
+    correction_types:
+      patch:
+        use_when: Error local y aislado.
+      partial_rework:
+        use_when: Una sección o sus dependencias directas dejaron de ser válidas.
+      full_rework:
+        use_when: Una premisa base invalida el enfoque.
+      user_clarification:
+        use_when: Falta información crítica o hay desacuerdo no resoluble.
+    preservation_rule: >
+      Las evidencias, secciones y resultados correctos no se modifican sin
+      justificación explícita. Un full rework preserva trazabilidad y componentes
+      que no dependan de la premisa invalidada.
+    reformulation_contract:
+      required:
+        - original_mandate
+        - previous_interpretation
+        - detected_error
+        - corrected_interpretation
+        - correction_type
+        - artifacts_to_preserve
+        - artifacts_to_modify
+        - responsible_role
+        - acceptance_criterion
+    on_exhausted_cycles:
+      status: blocked
+      output: blocking_report
+
+  emission_gate:
+    transition: ready_for_emission
+    required:
+      - definition_of_done_satisfied
+      - technical_review_approved
+      - visual_qa_approved
+      - audit_decision_approved
+      - human_approval_received
+      - no_critical_open_decisions
+    on_success:
+      action: publish_approved_deliverable
+      skill: publish-approved-deliverable
+      produces:
+        - external_deliverable_reference
+        - campaign_record_update
+    on_failure:
+      status: no_emit
+      output: pending_items_list
+
+  traceability_log:
+    skill: sync-agent-log
+    rule: >
+      El orquestador registra en la bitácora de agentes externa (traceability_log_store)
+      el cierre de cada etapa de `stages`: subagente responsable, ciclo, tipo de acción,
+      evidencia, finding, criterio, entregable y decisión — misma mecánica que
+      grounding-report.
+
+  handoffs:
+    contract: contracts/handoff.schema.json
+    rule: >
+      Cada transición entre roles debe entregar un handoff válido con revisión,
+      artefactos enlazados, limitaciones, decisiones abiertas, preservaciones y
+      una solicitud concreta al rol receptor.
+
+  traceability:
+    required_links:
+      - measurement_to_evidence
+      - finding_to_measurement
+      - evaluation_state_to_criterion
+      - criterion_to_source
+      - recommendation_to_finding
+      - deliverable_to_case_revision
+
+  escalation:
+    conditions:
+      - reviewer_orchestrator_auditor_disagreement
+      - missing_critical_evidence
+      - unsupported_normative_criterion
+      - scope_or_intent_ambiguity
+    action: request_human_decision

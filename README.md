@@ -10,7 +10,7 @@ Ariel Agent OS nace de una necesidad concreta: recibir una solicitud técnica �
 
 El primer piloto es un informe de verificación de sistemas de puesta a tierra (P.A.T.). Un ingeniero realiza mediciones en campo, registra una matriz de datos, toma fotografías y reúne documentos de referencia. El sistema debe ayudar a organizar el expediente, analizarlo con prudencia, investigar criterios aplicables, producir un borrador Word conforme a una plantilla y detectar errores que suelen pasar desapercibidos: una foto girada, una evidencia en orden incorrecto, una lectura sin respaldo o una conclusión que excede los datos.
 
-Pero la ambición es mayor: construir una base reusable para análisis COMTRADE, protecciones, supervisión de obras, revisión de documentos, informes y otras actividades de ingeniería. La inteligencia del sistema no vive en una plataforma particular: vive aquí, en este repositorio. 🌍
+El segundo dominio ya operativo con el mismo rigor es el análisis de falla eléctrica a partir de eventos de relé de protección (COMTRADE) — ver [`workflows/comtrade-fault-analysis.yaml`](workflows/comtrade-fault-analysis.yaml). La ambición sigue siendo mayor: supervisión de obras, revisión de documentos y otras actividades de ingeniería, cada una evaluada primero como candidata a un flujo liviano (Tier 2) y solo promovida al pipeline completo si el perfil de riesgo lo justifica — ver `docs/governance.md`, "Nivel de rigor por dominio". La inteligencia del sistema no vive en una plataforma particular: vive aquí, en este repositorio. 🌍
 
 > **Principio rector:** el arnés puede cambiar; la arquitectura, el método y la trazabilidad deben sobrevivir.
 
@@ -137,8 +137,10 @@ Estas contienen la metodología y el criterio técnico particular de Ariel Agent
   Analiza expedientes de verificación P.A.T. con evidencia de campaña, matriz, fotos, plantilla, histórico y criterios aplicables.
 - **[critique-grounding-safety-analysis](skills/critique-grounding-safety-analysis/SKILL.md)**  
   Aplica criterio real de ingeniería eléctrica (IEEE/IEC) a un resultado P.A.T. — suficiencia del criterio, consistencia por activo, outliers, tendencia. La usan domain-specialist (al proponer), technical-reviewer (de forma independiente, antes de leer la propuesta) y auditor (para confirmar que las otras dos la usaron, sin rehacerla).
-- **analyze-comtrade-event**  
-  Registrada como futura. No se activa hasta que tenga su propio método, contratos y pruebas.
+- **[analyze-comtrade-event](skills/analyze-comtrade-event/SKILL.md)**  
+  Analiza eventos de relé de protección (COMTRADE `.cfg`/`.dat`, o `.evzip`/`.CEV`) con contexto de planta, ajustes vigentes y criterio de coordinación aplicable.
+- **[critique-fault-diagnosis-analysis](skills/critique-fault-diagnosis-analysis/SKILL.md)**  
+  Aplica criterio real de ingeniería de protecciones a un diagnóstico de falla — ecuación de disparo, ajuste vs. corriente medida, tiempo de operación, descarte de falso disparo. Mismo patrón de tres modos que `critique-grounding-safety-analysis`.
 
 ### Skills transversales: piezas reutilizables
 
@@ -147,6 +149,7 @@ Estas no toman decisiones de ingeniería; dan soporte controlado a muchos domini
 | Skill | Hace | No hace |
 |---|---|---|
 | [validate-campaign-input](skills/validate-campaign-input/SKILL.md) | Verifica estructura, unidades, duplicados y datos visibles de la página de campaña en Notion. | Decidir aceptación técnica. |
+| [validate-event-file-input](skills/validate-event-file-input/SKILL.md) | Verifica estructura, canales, muestreo y CTR/PTR de un archivo de evento COMTRADE. | Decidir si el evento es falla real o falso disparo. |
 | [manage-photo-evidence-gallery](skills/manage-photo-evidence-gallery/SKILL.md) | Ordena y controla evidencia fotográfica y orientación visible. | Inferir lecturas o editar originales sin registro. |
 | [validate-technical-traceability](skills/validate-technical-traceability/SKILL.md) | Comprueba enlaces entre evidencia, findings y criterios. | Crear evidencia faltante. |
 | [research-normative-criterion](skills/research-normative-criterion/SKILL.md) | Documenta fuente, edición, cláusula y aplicabilidad. | Inventar requisitos normativos. |
@@ -308,10 +311,10 @@ Si la memoria falla o se retoma el proyecto tras una pausa, este es el orden rec
 - [x] Crear ejemplos ficticios válidos para cada contrato.
 - [x] Ejecutar un caso P.A.T. de prueba de punta a punta.
 - [x] Definir el adaptador inicial para Codex Cloud.
-- [ ] Enlazar herramientas reales de forma controlada.
+- [x] Enlazar herramientas reales de forma controlada (Notion y Google Drive, vía MCP en Claude Code — ver `CLAUDE.md` sección 7). Pendiente: renderizado real a PDF (`document_renderer` sigue `declared_not_bound`, LibreOffice headless no funciona en este sandbox).
 - [x] Preparar un expediente histórico anonimizado para piloto interno.
 - [ ] Ajustar contratos, roles y skills con evidencia de uso.
-- [ ] Diseñar la skill y workflow de análisis COMTRADE.
+- [x] Diseñar la skill y workflow de análisis COMTRADE (`workflows/comtrade-fault-analysis.yaml`, Tier 1 — ver `docs/governance.md` "Nivel de rigor por dominio"). Pendiente: primer caso de prueba de punta a punta.
 
 ---
 

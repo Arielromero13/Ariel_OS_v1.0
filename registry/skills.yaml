@@ -342,20 +342,112 @@ skills:
       - No modifica el contenido del documento.
       - No decide por sí sola que algo puede emitirse.
 
-  - id: analyze-comtrade-event
-    name: Análisis de evento COMTRADE
+  - id: validate-event-file-input
+    name: Validación de archivos de evento
+    kind: transversal
+    status: draft
+    version: 0.1.0
+    path: skills/validate-event-file-input/SKILL.md
+    domains:
+      - data-quality
+      - power-protection
+    invocable_by:
+      - domain_specialist
+      - technical_reviewer
+    required_inputs:
+      - event_file
+      - plant_context
+    produces:
+      - event_file_validation_record
+      - data_quality_issues
+    requires_tools:
+      - workspace_artifact_store
+    boundaries:
+      - No modifica el archivo fuente.
+      - No decide si el evento es falla real, falso disparo o maniobra.
+      - No asume CTR/PTR ni frecuencia nominal no declarados.
+
+  - id: critique-fault-diagnosis-analysis
+    name: Crítica de ingeniería de protecciones en análisis de falla
     kind: domain
-    status: planned
-    version: 0.0.0
+    status: draft
+    version: 0.1.0
+    path: skills/critique-fault-diagnosis-analysis/SKILL.md
+    domains:
+      - power-protection
+      - engineering-critique
+    applicable_workflows:
+      - comtrade-fault-analysis
+    invocable_by:
+      - domain_specialist
+      - technical_reviewer
+      - auditor
+    required_inputs:
+      - validated_event_file
+      - technical_findings_or_draft
+      - plant_context
+    produces:
+      - technical_critique_record
+    requires_tools:
+      - workspace_artifact_store
+    boundaries:
+      - No inventa ajustes, CTR/PTR ni datos de campo no verificados; los marca como faltantes.
+      - No sustituye la verificación de fuente/edición/cláusula de research-normative-criterion.
+      - En modo auditoría no reinterpreta la oscilografía ni emite un diagnóstico propio.
+      - Declarar sin hallazgos solo es válido si cada pregunta aplicable fue respondida explícitamente.
+    validation:
+      - domain_specialist y technical_reviewer registran un technical_critique_record propio y separado.
+      - technical_reviewer llega a su conclusión antes de leer la del especialista.
+      - auditor verifica que ambos registros existen y están razonados, no solo que existen.
+
+  - id: analyze-comtrade-event
+    name: Análisis de informe de falla (COMTRADE)
+    kind: domain
+    status: draft
+    version: 0.1.0
     path: skills/analyze-comtrade-event/SKILL.md
     domains:
       - power-protection
       - disturbance-analysis
     applicable_workflows:
-      - comtrade-diagnosis
+      - comtrade-fault-analysis
     invocable_by:
       - orchestrator
       - domain_specialist
       - technical_reviewer
+    required_inputs:
+      - work_item
+      - input_manifest
+      - event_file
+      - plant_context
+      - definition_of_done
+    optional_inputs:
+      - protection_philosophy_document
+      - approved_historical_event_reports
+      - normative_sources
+    produces:
+      - validated_event_file
+      - evidence_records
+      - technical_findings
+      - limitations_record
+      - provisional_evaluation_states
+      - pending_items_list
+    uses_skills:
+      - validate-event-file-input
+      - validate-technical-traceability
+      - research-normative-criterion
+      - critique-fault-diagnosis-analysis
+    requires_tools:
+      - workspace_artifact_store
+      - document_processor
+      - technical_calculation_runtime
+      - source_research
     boundaries:
-      - No puede activarse hasta contar con procedimiento, contratos y evaluación propios.
+      - El evento de la revisión actual prevalece sobre históricos y referencias.
+      - No inventa ajustes, CTR/PTR, fechas, causas ni resultados.
+      - No aprueba el resultado ni ensambla el informe final.
+      - Sin ajustes vigentes o CTR/PTR verificables usa No concluyente.
+    validation:
+      - Cada señal analizada se vincula al archivo de evento o queda pendiente.
+      - Cada estado Falla confirmada o Falla probable tiene ajuste y criterio verificable.
+      - Sus salidas cumplen los contratos de evidencia y finding.

@@ -22,8 +22,8 @@ Esta skill actúa **después** de la compuerta de emisión (`emission_gate` en `
 # Procedimiento
 
 1. Verificar antes de publicar que `emission_gate` está satisfecho — esta skill no re-evalúa esas condiciones, pero se niega a ejecutar si no se le confirman explícitamente.
-2. Resolver la carpeta de destino según la convención `EGEHAINA — Contextos de Planta/[Planta]/Informes P.A.T./`; crearla si la planta todavía no tiene subcarpeta de informes.
-3. Subir el documento final con un nombre trazable (`PAT – [PLANTA] – [AAAAMMDD] – Rev [n].docx`, ver `templates/grounding-report/README.md`).
+2. Resolver la carpeta de destino según la convención `EGEHAINA — Contextos de Planta/[Planta]/[Subcarpeta del workflow]/` — la subcarpeta depende del workflow que emite (`Informes P.A.T.` para `grounding-report`, `Informes de Falla` para `comtrade-fault-analysis`, u otra que declare un workflow futuro); crearla si la planta todavía no tiene esa subcarpeta.
+3. Subir el documento final con un nombre trazable siguiendo la convención del workflow que emite (ver `templates/grounding-report/README.md` para P.A.T.; el análogo de COMTRADE hereda el mismo principio: identificador de caso, planta/circuito, fecha y revisión en el nombre).
 4. Actualizar en la página de campaña: `Documento final` (enlace al archivo publicado), `Carpeta Drive` (si no estaba ya vinculada) y `Estado del expediente` → `emitido`.
 5. Invocar `sync-agent-log` para dejar la fila de cierre con Decisión `aprobado` y el enlace al entregable publicado.
 
