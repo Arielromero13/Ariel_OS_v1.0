@@ -115,6 +115,7 @@ Ariel ya mantiene, para su agente generalista (`agent-core-cloud`, fuera de este
 |---|---|
 | `identity.md` | Quién es Ariel: perfil profesional, contexto personal (familia, fe, formación), toolchain, preferencias de formato. |
 | `soul.md` | Cómo debe razonar y comportarse el agente: tono, prioridades de decisión, manejo de ambigüedad y error. |
+| `schema.md` | Cómo se mantiene esta memoria — capas raw/wiki/esquema (patrón "LLM Wiki" de Andrej Karpathy), quién escribe qué, mecanismo de aprobación. Fuente de verdad de esto vive ahí, no acá — esta sección solo resume lo necesario para operar en este arnés. |
 | `skills.md`, `knowledge.md`, `context.md` | Herramientas disponibles, vocabulario/clientes, proyectos activos — de referencia, no obligatorios para el orquestador de este repo. |
 
 Ariel Agent OS **no duplica ni copia** ese contenido al repositorio de GitHub — ya contiene datos personales reales (familia, fe, contexto profesional) que caen bajo la misma regla de la sección 6. En vez de eso, el orquestador **lee `identity.md` y `soul.md` desde Notion** al comienzo de una sesión (o la primera vez que el tono/contexto personal importe) para calibrar cómo comportarse y qué sabe de Ariel, tanto si el work item es técnico (EGEHAINA) como si es personal — Ariel Agent OS ya no asume que solo lo primero aplica.
@@ -126,6 +127,11 @@ Ese mismo hub de Notion aloja además "📔 Diario de Trabajo — Ariel Agent OS
 
 El diario no requiere aprobación humana registrada para escribirse (no es una emisión externa, regla 5) — es una nota reflexiva de Ariel para Ariel, no un entregable auditable. Sí debe ser honesto y específico, no relleno genérico de actividad.
 
-### Revisión semanal de identity.md
+### Revisión semanal de memoria
 
-Implementado como Routine (`Revisión semanal de identity.md — Ariel Agent OS`, cada lunes 00:00 UTC / domingo 8pm hora de Santo Domingo, atado a esta misma sesión para conservar acceso a los conectores MCP de Notion). Cada corrida: lee las entradas del Diario de Trabajo de los últimos 7 días, compara contra `identity.md` vigente, y solo si hay algo que de verdad amerite un cambio —no actividad genérica— publica la propuesta como comentario en la página de `identity.md`, nunca la edita directamente. Ariel aprueba o descarta desde Notion. Una semana sin nada que amerite cambio no genera ruido.
+Implementado como Routine (`Revisión semanal de memoria — Ariel Agent OS`, cada lunes 00:00 UTC / domingo 8pm hora de Santo Domingo, atado a esta misma sesión para conservar acceso a los conectores MCP de Notion). Cubre `identity.md` y `soul.md`, con dos pasadas independientes por corrida:
+
+1. **Síntesis** — compara el Diario de Trabajo de los últimos 7 días contra ambos archivos; propone diff solo si algo amerita un cambio real, no actividad genérica.
+2. **Lint** — relee ambos archivos completos buscando contradicciones internas o afirmaciones desactualizadas, sin depender de que haya diario nuevo esa semana.
+
+En ambos casos, nunca edita directo: publica la propuesta como comentario y Ariel aprueba o descarta desde Notion. Una semana sin nada que reportar en ninguna pasada no genera ruido. El criterio completo vive en `schema.md` (Notion), no acá.
