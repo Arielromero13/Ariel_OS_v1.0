@@ -99,17 +99,19 @@ Los datos reales de clientes/plantas específicos (mediciones, fotos, nombres de
 
 | Capacidad | Implementación | Dónde |
 |---|---|---|
-| `structured_campaign_store` (P.A.T.) | Notion — bases de datos "Campañas P.A.T." y "Puntos de medición P.A.T." (relacionadas) | Página "⚡ Ariel Agent OS — P.A.T." del workspace de Ariel en Notion |
-| `structured_campaign_store` (COMTRADE) | Notion — base de datos "Eventos de Falla — COMTRADE" (índice de expediente/estado; el archivo de evento y el contexto de planta siguen en Drive, no en Notion) | Misma página "⚡ Ariel Agent OS — P.A.T." |
+| `structured_campaign_store` (P.A.T.) | Notion — bases de datos "Campañas P.A.T." y "Puntos de medición P.A.T." (relacionadas) | Página "📘 Ariel Agent OS" — libro operativo dedicado en Notion, fuera del sistema P.A.R.A. personal de Ariel |
+| `structured_campaign_store` (COMTRADE) | Notion — base de datos "Eventos de Falla — COMTRADE" (índice de expediente/estado; el archivo de evento y el contexto de planta siguen en Drive, no en Notion) | Misma página "📘 Ariel Agent OS" |
 | `traceability_log_store` | Notion — base de datos "Bitácora de Agentes — Ariel Agent OS", con relación separada a cada base de expediente (P.A.T. y COMTRADE) | Misma página |
 | `external_deliverable_store` (P.A.T.) | Google Drive — carpeta `EGEHAINA — Contextos de Planta/[Planta]/Informes P.A.T./` | Google Drive de Ariel |
 | `external_deliverable_store` (COMTRADE) | Google Drive — carpeta `EGEHAINA — Contextos de Planta/[Planta]/Informes de Falla/` (misma carpeta por planta ya usada para `CONTEXTO_[PLANTA].md`) | Google Drive de Ariel |
 
 Ambas subcarpetas de Drive se crean si la planta todavía no las tiene. Los conectores MCP de Google Drive y Notion ya están habilitados en las sesiones de Claude Code de este proyecto — no requieren instalación adicional. Si un expediente llega con datos que todavía no están en estas estructuras (ej. un Excel o fotos sueltas para P.A.T., o un evento sin su índice en Notion para COMTRADE), el primer paso del orquestador es migrarlos antes de continuar (sección 1, punto 1 y `docs/input-contract.md`), no analizarlos directamente desde el archivo suelto.
 
+"📘 Ariel Agent OS" es un espacio operativo propio, no una nota más dentro del método P.A.R.A. de Ariel — vive fuera de él a propósito, para mantenerlo accesible y limpio. El gobierno de ese espacio es: Ariel entra a leer o a cargar datos puntuales cuando se le pide; la organización, estructura y mantenimiento quedan del lado del agente, sin necesitar autorización caso por caso para reordenar o crear páginas ahí dentro (nunca para perder o sobrescribir algo sin dejar registro). La página "⚙️ Agent Context — Ariel Romero" (sección 8, memoria del operador) vive anidada dentro de este mismo libro, ya no bajo "🤖 IA & Conocimiento" del P.A.R.A. personal — se movió, no se duplicó, así que sus IDs y enlaces internos no cambiaron.
+
 ## 8. Contexto del operador y diario de trabajo
 
-Ariel ya mantiene, para su agente generalista (`agent-core-cloud`, fuera de este repo), un paquete de memoria de arranque en Notion — página "⚙️ Agent Context — Ariel Romero", dentro de "🤖 IA & Conocimiento":
+Ariel ya mantiene, para su agente generalista (`agent-core-cloud`, fuera de este repo), un paquete de memoria de arranque en Notion — página "⚙️ Agent Context — Ariel Romero", hoy anidada dentro del libro operativo "📘 Ariel Agent OS" (sección 7) en vez de bajo el P.A.R.A. personal de Ariel:
 
 | Archivo | Contenido |
 |---|---|
