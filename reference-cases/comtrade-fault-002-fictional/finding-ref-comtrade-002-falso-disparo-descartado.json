@@ -1,0 +1,48 @@
+{
+  "finding_id": "FND-REF-COMTRADE-002",
+  "context": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "domain": "protection-fault-analysis",
+    "work_item_id": "WI-REF-COMTRADE-002"
+  },
+  "statement": {
+    "title": "Hipótesis de falso disparo evaluada explícitamente y descartada con evidencia del patrón de corriente",
+    "conclusion": "El patrón de corriente es un escalón abrupto (no un incremento gradual), lo que descarta arranque de motor. Las tres fases muestran una relación asimétrica característica de una falla, no de una condición de carga o saturación de TC generalizada — solo Fase A muestra el incremento significativo, consistente con una falla monofásica, no con una condición que afectaría a las tres fases por igual.",
+    "classification": "falso_disparo_descartado"
+  },
+  "scope": {
+    "point_ids": [],
+    "asset_ids": ["ALIMENTADOR-210", "RELE-SEL751-210"],
+    "system_ids": [],
+    "sections": ["4. Análisis de la señal"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-COMTRADE-CHANNEL-IA", "EVD-REF-COMTRADE-CHANNEL-IB", "EVD-REF-COMTRADE-CHANNEL-IC"],
+    "reasoning": "Comparación de la forma de la señal (escalón vs. rampa) y de la relación entre las tres fases, contra las firmas típicas de arranque de motor y de saturación de TC.",
+    "method_reference": "critique-fault-diagnosis-analysis, pregunta 6 (descarte de falso disparo)."
+  },
+  "evaluation": {
+    "state": "Conforme",
+    "criterion_id": "DOD-02",
+    "criterion_status": "verified",
+    "criterion_rationale": "El estado evalúa el cumplimiento del requisito de proceso DOD-02 (la hipótesis de falso disparo debe evaluarse explícitamente y descartarse con evidencia) — no la naturaleza del evento en sí. Ese requisito se cumple: hay evaluación explícita y descarte razonado."
+  },
+  "limitations": ["No se dispone de un registro de arranques de motor conocidos en ese alimentador para esa fecha, que hubiera permitido un descarte aún más directo."],
+  "impact": {
+    "severity": "low",
+    "decision_impact": "Respalda que el evento corresponde a una falla real y no a un disparo espurio — condición necesaria antes de clasificar el tipo de falla.",
+    "risk_statement": null
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-003"],
+    "handoff_ids": [],
+    "deliverable_sections": ["4. Análisis de la señal"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "domain_specialist",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

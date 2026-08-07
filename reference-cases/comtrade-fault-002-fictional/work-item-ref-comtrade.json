@@ -1,0 +1,62 @@
+{
+  "task_id": "WI-REF-COMTRADE-002",
+  "case": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "based_on_revision": null,
+    "revision_reason": "Caso de referencia construido para probar el workflow comtrade-fault-analysis de punta a punta, en particular la skill critique-fault-diagnosis-analysis (pregunta 7: alcance de la conclusión)."
+  },
+  "request": {
+    "objective": "Correr el workflow comtrade-fault-analysis contra un evento de falla ficticio y verificar que el sistema detecte una conclusión que excede la evidencia disponible.",
+    "requester": "Responsable técnico del proyecto",
+    "context": "Ejercicio de validación interna del sistema Ariel Agent OS (suite de regresión). No corresponde a una planta, circuito ni evento reales — ver README de este caso.",
+    "scope_in": ["Un evento de falla en un alimentador de distribución"],
+    "scope_out": ["Verificación de campo del punto de contacto (fuera de alcance de este ejercicio, y es precisamente el dato que falta en la conclusión bajo prueba)"]
+  },
+  "domain": {
+    "name": "protection-fault-analysis",
+    "specific_request": {
+      "plant_id": "REF-WIND-01",
+      "circuit_id": "Alimentador 210",
+      "relay_model": "SEL-751 (genérico, no ligado a ningún relé real de EGEHAINA)"
+    }
+  },
+  "deliverables": [
+    { "name": "Informe de análisis de falla (ejercicio de prueba, no destinado a emisión)", "format": "docx", "recipient": "Uso interno — validación de sistema" }
+  ],
+  "definition_of_done": [
+    { "id": "DOD-01", "criterion": "El elemento de protección que operó es consistente con la ecuación de disparo y el pickup declarados.", "verification_method": "Cruce ajuste vs. corriente medida en primario", "mandatory": true },
+    { "id": "DOD-02", "criterion": "La hipótesis de falso disparo se evalúa explícitamente y se descarta con evidencia, no por default.", "verification_method": "Registro de technical_critique_record, pregunta 6", "mandatory": true },
+    { "id": "DOD-03", "criterion": "Ninguna conclusión de causa confirmada se declara sin evidencia de inspección de campo; sin esa evidencia, la conclusión queda como causa probable.", "verification_method": "Registro de technical_critique_record, pregunta 7", "mandatory": true }
+  ],
+  "constraints": {
+    "deadline": null,
+    "confidentiality": "internal",
+    "approvals_required": ["Responsable técnico del proyecto"],
+    "allowed_tools": ["analyze-comtrade-event", "validate-event-file-input", "validate-technical-traceability", "critique-fault-diagnosis-analysis"],
+    "prohibited_actions": ["Emitir o distribuir este ejercicio como informe oficial", "Presentar este caso como derivado de un evento real"]
+  },
+  "input_manifest": [
+    { "artifact_id": "ART-EVENT-REF", "name": "evento_ficticio_alimentador210.cfg/.dat", "location": "reference-cases/comtrade-fault-002-fictional/README.md (descrito, no adjunto como binario)", "role": "current_evidence", "status": "available" },
+    { "artifact_id": "ART-PLANT-CONTEXT-REF", "name": "CONTEXTO_REF-WIND-01.md (descrito en el README de este caso)", "role": "current_evidence", "status": "available" }
+  ],
+  "workflow_hint": "comtrade-fault-analysis",
+  "orchestration": {
+    "workflow_selected": "comtrade-fault-analysis",
+    "skills_selected": ["analyze-comtrade-event", "validate-event-file-input", "validate-technical-traceability", "critique-fault-diagnosis-analysis"],
+    "acceptance_criteria": ["Los tres DOD verificados explícitamente", "El sistema detecta el overreach de la conclusión inicial sin que se le señale"]
+  },
+  "open_decisions": [
+    "Confirmar si en algún momento se realizó inspección de campo del alimentador 210 que respalde la causa propuesta."
+  ],
+  "lifecycle": {
+    "status": "in_progress",
+    "iteration_count": 0,
+    "superseded_by": null,
+    "readiness": {
+      "execution_gate": "passed",
+      "emission_gate": "not_evaluated",
+      "blocking_reasons": []
+    }
+  }
+}

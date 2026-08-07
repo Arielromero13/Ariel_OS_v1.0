@@ -1,0 +1,48 @@
+{
+  "review_id": "REV-TECH-REF-COMTRADE-001",
+  "context": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "work_item_id": "WI-REF-COMTRADE-002",
+    "workflow": "comtrade-fault-analysis"
+  },
+  "reviewer": {
+    "role": "technical_reviewer",
+    "review_type": "technical",
+    "independence_confirmed": true
+  },
+  "scope": {
+    "target_artifact_ids": ["ART-EVENT-REF", "ART-PLANT-CONTEXT-REF"],
+    "target_finding_ids": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-002", "FND-REF-COMTRADE-003"],
+    "target_evidence_ids": ["EVD-REF-COMTRADE-CHANNEL-IA", "EVD-REF-COMTRADE-CHANNEL-IB", "EVD-REF-COMTRADE-CHANNEL-IC", "EVD-REF-COMTRADE-BORRADOR-SECCION5"],
+    "target_pages_or_sections": ["4. Análisis de la señal", "5. Diagnóstico y conclusiones"]
+  },
+  "checks": [
+    { "check_id": "CHK-REF-COMTRADE-01", "area": "coherencia con ecuación de disparo", "result": "pass", "notes": "50P1 operó de forma consistente con el pickup y la ecuación de disparo declarados.", "evidence_links": ["EVD-REF-COMTRADE-CHANNEL-IA"] },
+    { "check_id": "CHK-REF-COMTRADE-02", "area": "tiempo de operación vs. ajuste", "result": "pass", "notes": "Tiempo de disparo consistente con delay instantáneo más tiempo de interruptor.", "evidence_links": ["EVD-REF-COMTRADE-CHANNEL-IA"] },
+    { "check_id": "CHK-REF-COMTRADE-03", "area": "descarte de falso disparo", "result": "pass", "notes": "Hipótesis evaluada explícitamente y descartada con base en el patrón de señal.", "evidence_links": ["EVD-REF-COMTRADE-CHANNEL-IB", "EVD-REF-COMTRADE-CHANNEL-IC"] },
+    { "check_id": "CHK-REF-COMTRADE-04", "area": "alcance de la conclusión", "result": "fail", "notes": "El borrador declara 'causa confirmada' sin evidencia de inspección de campo — excede lo que la oscilografía puede sustentar por sí sola.", "evidence_links": ["EVD-REF-COMTRADE-BORRADOR-SECCION5"] }
+  ],
+  "issues": [
+    { "issue_id": "ISS-REF-COMTRADE-01", "severity": "high", "blocking": true, "description": "Conclusión 'causa confirmada' sin evidencia de inspección de campo que la respalde.", "related_artifact_ids": ["ART-EVENT-REF"], "related_finding_ids": ["FND-REF-COMTRADE-003"], "related_evidence_ids": ["EVD-REF-COMTRADE-BORRADOR-SECCION5"] }
+  ],
+  "decision": {
+    "outcome": "partial_rework",
+    "rationale": "El análisis de señal (cruce de ajuste, tiempo de operación, descarte de falso disparo) está correctamente sustentado y se aprueba sin cambios. Solo la sección de diagnóstico y conclusiones requiere corrección: la causa debe bajar de 'confirmada' a 'probable' mientras no haya evidencia de campo, o debe incorporarse esa evidencia si existe."
+  },
+  "correction_request": {
+    "responsible_role": "domain_specialist",
+    "correction_type": "patch",
+    "artifacts_to_modify": ["ART-EVENT-REF"],
+    "artifacts_to_preserve": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-002"],
+    "acceptance_criteria": [
+      "La sección de conclusiones usa 'Causa probable' en vez de 'Causa confirmada', salvo que se adjunte evidencia de inspección de campo",
+      "El texto deja explícito que la base de la conclusión es oscilográfica, no de campo, cuando corresponda"
+    ]
+  },
+  "lifecycle": {
+    "status": "issued",
+    "correction_cycle": 0,
+    "superseded_by": null
+  }
+}

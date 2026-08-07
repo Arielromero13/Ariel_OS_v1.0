@@ -1,0 +1,84 @@
+{
+  "audit_id": "AUD-REF-COMTRADE-001",
+  "context": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "work_item_id": "WI-REF-COMTRADE-002",
+    "workflow_id": "comtrade-fault-analysis",
+    "candidate_deliverable_id": "DEL-REF-COMTRADE-001"
+  },
+  "auditor": {
+    "role": "auditor",
+    "agent_id": "auditor-run-ref-comtrade-001",
+    "independence_confirmed": true,
+    "domain_skill_context": ["analyze-comtrade-event", "critique-fault-diagnosis-analysis"]
+  },
+  "scope": {
+    "audit_type": "emission_gate",
+    "included_records": [
+      { "record_type": "finding", "record_id": "FND-REF-COMTRADE-001" },
+      { "record_type": "finding", "record_id": "FND-REF-COMTRADE-002" },
+      { "record_type": "finding", "record_id": "FND-REF-COMTRADE-003" },
+      { "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001" }
+    ],
+    "excluded_checks": ["No se ejecutó QA visual de gráficas de forma de onda en este ejercicio (no hay documento renderizado real)."]
+  },
+  "gates": [
+    {
+      "gate_id": "GATE-DOD",
+      "name": "Definition of Done satisfecho",
+      "required": true,
+      "result": "fail",
+      "basis": [{ "record_type": "finding", "record_id": "FND-REF-COMTRADE-003", "note": "DOD-03 incumplido: conclusión de causa confirmada sin evidencia de campo." }]
+    },
+    {
+      "gate_id": "GATE-TECH-REVIEW",
+      "name": "Revisión técnica aprobada",
+      "required": true,
+      "result": "fail",
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "Outcome partial_rework, no approve." }]
+    },
+    {
+      "gate_id": "GATE-CRITIQUE-RECORD",
+      "name": "technical_critique_record presente en modo proposal e independent_review",
+      "required": true,
+      "result": "pass",
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "El desacuerdo sobre el alcance de la conclusión surge precisamente de que technical_reviewer aplicó la pregunta 7 de forma independiente — el registro existe y está razonado." }]
+    },
+    {
+      "gate_id": "GATE-VISUAL-QA",
+      "name": "QA visual aprobada",
+      "required": true,
+      "result": "pending",
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "No ejecutada en este ejercicio; fuera de alcance." }]
+    }
+  ],
+  "gate_summary": {
+    "failed_required_gate_count": 2,
+    "pending_required_gate_count": 1,
+    "critical_open_decision_count": 1
+  },
+  "decision": {
+    "outcome": "no_emit",
+    "rationale": "Dos gates obligatorios fallan (Definition of Done y revisión técnica) y uno queda pendiente (QA visual, fuera de alcance de este ejercicio). El paquete no está listo para aprobación humana. Esto es el resultado esperado de este caso de referencia: el ejercicio no busca producir un informe emitible, sino comprobar si critique-fault-diagnosis-analysis detecta un sobre-alcance de conclusión que un análisis solo-de-formato no habría atrapado — y lo detectó.",
+    "conditions_before_emission": [
+      "Resolver ISS-REF-COMTRADE-01 del review REV-TECH-REF-COMTRADE-001 (bajar la conclusión a 'Causa probable' o incorporar evidencia de campo)",
+      "Ejecutar QA visual de las gráficas de forma de onda",
+      "Confirmar el open_decision del work item sobre inspección de campo del alimentador 210"
+    ]
+  },
+  "residual_risks": [],
+  "required_actions": [
+    { "action_id": "ACT-REF-COMTRADE-01", "action_type": "patch", "owner": "domain_specialist", "acceptance_criterion": "Sección de conclusiones corregida a 'Causa probable' o evidencia de campo incorporada.", "artifacts_to_preserve": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-002"], "artifacts_to_modify": ["ART-EVENT-REF"] }
+  ],
+  "human_approval": {
+    "required": true,
+    "status": "pending",
+    "approver_role": "Responsable técnico del proyecto"
+  },
+  "lifecycle": {
+    "status": "issued",
+    "correction_cycle": 0,
+    "issued_at": "2026-08-07T05:00:00Z"
+  }
+}

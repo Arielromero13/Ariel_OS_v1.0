@@ -1,0 +1,48 @@
+{
+  "finding_id": "FND-REF-COMTRADE-001",
+  "context": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "domain": "protection-fault-analysis",
+    "work_item_id": "WI-REF-COMTRADE-002"
+  },
+  "statement": {
+    "title": "Corriente de Fase A cruza el pickup de 50P1 y el tiempo de operación es consistente con el ajuste declarado",
+    "conclusion": "La corriente de Fase A alcanza 3.8 pu (5,700 A primario, CTR 300:1 declarado en el contexto de planta) durante el evento, superando el pickup de 50P1 (3.5 pu / 5,250 A). El disparo ocurre 1.5 ciclos después del pickup, consistente con el delay instantáneo de 50P1 (0.0 ciclos) más el tiempo de interruptor del circuito. La ecuación de disparo documentada (TR = 50P1T OR 51P1T) es consistente con que 50P1 haya operado.",
+    "classification": "cruce_ajuste_confirmado"
+  },
+  "scope": {
+    "point_ids": [],
+    "asset_ids": ["ALIMENTADOR-210", "RELE-SEL751-210"],
+    "system_ids": [],
+    "sections": ["4. Análisis de la señal"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-COMTRADE-CHANNEL-IA"],
+    "reasoning": "Comparación directa entre la corriente de Fase A en primario (derivada del canal COMTRADE y el CTR declarado) y el pickup/delay/ecuación de disparo del contexto de planta vigente al momento del evento.",
+    "method_reference": "critique-fault-diagnosis-analysis, pregunta 2 (ajuste vs. corriente medida) y pregunta 3 (tiempo de operación vs. ajuste temporizado)."
+  },
+  "evaluation": {
+    "state": "Falla confirmada",
+    "criterion_id": "AJUSTE-50P1-REF210",
+    "criterion_status": "verified",
+    "criterion_rationale": "El ajuste de 50P1 (pickup 3.5 pu, delay instantáneo) está declarado en el contexto de planta vigente al momento del evento, y la corriente medida en primario lo cruza de forma consistente con el elemento que reporta la operación."
+  },
+  "limitations": [],
+  "impact": {
+    "severity": "not_assessed",
+    "decision_impact": "Este hallazgo por sí solo no bloquea nada — es la base técnica sobre la que se apoya la conclusión, pero no responde por sí solo si esa conclusión puede declararse 'confirmada' en su alcance completo (ver FND-REF-COMTRADE-003).",
+    "risk_statement": null
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-COMTRADE-002", "FND-REF-COMTRADE-003"],
+    "handoff_ids": [],
+    "deliverable_sections": ["4. Análisis de la señal"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "domain_specialist",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

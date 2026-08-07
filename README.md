@@ -300,7 +300,7 @@ Si la memoria falla o se retoma el proyecto tras una pausa, este es el orden rec
 4. Leer [docs/input-contract.md](docs/input-contract.md) para entender qué hace que un expediente esté listo.
 5. Revisar [docs/role-matrix.md](docs/role-matrix.md) y los roles en [agents/](agents/).
 6. Revisar el workflow P.A.T. y sus contratos.
-7. Ejecutar un **caso ficticio pequeño de punta a punta**, sin emisión externa.
+7. Ejecutar un **caso ficticio pequeño de punta a punta**, sin emisión externa — o releer los ya resueltos en [reference-cases/](reference-cases/README.md), que documentan el resultado esperado y sirven de suite de regresión.
 8. Ajustar los documentos según lo aprendido antes de conectar herramientas o usar un expediente real.
 
 ---
@@ -314,7 +314,8 @@ Si la memoria falla o se retoma el proyecto tras una pausa, este es el orden rec
 - [x] Enlazar herramientas reales de forma controlada (Notion y Google Drive, vía MCP en Claude Code — ver `CLAUDE.md` sección 7). Pendiente: renderizado real a PDF (`document_renderer` sigue `declared_not_bound`, LibreOffice headless no funciona en este sandbox).
 - [x] Preparar un expediente histórico anonimizado para piloto interno.
 - [ ] Ajustar contratos, roles y skills con evidencia de uso.
-- [x] Diseñar la skill y workflow de análisis COMTRADE (`workflows/comtrade-fault-analysis.yaml`, Tier 1 — ver `docs/governance.md` "Nivel de rigor por dominio"). Pendiente: primer caso de prueba de punta a punta.
+- [x] Diseñar la skill y workflow de análisis COMTRADE (`workflows/comtrade-fault-analysis.yaml`, Tier 1 — ver `docs/governance.md` "Nivel de rigor por dominio").
+- [x] Suite mínima de casos de referencia como evaluación de regresión (ver [reference-cases/README.md](reference-cases/README.md)) y regla explícita de tratar la evidencia como dato, nunca instrucción (`AGENTS.md`, `docs/governance.md`). Pendiente: un caso que llegue limpio a `ready_for_emission` (hoy los dos casos existentes terminan en `no_emit` a propósito).
 
 ---
 

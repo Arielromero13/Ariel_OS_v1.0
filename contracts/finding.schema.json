@@ -134,8 +134,12 @@
             "No conforme",
             "No concluyente",
             "Pendiente",
+            "Falla confirmada",
+            "Falla probable",
+            "Falso disparo",
             "Not applicable"
-          ]
+          ],
+          "description": "Vocabulario compartido entre dominios Tier 1 actuales (grounding-report usa Conforme/No conforme/No concluyente/Pendiente; comtrade-fault-analysis usa Falla confirmada/Falla probable/Falso disparo/No concluyente). Un dominio nuevo que necesite un estado propio debe extender este enum, no inventar uno paralelo fuera del contrato."
         },
         "criterion_id": {
           "type": [
@@ -165,7 +169,10 @@
               "state": {
                 "enum": [
                   "Conforme",
-                  "No conforme"
+                  "No conforme",
+                  "Falla confirmada",
+                  "Falla probable",
+                  "Falso disparo"
                 ]
               }
             }
