@@ -102,3 +102,24 @@ Los datos reales de clientes/plantas específicos (mediciones, fotos, nombres de
 | `external_deliverable_store` | Google Drive — carpeta `EGEHAINA — Contextos de Planta/[Planta]/Informes P.A.T./` (subcarpeta por planta dentro de la carpeta ya existente `EGEHAINA — Contextos de Planta`; se crea si la planta todavía no tiene una) | Google Drive de Ariel |
 
 Los conectores MCP de Google Drive y Notion ya están habilitados en las sesiones de Claude Code de este proyecto — no requieren instalación adicional. Si un expediente llega con datos que todavía no están en estas estructuras (ej. un Excel o fotos sueltas), el primer paso del orquestador es migrarlos a la página de campaña correspondiente antes de continuar (sección 1, punto 1 y `docs/input-contract.md`), no analizarlos directamente desde el archivo suelto.
+
+## 8. Contexto del operador y diario de trabajo
+
+Ariel ya mantiene, para su agente generalista (`agent-core-cloud`, fuera de este repo), un paquete de memoria de arranque en Notion — página "⚙️ Agent Context — Ariel Romero", dentro de "🤖 IA & Conocimiento":
+
+| Archivo | Contenido |
+|---|---|
+| `identity.md` | Quién es Ariel: perfil profesional, contexto personal (familia, fe, formación), toolchain, preferencias de formato. |
+| `soul.md` | Cómo debe razonar y comportarse el agente: tono, prioridades de decisión, manejo de ambigüedad y error. |
+| `skills.md`, `knowledge.md`, `context.md` | Herramientas disponibles, vocabulario/clientes, proyectos activos — de referencia, no obligatorios para el orquestador de este repo. |
+
+Ariel Agent OS **no duplica ni copia** ese contenido al repositorio de GitHub — ya contiene datos personales reales (familia, fe, contexto profesional) que caen bajo la misma regla de la sección 6. En vez de eso, el orquestador **lee `identity.md` y `soul.md` desde Notion** al comienzo de una sesión (o la primera vez que el tono/contexto personal importe) para calibrar cómo comportarse y qué sabe de Ariel, tanto si el work item es técnico (EGEHAINA) como si es personal — Ariel Agent OS ya no asume que solo lo primero aplica.
+
+Ese mismo hub de Notion aloja además "📔 Diario de Trabajo — Ariel Agent OS": un diario narrativo, redactado por el orquestador (no una plantilla rellenada), que cruza ambas facetas de la vida de Ariel — laboral y personal. Se registra una entrada al **cierre de una sesión con trabajo o decisiones relevantes** (no en cada intercambio trivial), con qué pasó, qué se decidió y qué queda pendiente. Es distinto de:
+
+- La **Bitácora de Agentes** (sección 7): traza técnica por work item de un expediente P.A.T., estructurada, para trazabilidad de regla 2.
+- La bitácora de proyecto en Drive (`Bitácora - Ariel Agent OS.md`): decisiones de arquitectura del propio sistema.
+
+El diario no requiere aprobación humana registrada para escribirse (no es una emisión externa, regla 5) — es una nota reflexiva de Ariel para Ariel, no un entregable auditable. Sí debe ser honesto y específico, no relleno genérico de actividad.
+
+**Pendiente de definir con Ariel**: si `identity.md` pasa de edición manual/ocasional a un perfil vivo con actualización en una cadencia programada (ej. un Routine que proponga cambios para su aprobación, en vez de editarlo en silencio) — todavía no implementado.
