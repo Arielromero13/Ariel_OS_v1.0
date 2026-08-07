@@ -30,7 +30,7 @@ print('OK')
 | Caso | Dominio | Origen | Resultado esperado | Qué prueba específicamente |
 |---|---|---|---|---|
 | [`pvground-001-anonymized`](pvground-001-anonymized/README.md) | P.A.T. (`grounding-report`) | Campaña real anonimizada | `no_emit` | Trazabilidad foto-lectura (rich value de Excel), criterio mal aplicado por tipo de activo, outlier con contradicción interna, punto en el margen del criterio |
-| [`comtrade-fault-002-fictional`](comtrade-fault-002-fictional/README.md) | COMTRADE (`comtrade-fault-analysis`) | Construido (ficticio) | `no_emit` | Cruce de ajuste correcto, descarte de falso disparo, y el caso central: una conclusión de "causa confirmada" que excede la evidencia de oscilografía disponible (pregunta 7 de `critique-fault-diagnosis-analysis`) |
+| [`comtrade-fault-002-fictional`](comtrade-fault-002-fictional/README.md) | COMTRADE (`comtrade-fault-analysis`) | Construido (ficticio), **corrida real registrada** el 2026-08-07 | `no_emit`, `patch`, ciclo 1 de 3 | Cruce de ajuste y alcance de la conclusión correctos (coincidencia independiente); descarte de falso disparo incompleto (DOD-02) — el problema real que apareció al correrlo, distinto del que se había anticipado al escribir el caso a mano |
 
 Ningún caso de esta suite termina en `emitido` a propósito: un caso donde todo sale limpio prueba mucho menos que uno donde el sistema tiene que atrapar algo real.
 

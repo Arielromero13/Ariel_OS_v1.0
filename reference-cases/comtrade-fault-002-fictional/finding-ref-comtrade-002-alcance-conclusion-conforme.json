@@ -1,0 +1,48 @@
+{
+  "finding_id": "FND-REF-COMTRADE-002",
+  "context": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "domain": "protection-fault-analysis",
+    "work_item_id": "WI-REF-COMTRADE-002"
+  },
+  "statement": {
+    "title": "El alcance de la conclusión queda correctamente limitado a 'Causa probable' — no se declaró 'Causa confirmada' sin respaldo de campo",
+    "conclusion": "En la corrida real del workflow contra este expediente, domain_specialist redactó desde el primer intento 'Falla probable — monofásica en Fase A' citando explícitamente DOD-03 y la ausencia de reporte de inspección de campo en el input manifest. technical_reviewer, evaluando la misma evidencia cruda de forma independiente y sin haber visto ese borrador, llegó al mismo alcance por su cuenta. Es una coincidencia razonada real, no un formalismo: ambos roles aplicaron correctamente la pregunta 7 de critique-fault-diagnosis-analysis sin que hiciera falta corregir a ninguno.",
+    "classification": "criterio_correctamente_aplicado"
+  },
+  "scope": {
+    "point_ids": [],
+    "asset_ids": ["ALIMENTADOR-210"],
+    "system_ids": [],
+    "sections": ["5. Diagnóstico y conclusiones"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-COMTRADE-RUN-DOMAIN-SPECIALIST", "EVD-REF-COMTRADE-RUN-TECHNICAL-REVIEWER"],
+    "reasoning": "Contraste entre el borrador real de domain_specialist (corrida en vivo) y la conclusión independiente de technical_reviewer (corrida en vivo, sin ver el borrador antes de formar su propio juicio) — ambos coinciden en limitar la conclusión a 'causa probable'.",
+    "method_reference": "critique-fault-diagnosis-analysis, pregunta 7 (alcance de la conclusión), aplicada en modo proposal y en modo independent_review."
+  },
+  "evaluation": {
+    "state": "Conforme",
+    "criterion_id": "DOD-03",
+    "criterion_status": "verified",
+    "criterion_rationale": "DOD-03 exige que ninguna conclusión de causa confirmada se declare sin evidencia de inspección de campo. Ambos registros, de forma independiente, cumplen este requisito sin necesidad de corrección."
+  },
+  "limitations": [],
+  "impact": {
+    "severity": "not_assessed",
+    "decision_impact": "No bloquea nada — es el hallazgo positivo de este ejercicio. No sustituye la revisión de FND-REF-COMTRADE-003, que sí encontró un problema real en un eje distinto.",
+    "risk_statement": null
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-003", "FND-REF-COMTRADE-004"],
+    "handoff_ids": [],
+    "deliverable_sections": ["5. Diagnóstico y conclusiones"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "technical_reviewer",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

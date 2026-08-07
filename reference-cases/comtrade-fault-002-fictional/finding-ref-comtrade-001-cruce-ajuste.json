@@ -31,11 +31,11 @@
   "limitations": [],
   "impact": {
     "severity": "not_assessed",
-    "decision_impact": "Este hallazgo por sí solo no bloquea nada — es la base técnica sobre la que se apoya la conclusión, pero no responde por sí solo si esa conclusión puede declararse 'confirmada' en su alcance completo (ver FND-REF-COMTRADE-003).",
+    "decision_impact": "Este hallazgo por sí solo no bloquea nada — es la base técnica confirmada de forma independiente por ambos roles. La reserva sobre qué mide exactamente el intervalo de 1.5 ciclos queda documentada aparte en FND-REF-COMTRADE-004, para no diluir este hallazgo positivo con una reserva menor.",
     "risk_statement": null
   },
   "links": {
-    "related_finding_ids": ["FND-REF-COMTRADE-002", "FND-REF-COMTRADE-003"],
+    "related_finding_ids": ["FND-REF-COMTRADE-002", "FND-REF-COMTRADE-003", "FND-REF-COMTRADE-004"],
     "handoff_ids": [],
     "deliverable_sections": ["4. Análisis de la señal"]
   },

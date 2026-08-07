@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-COMTRADE-003",
+  "context": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "domain": "protection-fault-analysis",
+    "work_item_id": "WI-REF-COMTRADE-002"
+  },
+  "statement": {
+    "title": "El descarte de falso disparo está incompleto: dos de cuatro hipótesis quedan como limitación declarada, no como hallazgo descartado con evidencia",
+    "conclusion": "domain_specialist evaluó las cuatro hipótesis típicas de falso disparo. Arranque de motor y ruido quedaron descartados con evidencia explícita del patrón de señal (escalón sin rampa previa, monofásico). Saturación de TC y maniobra coincidente NO quedaron descartadas con el mismo nivel de evidencia — el expediente no incluye morfología de onda cruda (flat-topping, distorsión armónica) ni bitácora de maniobras/SCADA de planta para el instante del evento, que son la evidencia típica para ese descarte. domain_specialist declaró esto honestamente como limitación en vez de resolverlo por default. technical_reviewer, evaluando la misma evidencia de forma independiente, llegó al mismo hallazgo por su cuenta y lo elevó de 'limitación declarada' a 'hallazgo bloqueante': DOD-02 exige descarte explícito con evidencia, y una limitación sin resolver no satisface ese estándar aunque esté declarada con honestidad.",
+    "classification": "criterio_incumplido_parcial"
+  },
+  "scope": {
+    "point_ids": [],
+    "asset_ids": ["ALIMENTADOR-210", "RELE-SEL751-210"],
+    "system_ids": [],
+    "sections": ["4. Análisis de la señal"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-COMTRADE-RUN-DOMAIN-SPECIALIST", "EVD-REF-COMTRADE-RUN-TECHNICAL-REVIEWER"],
+    "reasoning": "Ambos registros (proposal e independent_review) identifican por separado la misma laguna de evidencia para saturación de TC y maniobra — coincidencia razonada, no un hallazgo unilateral.",
+    "method_reference": "critique-fault-diagnosis-analysis, pregunta 6 (descarte de falso disparo)."
+  },
+  "evaluation": {
+    "state": "No conforme",
+    "criterion_id": "DOD-02",
+    "criterion_status": "verified",
+    "criterion_rationale": "DOD-02 exige que la hipótesis de falso disparo se evalúe explícitamente y se descarte con evidencia, no por default. Dos de las cuatro sub-hipótesis quedan sin ese descarte — el requisito no se satisface en su totalidad, aunque el expediente sea honesto sobre la laguna."
+  },
+  "limitations": ["No hay datos de forma de onda/distorsión ni clase/burden del TC en el expediente para confirmar o descartar saturación.", "No hay bitácora de maniobras/SCADA de planta para el instante del evento."],
+  "impact": {
+    "severity": "high",
+    "decision_impact": "Bloquea la aprobación del análisis tal como está — es el motivo real por el que technical_reviewer devolvió el expediente con outcome patch.",
+    "risk_statement": "Descartar por default una hipótesis de falso disparo (en vez de con evidencia) es exactamente el tipo de atajo que DOD-02 existe para prevenir, incluso cuando el resto del diagnóstico es sólido."
+  },
+  "recommendation": {
+    "action": "Revisar la morfología de onda cruda del registro COMTRADE (flat-topping, contenido armónico) para descartar saturación de TC con evidencia, y confirmar o descartar maniobra conocida en el alimentador durante la ventana del evento; si no hay dato disponible para esto último, declararlo como limitación explícita del expediente en vez de omitirlo.",
+    "priority": "high",
+    "owner": "domain_specialist",
+    "justification": "Es el único punto de este expediente donde el requisito de proceso (DOD-02) no se cumple en su totalidad, pese a que el resto del análisis es sólido."
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-002"],
+    "handoff_ids": [],
+    "deliverable_sections": ["4. Análisis de la señal"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "technical_reviewer",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

@@ -14,14 +14,15 @@
     "domain_skill_context": ["analyze-comtrade-event", "critique-fault-diagnosis-analysis"]
   },
   "scope": {
-    "audit_type": "emission_gate",
+    "audit_type": "correction_decision",
     "included_records": [
       { "record_type": "finding", "record_id": "FND-REF-COMTRADE-001" },
       { "record_type": "finding", "record_id": "FND-REF-COMTRADE-002" },
       { "record_type": "finding", "record_id": "FND-REF-COMTRADE-003" },
+      { "record_type": "finding", "record_id": "FND-REF-COMTRADE-004" },
       { "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001" }
     ],
-    "excluded_checks": ["No se ejecutó QA visual de gráficas de forma de onda en este ejercicio (no hay documento renderizado real)."]
+    "excluded_checks": ["No se ejecutó report_integration ni visual_evidence_qa en este ejercicio: technical_reviewer devolvió el expediente con outcome patch, así que no existe todavía un entregable integrado sobre el cual auditar emisión."]
   },
   "gates": [
     {
@@ -29,47 +30,51 @@
       "name": "Definition of Done satisfecho",
       "required": true,
       "result": "fail",
-      "basis": [{ "record_type": "finding", "record_id": "FND-REF-COMTRADE-003", "note": "DOD-03 incumplido: conclusión de causa confirmada sin evidencia de campo." }]
+      "basis": [
+        { "record_type": "finding", "record_id": "FND-REF-COMTRADE-003", "note": "DOD-02 no cumplido en su totalidad: descarte de falso disparo incompleto." },
+        { "record_type": "finding", "record_id": "FND-REF-COMTRADE-004", "note": "DOD-01 con reserva no resuelta sobre la medición del intervalo de tiempo." }
+      ]
     },
     {
       "gate_id": "GATE-TECH-REVIEW",
       "name": "Revisión técnica aprobada",
       "required": true,
       "result": "fail",
-      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "Outcome partial_rework, no approve." }]
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "Outcome patch, no approve." }]
     },
     {
       "gate_id": "GATE-CRITIQUE-RECORD",
       "name": "technical_critique_record presente en modo proposal e independent_review",
       "required": true,
       "result": "pass",
-      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "El desacuerdo sobre el alcance de la conclusión surge precisamente de que technical_reviewer aplicó la pregunta 7 de forma independiente — el registro existe y está razonado." }]
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "domain_specialist y technical_reviewer dejaron registro propio y razonado; technical_reviewer llegó a su conclusión antes de leer la del especialista y aun así coincidió en el alcance (DOD-03) y encontró por su cuenta el hueco de DOD-02 y un hallazgo adicional (FND-REF-COMTRADE-004) no anticipado por el especialista — señal de revisión real, no de trámite." }]
     },
     {
       "gate_id": "GATE-VISUAL-QA",
       "name": "QA visual aprobada",
       "required": true,
       "result": "pending",
-      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "No ejecutada en este ejercicio; fuera de alcance." }]
+      "basis": [{ "record_type": "review", "record_id": "REV-TECH-REF-COMTRADE-001", "note": "No aplica todavía — no existe documento integrado en este ejercicio." }]
     }
   ],
   "gate_summary": {
     "failed_required_gate_count": 2,
     "pending_required_gate_count": 1,
-    "critical_open_decision_count": 1
+    "critical_open_decision_count": 0
   },
   "decision": {
     "outcome": "no_emit",
-    "rationale": "Dos gates obligatorios fallan (Definition of Done y revisión técnica) y uno queda pendiente (QA visual, fuera de alcance de este ejercicio). El paquete no está listo para aprobación humana. Esto es el resultado esperado de este caso de referencia: el ejercicio no busca producir un informe emitible, sino comprobar si critique-fault-diagnosis-analysis detecta un sobre-alcance de conclusión que un análisis solo-de-formato no habría atrapado — y lo detectó.",
+    "rationale": "El expediente no llega todavía a esta compuerta en sentido pleno: technical_reviewer lo devolvió con outcome patch (ciclo 1 de 3, dentro del límite de la regla no negociable 4), por lo que corresponde volver a domain_specialist antes de continuar la secuencia (report_integration → visual_evidence_qa → esta compuerta, ahora sí sobre un entregable integrado). No hay nada oculto ni un desacuerdo material entre roles — al contrario, domain_specialist y technical_reviewer convergieron de forma independiente en el diagnóstico y el alcance de la conclusión; los huecos que quedan (descarte de falso disparo incompleto, ambigüedad de medición de tiempo) son puntuales y corregibles.",
     "conditions_before_emission": [
-      "Resolver ISS-REF-COMTRADE-01 del review REV-TECH-REF-COMTRADE-001 (bajar la conclusión a 'Causa probable' o incorporar evidencia de campo)",
-      "Ejecutar QA visual de las gráficas de forma de onda",
-      "Confirmar el open_decision del work item sobre inspección de campo del alimentador 210"
+      "domain_specialist aplica el patch de REV-TECH-REF-COMTRADE-001 (los 4 criterios de aceptación)",
+      "technical_reviewer cierra el ciclo 1 revisando el patch",
+      "Recién entonces continúa report_integration → visual_evidence_qa → esta compuerta, sobre el entregable integrado",
+      "Aprobación humana registrada de Ariel antes de cualquier publicación, sin excepción (regla no negociable 5)"
     ]
   },
   "residual_risks": [],
   "required_actions": [
-    { "action_id": "ACT-REF-COMTRADE-01", "action_type": "patch", "owner": "domain_specialist", "acceptance_criterion": "Sección de conclusiones corregida a 'Causa probable' o evidencia de campo incorporada.", "artifacts_to_preserve": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-002"], "artifacts_to_modify": ["ART-EVENT-REF"] }
+    { "action_id": "ACT-REF-COMTRADE-01", "action_type": "patch", "owner": "domain_specialist", "acceptance_criterion": "Los 4 criterios de aceptación de REV-TECH-REF-COMTRADE-001 resueltos.", "artifacts_to_preserve": ["FND-REF-COMTRADE-001", "FND-REF-COMTRADE-002"], "artifacts_to_modify": ["ART-EVENT-REF"] }
   ],
   "human_approval": {
     "required": true,
@@ -78,7 +83,7 @@
   },
   "lifecycle": {
     "status": "issued",
-    "correction_cycle": 0,
-    "issued_at": "2026-08-07T05:00:00Z"
+    "correction_cycle": 1,
+    "issued_at": "2026-08-07T14:05:00Z"
   }
 }

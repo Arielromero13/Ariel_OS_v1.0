@@ -1,0 +1,54 @@
+{
+  "finding_id": "FND-REF-COMTRADE-004",
+  "context": {
+    "case_id": "CASE-REF-COMTRADE-002",
+    "revision_id": "REV-01",
+    "domain": "protection-fault-analysis",
+    "work_item_id": "WI-REF-COMTRADE-002"
+  },
+  "statement": {
+    "title": "No queda claro si el intervalo de '1.5 ciclos hasta el disparo' mide la salida del relé o la interrupción física del interruptor",
+    "conclusion": "technical_reviewer, en su revisión independiente, señaló una ambigüedad que domain_specialist había usado sin cuestionar: el expediente dice 'tiempo entre el cruce de pickup y el disparo: 1.5 ciclos' y por separado da el tiempo de interruptor conocido como 1.3–1.5 ciclos. Si el intervalo de 1.5 ciclos mide la aserción de disparo del relé (TR), es razonable para un elemento instantáneo. Si en cambio mide la interrupción física de corriente, sería casi incompatible con la evidencia propia del expediente, porque el interruptor solo ya consume ese tiempo. Esto no invalida la coherencia temporal general (DOD-01), pero la deja con una reserva no resuelta que domain_specialist no había señalado como tal.",
+    "classification": "hallazgo_de_revisor_no_anticipado"
+  },
+  "scope": {
+    "point_ids": [],
+    "asset_ids": ["ALIMENTADOR-210", "RELE-SEL751-210"],
+    "system_ids": [],
+    "sections": ["4. Análisis de la señal"]
+  },
+  "evidence": {
+    "evidence_ids": ["EVD-REF-COMTRADE-RUN-TECHNICAL-REVIEWER"],
+    "reasoning": "Lectura literal de la definición del intervalo de tiempo declarado en el expediente, contrastada contra el tiempo de interruptor declarado por separado.",
+    "method_reference": "critique-fault-diagnosis-analysis, pregunta 3 (tiempo de operación vs. ajuste temporizado)."
+  },
+  "evaluation": {
+    "state": "No conforme",
+    "criterion_id": "DOD-01",
+    "criterion_status": "verified",
+    "criterion_rationale": "DOD-01 exige que el tiempo de operación sea consistente con el ajuste declarado — una ambigüedad de qué se está midiendo deja esa consistencia sin verificar del todo, aunque la interpretación más probable (salida TR del relé) sea coherente."
+  },
+  "limitations": ["El expediente no define explícitamente qué evento marca el fin del intervalo medido."],
+  "impact": {
+    "severity": "medium",
+    "decision_impact": "No invalida el diagnóstico, pero es un hallazgo real de revisión independiente que domain_specialist no había planteado — exactamente el tipo de valor que se espera de una revisión técnica genuina, no un trámite.",
+    "risk_statement": null
+  },
+  "recommendation": {
+    "action": "Aclarar en el expediente si el intervalo reportado corresponde a la aserción de disparo del relé o a la interrupción física de corriente por el interruptor.",
+    "priority": "medium",
+    "owner": "domain_specialist",
+    "justification": "Cierra la única reserva abierta sobre DOD-01."
+  },
+  "links": {
+    "related_finding_ids": ["FND-REF-COMTRADE-001"],
+    "handoff_ids": [],
+    "deliverable_sections": ["4. Análisis de la señal"]
+  },
+  "lifecycle": {
+    "status": "proposed",
+    "created_by": "technical_reviewer",
+    "reviewed_by": null,
+    "superseded_by": null
+  }
+}

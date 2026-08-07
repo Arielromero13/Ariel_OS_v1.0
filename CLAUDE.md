@@ -6,14 +6,16 @@ Este archivo es la instrucción operativa de sesión para el arnés Claude Code.
 
 **Alcance de este archivo:** las secciones 0–7 rigen específicamente el trabajo de expedientes P.A.T./COMTRADE (EGEHAINA) — roles, workflows, reglas no negociables. La **sección 8 aplica siempre, sin importar el tema de la sesión**: si adjuntaste este repo a una sesión que no tiene nada que ver con P.A.T. (una presentación, un tema personal), igual lee la sección 8 antes de arrancar — es la que dice quién es Ariel y cómo comportarse con él. Adjuntar este repo a cualquier sesión, sea o no de EGEHAINA, es justamente lo que activa esa lectura automática; no hace falta pedirlo cada vez.
 
-Los subagentes disponibles y su función:
+Los subagentes disponibles y su función. Cada uno está registrado como subagente nativo de Claude Code en `.claude/agents/*.md` (despachable de verdad vía la herramienta Agent, con contexto aislado — no una simulación de roles dentro de esta misma sesión) — esos archivos son adaptadores delgados que apuntan a `agents/*/AGENT.md` como fuente de verdad, no una copia:
 
 - `domain-specialist` — produce el análisis técnico inicial del expediente.
 - `normative-researcher` — resuelve dudas normativas/de criterio cuando domain-specialist o technical-reviewer las señalan. Se invoca bajo demanda, no en toda ejecución.
-- `technical-reviewer` — revisa de forma independiente el resultado de domain-specialist antes de integrar.
+- `technical-reviewer` — revisa de forma independiente el resultado de domain-specialist antes de integrar. La independencia depende de despacharlo como subagente separado *antes* de que vea el resultado del especialista — no alcanza con pedirle "actuá como si no lo hubieras leído" dentro del mismo hilo.
 - `integrator` — ensambla el entregable final (informe) a partir de los resultados aprobados.
 - `visual-reviewer` — control de calidad visual/formato del entregable integrado.
 - `auditor` — última verificación de trazabilidad y cumplimiento de las reglas no negociables antes de habilitar la emisión.
+
+El orquestador (esta sesión) nunca sustituye a estos roles jugándolos él mismo dentro de su propio contexto — los despacha con la herramienta Agent, pasándoles el work item, la skill de dominio activa y la evidencia relevante (sección 2). Correr `reference-cases/comtrade-fault-002-fictional` así, en vivo, es lo que reveló que faltaba esta pieza — antes de esto los roles eran solo markdown descriptivo, sin despacho real.
 
 ## 0. Reglas no negociables
 
