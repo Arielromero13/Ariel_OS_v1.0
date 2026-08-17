@@ -40,6 +40,10 @@ El JSON de datos de un caso real (nombres de planta, mediciones, rutas a fotos) 
 
 Fotos de teléfono (o extraídas como *rich value* de una celda de Excel) suelen venir en JPEG progresivo, que Word renderiza mal — la foto aparece de lado o distorsionada sin que el archivo tenga ningún problema real. `generate_report.js` **rechaza con error** cualquier imagen progresiva en vez de generar un documento con fotos rotas en silencio; correr `scripts/normalize_photos.py <entrada> <salida>` sobre la carpeta de fotos antes de generar el informe.
 
+## Semáforo / mapa de calor en la tabla de resultados
+
+La tabla de resultados (Sección 4, `dataTable` en `generate_report.js`) soporta sombreado condicional de fila desde 2026-08-17: cualquier punto cuyo `estado` empiece con "No conforme" (incluye tanto el numérico >1.05 Ω como los hallazgos de "No conforme (inspección visual)") se resalta en rojo suave (`FADBD8`) en las seis celdas de su fila, para que salte a la vista sin leer celda por celda. "Conforme" y "Pendiente" no se sombrean, por legibilidad. Se implementa con el shading nativo de celda de la librería `docx` (el mismo mecanismo que ya usaban los encabezados NAVY/LIGHT_BLUE) vía el parámetro `rowFills` de `dataTable(rows, widths, rowFills)` y el helper `conformityRowFill(estado)` — no requiere una librería nueva. Quien arme el JSON de un caso no necesita hacer nada especial: el color se calcula automáticamente a partir del campo `estado` de cada punto en `data.points`.
+
 ## Esquema de la hoja de mediciones
 
 Este esquema hoy vive en la tabla de Notion "Puntos de medición P.A.T." (ver "Ingesta de datos" arriba), no en una hoja de Excel — pero el campo por campo es el mismo. Una fila por punto, como mínimo:

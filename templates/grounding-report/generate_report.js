@@ -125,16 +125,34 @@ function cell(text, opts = {}) {
 }
 
 // Fila de encabezado azul marino / texto blanco -- estilo "Registro de mediciones" de Girasol.
-function dataTable(rows, widths) {
+// `rowFills` (opcional): array paralelo a las filas de datos (sin contar el
+// encabezado, fila 0) con el color de sombreado de esa fila completa o
+// `undefined` para no sombrear -- semaforo/mapa de calor de la tabla de
+// resultados (pedido de Ariel 2026-08-17): resalta de un vistazo las filas
+// "No conforme" sin tener que leer celda por celda. Usa el shading nativo de
+// celda de la libreria docx (mismo mecanismo que ya usaba `cell()` para los
+// encabezados NAVY/LIGHT_BLUE), no una capa nueva.
+function dataTable(rows, widths, rowFills) {
   return new Table({
     width: { size: 9350, type: WidthType.DXA },
     columnWidths: widths,
     rows: rows.map((r, i) => new TableRow({
       children: r.map((val, j) => cell(String(val), i === 0
         ? { bold: true, fill: NAVY, color: "FFFFFF", width: widths[j] }
-        : { width: widths[j] })),
+        : { width: widths[j], fill: rowFills && rowFills[i - 1] })),
     })),
   });
+}
+
+// Color de fila para el semaforo de la tabla de resultados (Seccion 4), en
+// funcion del `estado` calculado de cada punto. Rojo suave para todo lo que
+// no sea conforme (incluye "No conforme" numerico >1.05 Ω y "No conforme
+// (inspeccion visual)", ej. cable sulfatado Aero#8) -- es la categoria que
+// Ariel pidio que salte a la vista. "Conforme" y "Pendiente" quedan sin
+// sombrear para no saturar la tabla (legibilidad, ver README).
+function conformityRowFill(estado) {
+  if (!estado) return undefined;
+  return estado.toLowerCase().startsWith("no conforme") ? "FADBD8" : undefined;
 }
 
 // Campo/valor con columna de etiqueta azul claro -- estilo "Datos de la Ruta de mediciones" de Girasol.
@@ -157,6 +175,23 @@ function figureBlock(imgPath, caption, width, captionSize = SIZE_FIGURE_CAPTION)
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 120 }, children: [new ImageRun({ data: img.buf, transformation: img.transformation, type: img.type })] }),
     new Paragraph({ alignment: AlignmentType.CENTER, spacing: { after: 200 }, children: [new TextRun({ text: caption, italics: true, size: captionSize, font: FONT_BODY })] }),
   ];
+}
+
+// Renderiza una seccion generica a partir de un array de "blocks" tipados
+// -- mecanismo reutilizable para secciones nuevas del informe (ej. la
+// evaluacion de salud del sistema, Larimar 1 2026-08-17) sin tener que
+// hardcodear cada seccion nueva a mano en buildGroundingReportDocx. Tipos
+// soportados: heading2, heading3 (negrita, sin nivel de TOC), paragraph,
+// note (parrafo en italica), table (header + rows, con dataTable()).
+function renderBlocks(children, blocks) {
+  (blocks || []).forEach((b) => {
+    if (b.type === "heading2") children.push(h(b.text, HeadingLevel.HEADING_2));
+    else if (b.type === "heading3") children.push(pBold(b.text));
+    else if (b.type === "paragraph") children.push(p(b.text, b.opts || {}));
+    else if (b.type === "note") children.push(p(b.text, { italics: true }));
+    else if (b.type === "table") children.push(dataTable([b.header, ...b.rows], b.widths));
+    else throw new Error(`renderBlocks: tipo de bloque desconocido "${b.type}"`);
+  });
 }
 
 function pendingPhotoBox(label) {
@@ -280,7 +315,11 @@ function buildGroundingReportDocx(data) {
     [["ID", "Activo / electrodo", "R (Ω)", "Criterio", "Foto fuente", "Estado"],
       ...data.points.map((pt) => [pt.id, pt.activo, pt.r, pt.criterioLabel, pt.foto, pt.estado])],
     [900, 3700, 1200, 1300, 1200, 2050],
+    data.points.map((pt) => conformityRowFill(pt.estado)),
   ));
+  if (data.section4.legend !== false) {
+    children.push(p("Fila resaltada en rojo suave = estado No conforme (semaforo visual, ver Seccion 6 para el detalle de cada hallazgo).", { italics: true, size: SIZE_GALLERY_CAPTION }));
+  }
 
   children.push(h("5. Galería de evidencias", HeadingLevel.HEADING_1));
   if (data.section5.intro) children.push(p(data.section5.intro));
@@ -318,6 +357,15 @@ function buildGroundingReportDocx(data) {
   if (data.conclusions.recomendaciones && data.conclusions.recomendaciones.length) {
     children.push(pBold("7.3 Recomendaciones"));
     data.conclusions.recomendaciones.forEach((t, i) => children.push(p(`${i + 1}. ${t}`)));
+  }
+
+  // Seccion 8 (opcional): bloque generico, ej. "Evaluacion de salud del
+  // sistema de puesta a tierra" -- va despues de Findings/limitaciones/
+  // recomendaciones (Seccion 7) y antes de los anexos, como seccion propia
+  // del cuerpo del informe (aparece en el TOC nativo via heading H1/H2).
+  if (data.section8) {
+    children.push(h(data.section8.heading, HeadingLevel.HEADING_1));
+    renderBlocks(children, data.section8.blocks);
   }
 
   if (data.anexoA && data.anexoA.length) {
