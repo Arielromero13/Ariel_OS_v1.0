@@ -318,7 +318,7 @@ function buildGroundingReportDocx(data) {
     data.points.map((pt) => conformityRowFill(pt.estado)),
   ));
   if (data.section4.legend !== false) {
-    children.push(p("Fila resaltada en rojo suave = estado No conforme (semaforo visual, ver Seccion 6 para el detalle de cada hallazgo).", { italics: true, size: SIZE_GALLERY_CAPTION }));
+    children.push(p("Fila resaltada en rojo suave = estado No conforme (semaforo visual, ver Sección 6 para el detalle de cada hallazgo).", { italics: true, size: SIZE_GALLERY_CAPTION }));
   }
 
   children.push(h("5. Galería de evidencias", HeadingLevel.HEADING_1));
