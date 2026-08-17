@@ -132,6 +132,7 @@
           "enum": [
             "Conforme",
             "No conforme",
+            "Revisar",
             "No concluyente",
             "Pendiente",
             "Falla confirmada",
@@ -139,7 +140,7 @@
             "Falso disparo",
             "Not applicable"
           ],
-          "description": "Vocabulario compartido entre dominios Tier 1 actuales (grounding-report usa Conforme/No conforme/No concluyente/Pendiente; comtrade-fault-analysis usa Falla confirmada/Falla probable/Falso disparo/No concluyente). Un dominio nuevo que necesite un estado propio debe extender este enum, no inventar uno paralelo fuera del contrato."
+          "description": "Vocabulario compartido entre dominios Tier 1 actuales (grounding-report usa Conforme/No conforme/Revisar/No concluyente/Pendiente; comtrade-fault-analysis usa Falla confirmada/Falla probable/Falso disparo/No concluyente). 'Revisar' señala un punto que supera un umbral de práctica interna/mantenimiento sin respaldo normativo verificado — no equivale a 'No conforme' (incumplimiento de un criterio con respaldo normativo o contractual verificado); ver skills/analyze-grounding-report/SKILL.md, sección 'Estados de evaluación'. Un dominio nuevo que necesite un estado propio debe extender este enum, no inventar uno paralelo fuera del contrato."
         },
         "criterion_id": {
           "type": [
@@ -170,6 +171,7 @@
                 "enum": [
                   "Conforme",
                   "No conforme",
+                  "Revisar",
                   "Falla confirmada",
                   "Falla probable",
                   "Falso disparo"

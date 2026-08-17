@@ -71,10 +71,13 @@ Usar exclusivamente:
 
 - Conforme.
 - No conforme.
+- Revisar.
 - No concluyente.
 - Pendiente.
 
 El estado sólo se asigna contra un criterio técnico explícito y aplicable, documentado en el informe.
+
+**No conforme vs. Revisar**: "No conforme" se reserva para un punto que incumple un criterio con respaldo normativo o contractual verificado (fuente, edición, cláusula documentados vía `research-normative-criterion` cuando aplique), donde el incumplimiento en sí mismo constituye una condición fuera de norma. "Revisar" se usa cuando el punto supera un umbral de práctica interna o de mantenimiento (no un límite normativo exigido) — señala necesidad de inspección/mantenimiento, sin afirmar que la instalación sea insegura ni sustituir una evaluación de seguridad completa (tensión de paso/contacto u otra, según el dominio). El informe debe declarar explícitamente el alcance de cada estado que use — qué significa y qué no — para que un lector no infiera más de lo verificado.
 
 ## Criterios, normas y análisis
 
