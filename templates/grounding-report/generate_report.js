@@ -30,6 +30,14 @@ const {
 const ASSETS_DIR = path.join(__dirname, "assets");
 const NAVY = "1F4E79";
 const LIGHT_BLUE = "D9EAF7";
+// Semaforo de la tabla de resultados (Seccion 4): color depende del estado
+// real del punto, no de un "todo lo que no sea Conforme es rojo" hardcodeado
+// -- ver conformityRowFill() abajo. AMBAR para "Revisar" (senal de
+// mantenimiento, no de falla); ROJO reservado a "No conforme" (incumplimiento
+// de un criterio con respaldo normativo/contractual verificado, vocabulario
+// de skills/analyze-grounding-report/SKILL.md).
+const AMBER_REVIEW = "FDEBD3";
+const RED_NONCONFORME = "FADBD8";
 
 // Tipografía calcada de Informe_PAT_Girasol_Rev03 (styles.xml + runs reales,
 // no el tema por defecto): cuerpo en Arial 14pt, encabezados en Calibri
@@ -128,10 +136,11 @@ function cell(text, opts = {}) {
 // `rowFills` (opcional): array paralelo a las filas de datos (sin contar el
 // encabezado, fila 0) con el color de sombreado de esa fila completa o
 // `undefined` para no sombrear -- semaforo/mapa de calor de la tabla de
-// resultados (pedido de Ariel 2026-08-17): resalta de un vistazo las filas
-// "No conforme" sin tener que leer celda por celda. Usa el shading nativo de
-// celda de la libreria docx (mismo mecanismo que ya usaba `cell()` para los
-// encabezados NAVY/LIGHT_BLUE), no una capa nueva.
+// resultados (pedido de Ariel 2026-08-17, color por estado real desde
+// 2026-08-17): resalta de un vistazo las filas que requieren atencion (hoy,
+// "Revisar" en ambar) sin tener que leer celda por celda. Usa el shading
+// nativo de celda de la libreria docx (mismo mecanismo que ya usaba `cell()`
+// para los encabezados NAVY/LIGHT_BLUE), no una capa nueva.
 function dataTable(rows, widths, rowFills) {
   return new Table({
     width: { size: 9350, type: WidthType.DXA },
@@ -145,14 +154,21 @@ function dataTable(rows, widths, rowFills) {
 }
 
 // Color de fila para el semaforo de la tabla de resultados (Seccion 4), en
-// funcion del `estado` calculado de cada punto. Rojo suave para todo lo que
-// no sea conforme (incluye "No conforme" numerico >1.05 Ω y "No conforme
-// (inspeccion visual)", ej. cable sulfatado Aero#8) -- es la categoria que
-// Ariel pidio que salte a la vista. "Conforme" y "Pendiente" quedan sin
-// sombrear para no saturar la tabla (legibilidad, ver README).
+// funcion del `estado` real de cada punto -- ya no "rojo para todo lo que no
+// sea Conforme". "Revisar" (umbral de practica interna/mantenimiento superado,
+// vocabulario de skills/analyze-grounding-report/SKILL.md) se resalta en
+// ambar suave: es una senal de mantenimiento, no una falla, y el color no debe
+// comunicar mas de lo que dice el texto. "No conforme" (incumplimiento de un
+// criterio con respaldo normativo/contractual verificado) se reserva el rojo
+// de alarma, para el caso en que aplique en otro expediente. "Conforme" y
+// "Pendiente" quedan sin sombrear para no saturar la tabla (legibilidad, ver
+// README).
 function conformityRowFill(estado) {
   if (!estado) return undefined;
-  return estado.toLowerCase().startsWith("no conforme") ? "FADBD8" : undefined;
+  const s = estado.toLowerCase();
+  if (s.startsWith("revisar")) return AMBER_REVIEW;
+  if (s.startsWith("no conforme")) return RED_NONCONFORME;
+  return undefined;
 }
 
 // Campo/valor con columna de etiqueta azul claro -- estilo "Datos de la Ruta de mediciones" de Girasol.
@@ -318,7 +334,7 @@ function buildGroundingReportDocx(data) {
     data.points.map((pt) => conformityRowFill(pt.estado)),
   ));
   if (data.section4.legend !== false) {
-    children.push(p("Fila resaltada en rojo suave = estado No conforme (semaforo visual, ver Sección 6 para el detalle de cada hallazgo).", { italics: true, size: SIZE_GALLERY_CAPTION }));
+    children.push(p("Fila resaltada = estado Revisar (ver Sección 6 para el detalle de cada hallazgo y recomendación).", { italics: true, size: SIZE_GALLERY_CAPTION }));
   }
 
   children.push(h("5. Galería de evidencias", HeadingLevel.HEADING_1));
